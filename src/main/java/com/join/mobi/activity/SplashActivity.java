@@ -34,13 +34,16 @@ public class SplashActivity extends BaseActivity {
     void afterViews() {
         loadAd();
         start();
+
     }
 
     //    http://mobi.365ulife.com/Images/goods/wxtg70011.jpg
     @UiThread(delay = 1000)
     void loadAd() {
 
+
         AsyncHttpClient client = new AsyncHttpClient();
+//        client.cancelAllRequests(true);
         client.get(adUrl, new FileAsyncHttpResponseHandler(this) {
             @Override
             public void onFailure(int i, Header[] headers, Throwable throwable, File file) {
