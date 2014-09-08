@@ -15,7 +15,7 @@ public interface MyPref {
     @DefaultString("John")
     String name();
 
-    @DefaultInt(42)
+    @DefaultInt(421)
     int age();
 
 }

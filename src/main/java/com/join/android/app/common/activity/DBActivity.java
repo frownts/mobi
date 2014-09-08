@@ -42,10 +42,10 @@ public class DBActivity extends BaseActivity{
         initDB();
 
         //insert data
-//        initData();
+        initData();
 //        update();
 //        //query
-        query();
+//        query();
 
 
         List<Account> accounts = AccountManager.getInstance().findAll();

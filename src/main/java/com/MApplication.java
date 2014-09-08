@@ -1,6 +1,7 @@
 package com;
 
 import android.app.Application;
+import com.join.android.app.common.db.manager.DBManager;
 import com.join.android.app.common.utils.ImageOptionFactory;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
@@ -37,5 +38,11 @@ public class MApplication extends Application {
                 .defaultDisplayImageOptions(ImageOptionFactory.getDefaultOptions())
                 .build();
         ImageLoader.getInstance().init(config);
+    }
+
+    @Override
+    public void onTerminate() {
+        super.onTerminate();
+        DBManager.getInstance(this).onDestroy();
     }
 }

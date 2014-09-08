@@ -3,10 +3,10 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <groupId>com.googlecode.androidannotations</groupId>
-    <artifactId>ott</artifactId>
+    <artifactId>mobi</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <packaging>apk</packaging>
-    <name>ott</name>
+    <name>mobi</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -92,11 +92,11 @@
             <version>${jackson-version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>com.google.android</groupId>
-            <artifactId>support-v4</artifactId>
-            <version>r7</version>
-        </dependency>
+        <!--<dependency>-->
+            <!--<groupId>com.google.android</groupId>-->
+            <!--<artifactId>support-v4</artifactId>-->
+            <!--<version> </version>-->
+        <!--</dependency>-->
 
         <dependency>
             <groupId>com.squareup.okhttp</groupId>
@@ -109,7 +109,11 @@
             <artifactId>universal-image-loader</artifactId>
             <version>${com.nostra13.universalimageloader}</version>
         </dependency>
-
+        <dependency>
+            <groupId>commons-beanutils</groupId>
+            <artifactId>commons-beanutils</artifactId>
+            <version>1.9.1</version>
+        </dependency>
 
 
     </dependencies>

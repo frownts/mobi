@@ -32,18 +32,17 @@ public class SplashActivity extends BaseActivity {
 
     @AfterViews
     void afterViews() {
-        loadAd();
+//        loadAd();
         start();
 
     }
 
-    //    http://mobi.365ulife.com/Images/goods/wxtg70011.jpg
     @UiThread(delay = 1000)
     void loadAd() {
 
 
         AsyncHttpClient client = new AsyncHttpClient();
-//        client.cancelAllRequests(true);
+
         client.get(adUrl, new FileAsyncHttpResponseHandler(this) {
             @Override
             public void onFailure(int i, Header[] headers, Throwable throwable, File file) {
@@ -67,7 +66,7 @@ public class SplashActivity extends BaseActivity {
 
     }
 
-    @UiThread(delay = 4000)
+    @UiThread(delay = 3000)
     void start() {
         PortalActivity_.intent(this).start();
         finish();

@@ -1,9 +1,9 @@
 package com.join.android.app.common.db.manager;
 
 import com.j256.ormlite.dao.RuntimeExceptionDao;
+import com.j256.ormlite.stmt.DeleteBuilder;
 import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.stmt.Where;
-import com.join.android.app.common.db.tables.Account;
 
 import java.sql.SQLException;
 import java.util.Collection;
@@ -76,8 +76,8 @@ public class BaseManager<E> {
      * @param ascending
      * @return
      */
-    public List<Account> findPage(long start, long size, String orderBy, boolean ascending) {
-        QueryBuilder<Account, Integer> builder = dao.queryBuilder();
+    public List<E> findPage(long start, long size, String orderBy, boolean ascending) {
+        QueryBuilder<E, Integer> builder = dao.queryBuilder();
         try {
             builder.orderBy(orderBy, ascending);
             builder.offset(start);
@@ -89,8 +89,8 @@ public class BaseManager<E> {
         return null;
     }
 
-    public List<Account> findPage(Where where,long start, long size, String orderBy, boolean ascending) {
-        QueryBuilder<Account, Integer> builder = dao.queryBuilder();
+    public List<E> findPage(Where where,long start, long size, String orderBy, boolean ascending) {
+        QueryBuilder<E, Integer> builder = dao.queryBuilder();
         try {
             builder.setWhere(where);
             builder.orderBy(orderBy, ascending);
@@ -102,4 +102,16 @@ public class BaseManager<E> {
         }
         return null;
     }
+
+
+    public int deleteAll(){
+        DeleteBuilder<E,Integer> builder = dao.deleteBuilder();
+        try {
+            return builder.delete();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
 }

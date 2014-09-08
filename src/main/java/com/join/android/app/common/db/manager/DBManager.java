@@ -1,6 +1,7 @@
 package com.join.android.app.common.db.manager;
 
 import android.content.Context;
+import android.util.Log;
 import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.join.android.app.common.db.DatabaseHelper;
 
@@ -42,6 +43,7 @@ public class DBManager {
     }
 
     public void createDB(String dbName) {
+        Log.i(getClass().getName(),dbName);
         if (databaseHelper != null && databaseHelper.getDatabaseName().equals(dbName)) return;
         DatabaseHelper.setDatabaseName(dbName);
         databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);

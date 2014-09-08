@@ -19,13 +19,21 @@ public class PrefActivity extends BaseActivity {
 
     @Pref
     MyPref_ myPref;
-
     @ViewById
     TextView msg;
 
     @AfterViews
     void afterViews() {
-        myPref.edit().name().put("after update name");
+        myPref.name().put("after update name");
         msg.setText(myPref.name().get() + ";age=" + myPref.age().get());
+//
+//        SharedPreferences sharedPreferences = getSharedPreferences("abc", Context.MODE_PRIVATE);
+//        SharedPreferences.Editor editor = sharedPreferences.edit();
+//        editor.putString("age","1000");
+//        editor.commit();
+//
+//        msg.setText(sharedPreferences.getString("age","2000")+myPref.age().get());
+
+
     }
 }

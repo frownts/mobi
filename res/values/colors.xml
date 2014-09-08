@@ -4,7 +4,11 @@
     <color name="title_bar_color">#b2b2b2</color>
     <color name="white">#ffffff</color>
     <color name="black">#000000</color>
+    <color name="red">#DE2756</color>
     <color name="home_page_text_title">#42c2d5</color>
     <color name="home_gray">#999999</color>
     <color name="merchant_listing_name_color">#333333</color>
+    <color name="spinner_list_background">#EFEFEF</color>
+    <color name="spinner_list_select">#7BCBEE</color>
+    <color name="spinner_list_divider">#D8D8D8</color>
 </resources>

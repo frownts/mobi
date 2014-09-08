@@ -14,6 +14,25 @@
     <string name="yes">是</string>
     <string name="no">否</string>
     <string name="hello_html"><![CDATA[Hello <b>World</b>!]]></string>
+    <string name="menu_live">直播</string>
+    <string name="menu_live_course">在线课程</string>
+    <string name="menu_share">共享资源</string>
+    <string name="menu_annoce">通知</string>
+    <string name="local_course">本地课程</string>
+    <string name="local_source">本地资源</string>
+    <string name="menu_download">下载任务</string>
+    <string name="menu_setting">设置</string>
+    <string name="hint_login_name">请输入您的帐号</string>
+    <string name="hint_login_pass">请输入密码</string>
+    <string name="cancel">取消</string>
+    <string name="branch_sh">上海分公司</string>
+    <string name="continue_download">自动完成未完成的下载</string>
+    <string name="continue_when_wifi">仅在使用WIFI时续传</string>
+    <string name="auto_login_when_net">联网时自动登录</string>
+    <string name="login_name">登录帐号:</string>
+    <string name="erase">清除</string>
+    <string name="annonunceWhenDownload">每次点播和下载提醒网络类型</string>
+    <string name="totalDuration">累计学习</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

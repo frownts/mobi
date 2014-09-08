@@ -52,8 +52,9 @@
             </intent-filter>
         </activity>
 
-        <activity android:name="com.join.mobi.activity.PortalActivity_">
-        </activity>
+        <activity android:name="com.join.mobi.activity.PortalActivity_" />
+        <activity android:name="com.join.mobi.activity.LiveCourseActivity_" />
+
 
 
     </application>

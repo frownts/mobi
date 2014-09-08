@@ -23,7 +23,6 @@ import java.util.List;
 @Rest(rootUrl = "http://192.168.1.102:8080/kl", converters = MappingJacksonHttpMessageConverter.class,interceptors = HttpBasicAuthenticatorInterceptor.class)
 public interface BookmarkClient extends RestClientHeaders {
     @Get("/json")
-
     RPCResult<List<Recommend>> getAccounts();
 //    @Get("/json")
 //    ResponseEntity getAccoutsRSEntityResult();

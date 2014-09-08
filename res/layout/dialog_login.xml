@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/corn_red_bg"
+        >
+
+    <!--<ImageView-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="fill_parent"-->
+            <!--android:src="@drawable/head_bg_red"-->
+            <!--android:scaleType="fitXY"/>-->
+
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/linearLayout"
+            android:paddingBottom="20dp"
+            >
+
+        <!--LoginName-->
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                >
+
+            <EditText
+                    android:id="@+id/loginName"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:hint="@string/hint_login_name"
+                    android:paddingLeft="50dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/corners_round"
+                    />
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/loginName"
+                    android:src="@drawable/login_portrait"/>
+        </RelativeLayout>
+        <!--Password-->
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                >
+
+            <EditText
+                    android:id="@+id/passWord"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:hint="@string/hint_login_pass"
+                    android:paddingLeft="50dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/corners_round"
+                    android:inputType="textPassword"
+
+                    />
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/passWord"
+                    android:src="@drawable/login_pass"/>
+        </RelativeLayout>
+
+        <!--Branch-->
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="10dp"
+                >
+
+            <EditText
+                    android:id="@+id/branch"
+                    android:layout_width="fill_parent"
+                    android:layout_height="30dp"
+                    android:paddingLeft="50dp"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/corners_round"
+                    android:text="@string/branch_sh"
+                    android:focusable="false"/>
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/branch"
+                    android:src="@drawable/login_branch"/>
+
+
+            <com.join.mobi.customview.MySpinner
+                    android:id="@+id/spinner_btn"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/spinner"
+                    android:text="请选择分类"
+                    android:textSize="16sp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
+                    android:visibility="gone"
+                    />
+
+
+        </RelativeLayout>
+
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:gravity="center_vertical">
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                <TextView
+                        android:id="@+id/cancel"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/home_page_text_title"
+                        android:text="@string/cancel"/>
+            </LinearLayout>
+
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center_horizontal">
+
+                <ImageView
+                        android:id="@+id/btnLogin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/btn_login"/>
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</RelativeLayout>
