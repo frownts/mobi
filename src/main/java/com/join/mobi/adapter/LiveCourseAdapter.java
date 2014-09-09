@@ -8,7 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
-import com.join.android.app.common.db.tables.Live;
+import com.join.android.app.common.db.tables.Course;
+import com.nostra13.universalimageloader.core.ImageLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,7 +22,7 @@ import java.util.List;
  */
 public class LiveCourseAdapter extends BaseAdapter {
 
-    private List<Live> liveCourses = new ArrayList<Live>(0);
+    private List<Course> liveCourses = new ArrayList<Course>(0);
 
 
     private Context mContext;
@@ -35,12 +36,12 @@ public class LiveCourseAdapter extends BaseAdapter {
         TextView totalDuration;
     }
 
-    public void updateItems(List<Live> _liveCourses){
+    public void updateItems(List<Course> _liveCourses){
         liveCourses.clear();
         liveCourses.addAll(_liveCourses);
     }
 
-    public LiveCourseAdapter(Context c, List<Live> _liveCourses) {
+    public LiveCourseAdapter(Context c, List<Course> _liveCourses) {
         mContext = c;
         liveCourses.clear();
         liveCourses.addAll(_liveCourses);
@@ -64,6 +65,7 @@ public class LiveCourseAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        Course course = liveCourses.get(position);
         GirdHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.livecourse_listview_layout, null);
@@ -77,7 +79,11 @@ public class LiveCourseAdapter extends BaseAdapter {
         } else {
             holder = (GirdHolder) convertView.getTag();
         }
-
+        ImageLoader.getInstance().displayImage(course.getUrl(),holder.url);
+        holder.title.setText(course.getTitle());
+        holder.lastLearn.setText("上次学习:"+course.getLastLearn());
+        holder.courseHour.setText("课程总时长:"+course.getCourseHour());
+        holder.totalDuration.setText("累计学习:"+course.getTotalDuration());
 
         return convertView;
     }

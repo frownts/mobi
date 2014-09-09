@@ -3,64 +3,70 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               android:orientation="vertical"
               android:layout_width="match_parent"
-              android:layout_height="match_parent"
-              android:background="@color/home_gray"
-              android:layout_margin="20dp"
-              android:padding="10dp">
-
-    <RelativeLayout
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/white">
-
-        <ImageView
-                android:id="@+id/url"
-                android:layout_width="wrap_content"
-                android:layout_height="80dp"
-                android:layout_centerInParent="true"
-                android:src="@drawable/icon"
-                android:scaleType="fitXY"/>
-    </RelativeLayout>
-    <!--课程名称-->
-    <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="20sp"
-            android:text="课程名称"/>
+              android:layout_height="match_parent">
 
     <LinearLayout
+            android:orientation="vertical"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content">
-        <!--上次学习-->
+            android:layout_height="fill_parent"
+            android:background="@color/home_gray"
+            android:layout_margin="20dp"
+            android:padding="10dp">
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:background="@color/white">
+
+            <ImageView
+                    android:id="@+id/url"
+                    android:layout_width="wrap_content"
+                    android:layout_height="80dp"
+                    android:layout_centerInParent="true"
+                    android:src="@drawable/icon"
+                    android:scaleType="fitXY"/>
+        </RelativeLayout>
+        <!--课程名称-->
         <TextView
-                android:id="@+id/lastLearn"
+                android:id="@+id/title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="上次学习:3小时前"/>
-        <!--课程总时长-->
-        <TextView
-                android:id="@+id/courseHour"
+                android:textSize="20sp"
+                android:text="课程名称"/>
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <!--上次学习-->
+            <TextView
+                    android:id="@+id/lastLearn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="上次学习:3小时前"/>
+            <!--课程总时长-->
+            <TextView
+                    android:id="@+id/courseHour"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="课程总时长:10:35"/>
+        </LinearLayout>
+
+        <LinearLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="课程总时长:10:35"/>
+                android:layout_height="wrap_content">
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/totalDuration"/>
+
+            <TextView
+                    android:id="@+id/totalDuration"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/red"
+                    android:text="20:30"/>
+        </LinearLayout>
+
     </LinearLayout>
-
-    <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content">
-
-        <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/totalDuration"/>
-
-        <TextView
-                android:id="@+id/totalDuration"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/red"
-                android:text="20:30"/>
-    </LinearLayout>
-
 </LinearLayout>

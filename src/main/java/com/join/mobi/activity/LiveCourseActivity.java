@@ -5,11 +5,12 @@ import android.util.Log;
 import android.widget.ListView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
-import com.join.android.app.common.db.manager.LiveManager;
+import com.join.android.app.common.db.manager.CourseManager;
 import com.join.mobi.adapter.LiveCourseAdapter;
 import com.join.mobi.dto.MainContentDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
+import com.join.mobi.rpc.RPCTestData;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -41,7 +42,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         swipeRefreshLayout.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
 
-        mAdapter = new LiveCourseAdapter(this, LiveManager.getInstance().findAll());
+        mAdapter = new LiveCourseAdapter(this, CourseManager.getInstance().findAll());
         listView.setAdapter(mAdapter);
 
         swipeRefreshLayout.performClick();
@@ -49,13 +50,15 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
     @Background
     void retrieveDataFromServer() {
-        MainContentDto mainContent = rpcService.getMainContent(myPref.userId().get());
+//        MainContentDto mainContent = rpcService.getMainContent(myPref.userId().get());
+        MainContentDto mainContent = RPCTestData.getMainContentDto();
+
         updateMainContent(mainContent);
         updateView();
     }
     @UiThread
     public void updateView() {
-        mAdapter.updateItems(LiveManager.getInstance().findAll());
+        mAdapter.updateItems(CourseManager.getInstance().findAll());
         mAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
     }

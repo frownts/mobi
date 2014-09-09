@@ -7,8 +7,8 @@ import com.join.android.app.common.db.tables.Course;
 import com.join.android.app.common.db.tables.Live;
 import com.join.android.app.common.db.tables.Notice;
 import com.join.android.app.common.db.tables.ResourceShare;
+import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
-import org.apache.commons.beanutils.PropertyUtils;
 
 import java.util.List;
 
@@ -62,7 +62,7 @@ public class BaseActivity extends Activity {
             for (LiveDto liveDto : liveDtos) {
                 Live live = new Live();
                 try {
-                    PropertyUtils.copyProperties(live, liveDto);
+                    BeanUtils.copyProperties(live, liveDto);
                     LiveManager.getInstance().save(live);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -75,7 +75,7 @@ public class BaseActivity extends Activity {
             for (LiveCourseDto liveCourseDto : liveCourseDtos) {
                 Course course = new Course();
                 try {
-                    PropertyUtils.copyProperties(course, liveCourseDto);
+                    BeanUtils.copyProperties(course, liveCourseDto);
                     CourseManager.getInstance().save(course);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -88,7 +88,7 @@ public class BaseActivity extends Activity {
             for (ResourceShareDto resourceShareDto : resourceShareDtos) {
                 ResourceShare resourceShare = new ResourceShare();
                 try {
-                    PropertyUtils.copyProperties(resourceShare, resourceShareDto);
+                    BeanUtils.copyProperties(resourceShare, resourceShareDto);
                     ResourceShareManager.getInstance().save(resourceShare);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -101,7 +101,7 @@ public class BaseActivity extends Activity {
             for (NoticeDto noticeDto : noticeDtos) {
                 Notice notice = new Notice();
                 try {
-                    PropertyUtils.copyProperties(notice, noticeDto);
+                    BeanUtils.copyProperties(notice, noticeDto);
                     NoticeManager.getInstance().save(notice);
                 } catch (Exception e) {
                     e.printStackTrace();
