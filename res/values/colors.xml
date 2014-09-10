@@ -12,4 +12,5 @@
     <color name="spinner_list_background">#EFEFEF</color>
     <color name="spinner_list_select">#7BCBEE</color>
     <color name="spinner_list_divider">#D8D8D8</color>
+    <color name="holo_blue_light">#ff33b5e5</color>
 </resources>

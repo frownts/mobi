@@ -37,6 +37,7 @@
     <string name="chapter">章节</string>
     <string name="exam">测试</string>
     <string name="reference">资料</string>
+    <string name="exam_intro">测试使用说明</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

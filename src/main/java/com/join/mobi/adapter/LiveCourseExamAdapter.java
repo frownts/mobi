@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.join.android.app.common.R;
-import com.join.android.app.common.manager.DialogManager;
+import com.join.mobi.activity.ExamIntroActivity_;
 import com.join.mobi.dto.ExamDto;
 
 import java.util.ArrayList;
@@ -90,8 +90,7 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //播放
-                DialogManager.getInstance().makeText(mContext,"start exam",DialogManager.DIALOG_TYPE_OK);
+                ExamIntroActivity_.intent(mContext).start();
             }
         });
 
