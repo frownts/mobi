@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/head_bg_red"
+            android:gravity="center_vertical">
+        <!--返回按钮-->
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/back_icon"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="20dp"/>
+        <!--标题前缀-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="在线课程:"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+        <!--标题-->
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+    </LinearLayout>
+
+    <!--视频区域-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="260dp">
+
+    </LinearLayout>
+
+    <!--四个选项卡-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/gray"
+            android:padding="10dp"
+            android:orientation="vertical">
+
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
+            <!--详情-->
+            <TextView
+                    android:id="@+id/detailTab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/detail"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="16sp"/>
+            <!--章节-->
+            <TextView
+                    android:id="@+id/chapterTab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chapter"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="16sp"/>
+            <!--测试-->
+            <TextView
+                    android:id="@+id/examTab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exam"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="16sp"/>
+
+            <!--资料-->
+            <TextView
+                    android:id="@+id/referenceTab"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/reference"
+                    android:gravity="center_horizontal"
+                    android:layout_weight="1"
+                    android:textSize="16sp"/>
+        </LinearLayout>
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-10dp">
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/curve_red_line"/>
+
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content">
+
+                <ImageView
+                        android:id="@+id/curveMarkerDetail"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/curve_selected"/>
+
+                <ImageView
+                        android:id="@+id/curveMarkerChapter"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/curve_selected"
+                        android:visibility="invisible"/>
+
+                <ImageView
+                        android:id="@+id/curveMarkerExam"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/curve_selected"
+                        android:visibility="invisible"/>
+
+                <ImageView
+                        android:id="@+id/curveMarkerReference"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:src="@drawable/curve_selected"
+                        android:visibility="invisible"/>
+
+            </LinearLayout>
+
+
+        </RelativeLayout>
+
+
+        <!--内容 fragment-->
+        <LinearLayout
+                android:id="@+id/liveCourseFragment"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:orientation="horizontal"/>
+    </LinearLayout>
+
+
+
+
+
+</LinearLayout>

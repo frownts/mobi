@@ -56,8 +56,6 @@ public class BaseActivity extends Activity {
         List<ResourceShareDto> resourceShareDtos = mainContent.getResourceShares();
         List<NoticeDto> noticeDtos = mainContent.getNotices();
 
-
-
         if (liveDtos != null) {
             for (LiveDto liveDto : liveDtos) {
                 Live live = new Live();
@@ -71,6 +69,8 @@ public class BaseActivity extends Activity {
 
         }
 
+
+        CourseManager.getInstance().deleteAll();
         if (liveCourseDtos != null) {
             for (LiveCourseDto liveCourseDto : liveCourseDtos) {
                 Course course = new Course();
@@ -109,7 +109,6 @@ public class BaseActivity extends Activity {
             }
 
         }
-
 
 
     }

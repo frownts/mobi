@@ -33,6 +33,10 @@
     <string name="erase">清除</string>
     <string name="annonunceWhenDownload">每次点播和下载提醒网络类型</string>
     <string name="totalDuration">累计学习</string>
+    <string name="detail">详情</string>
+    <string name="chapter">章节</string>
+    <string name="exam">测试</string>
+    <string name="reference">资料</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

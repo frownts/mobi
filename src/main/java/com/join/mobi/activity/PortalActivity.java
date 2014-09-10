@@ -55,24 +55,6 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             }
         });
         gridViewMenu.setAdapter(menuAdapter);
-//        gridViewMenu.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-//                DialogManager.getInstance().makeText(getBaseContext(), "index=" + position, DialogManager.DIALOG_TYPE_OK);
-//                switch (position) {
-//                    case 1:
-//                        LiveCourseActivity_.intent(getBaseContext()).start();
-//                        break;
-//                    case 7:
-//                        showSetting();
-//                        break;
-//                }
-//            }
-//
-//
-//        });
-
-
     }
 
 

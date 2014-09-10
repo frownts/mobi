@@ -56,7 +56,10 @@
                 <ListView
                         android:id="@+id/listView"
                         android:layout_width="fill_parent"
-                        android:layout_height="fill_parent"/>
+                        android:layout_height="fill_parent"
+
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"/>
 
             </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
@@ -84,16 +87,18 @@
                 android:id="@+id/loginName"
                 android:layout_width="100dp"
                 android:layout_height="30dp"
-                android:paddingLeft="50dp"
                 android:background="@drawable/corners_round"
                 android:layout_alignParentTop="true"
                 android:layout_alignParentRight="true"/>
 
         <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/searchIcon"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
                 android:layout_alignLeft="@+id/loginName"
-                android:src="@drawable/login_portrait"/>
+                android:layout_centerVertical="true"
+                android:src="@drawable/search_icon"/>
+
     </RelativeLayout>
 
 
