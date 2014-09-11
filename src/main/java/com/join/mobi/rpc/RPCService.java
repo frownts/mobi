@@ -74,8 +74,8 @@ public interface RPCService {
      * @param userId
      * @return
      */
-    @Get("examDetail.jsp?userId={userId}")
-    public ExamDto getExamDetail(String userId);
+    @Get("examDetail.jsp?userId={userId}&examId={examId}")
+    public ExamDto getExamDetail(String userId,String examId);
 
     /**
      * 交卷
@@ -119,6 +119,18 @@ public interface RPCService {
      */
     @Get("synchronousData.jsp?chapterIds={chapterIds}&referenceIds={referenceIds}&shareResourceIds={shareResourceIds}")
     public void synchronousData(String chapterIds, String referenceIds, String shareResourceIds);
+
+    /**
+     * 交卷
+     * @param userId
+     * @param examId
+     * @param correctPercent
+     * @param finishPercent
+     * @param startTime
+     * @param duration
+     */
+    @Get("submitExamResult.jsp?userId={userId}&examId={examId}&correctPercent={correctPercent}&finishPercent={finishPercent}&startTime={startTime}&duration={duration}")
+    public void submitExamResult(String userId,String examId,String correctPercent,String finishPercent,String startTime,String duration);
 
 }
 

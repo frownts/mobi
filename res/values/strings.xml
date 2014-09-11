@@ -38,6 +38,9 @@
     <string name="exam">测试</string>
     <string name="reference">资料</string>
     <string name="exam_intro">测试使用说明</string>
+    <string name="mark">做记号</string>
+    <string name="exam_list">试题列表</string>
+    <string name="exam_notice">注：继续测试会覆盖以前的记录</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

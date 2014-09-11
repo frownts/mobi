@@ -59,6 +59,8 @@
         <activity android:name="com.join.mobi.activity.LiveCourseDetailActivity_" />
         <activity android:name="com.join.mobi.activity.ExamIntroActivity_" />
         <activity android:name="com.join.mobi.activity.IntroActivity_" />
+        <activity android:name="com.join.mobi.activity.ExamActivity_" />
+        <activity android:name="com.join.mobi.activity.ExamListActivity_" />
 
 
     </application>

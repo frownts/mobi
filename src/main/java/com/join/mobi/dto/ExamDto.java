@@ -1,5 +1,6 @@
 package com.join.mobi.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,8 @@ import java.util.List;
  * Date: 14-9-8
  * Time: 上午10:29
  */
-public class ExamDto {
+public class ExamDto implements Serializable{
+
     /**
      * 测试ID
      */
@@ -35,6 +37,12 @@ public class ExamDto {
     private long durationLimit;
 
     /*************以下是个人考试详情***************/
+
+    /**
+     * 测试标题
+     */
+    private String title;
+
     /**
      * 测试创建时间
      */
@@ -138,11 +146,28 @@ public class ExamDto {
         this.duration = duration;
     }
 
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
     public List<ExamItem> getExamItems() {
         return examItems;
     }
 
     public void setExamItems(List<ExamItem> examItems) {
         this.examItems = examItems;
+    }
+
+    /**
+     * 用createTime - examTime
+     *
+     * @return
+     */
+    public String getCost() {
+        return "20";
     }
 }

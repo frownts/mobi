@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+
+    <!--HEAD-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/head_bg_red"
+            android:gravity="center_vertical">
+
+        <!--COUNTDOWN-->
+        <TextView
+                android:id="@+id/countDown"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="00:00"
+                android:textColor="@color/white"
+                android:textSize="18sp"/>
+
+        <!--TITLE-->
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:background="@drawable/gray_round"
+                android:gravity="center_vertical"
+                android:paddingLeft="10dp">
+
+            <TextView
+                    android:id="@+id/title"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="这里是标题"
+                    android:textSize="18sp"/>
+        </LinearLayout>
+    </LinearLayout>
+    <!--中间-->
+    <RelativeLayout
+            android:layout_width="fill_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+        <android.support.v4.view.ViewPager
+                android:id="@+id/viewpager"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:flipInterval="30"
+                android:persistentDrawingCache="animation"/>
+
+        <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/quater_round"
+                android:orientation="vertical"
+                android:gravity="bottom|right">
+
+            <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginRight="10dp"
+                    android:layout_marginBottom="10dp">
+
+                <TextView
+                        android:id="@+id/examNum"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="第$1题"
+                        android:textSize="17sp"/>
+
+                <TextView
+                        android:id="@+id/total"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/white"
+                        android:text="共$1题"
+                        android:textSize="17sp"/>
+            </LinearLayout>
+        </LinearLayout>
+
+    </RelativeLayout>
+
+    <!--底部部的半圈-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal|bottom">
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/gray_line"/>
+
+        <ImageView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:src="@drawable/half_round"/>
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@drawable/gray_line"/>
+    </LinearLayout>
+    <!--Footer-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center">
+        <!--试题列表-->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center">
+
+            <ImageView
+                    android:id="@+id/examList"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/red_list"/>
+
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/exam_list"/>
+        </LinearLayout>
+        <!--交卷按钮-->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center_horizontal">
+
+            <ImageView
+                    android:id="@+id/commitExam"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/commit_exam"/>
+        </LinearLayout>
+
+        <!--标记-->
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:orientation="vertical"
+                android:gravity="center_horizontal|bottom"
+                >
+
+            <ImageView
+                    android:id="@+id/mark"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/red_flag"/>
+
+            <TextView
+                    android:id="@+id/markTxt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/mark"/>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

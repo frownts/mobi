@@ -1,5 +1,6 @@
 package com.join.mobi.dto;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -7,7 +8,7 @@ import java.util.List;
  * Date: 14-9-8
  * Time: 下午12:54
  */
-public class ExamItem {
+public class ExamItem implements Serializable{
     private long itemId;
     private String title;
     private int type;

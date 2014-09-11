@@ -61,7 +61,7 @@ public class RPCTestData {
         return mainContentDto;
     }
 
-    public static CourseDetailDto getCourseDetailDto(){
+    public static CourseDetailDto getCourseDetailDto() {
         CourseDetailDto courseDetailDto = new CourseDetailDto();
         //详情
         courseDetailDto.setName("课程标题一");
@@ -154,7 +154,93 @@ public class RPCTestData {
         courseDetailDto.setReferences(referenceDtos);
 
 
-
         return courseDetailDto;
+    }
+
+
+    public static ExamDto getExamDetail() {
+        ExamDto examDto = new ExamDto();
+        examDto.setTitle("章节测试001");
+        examDto.setItemCount(5);
+        examDto.setDurationLimit(50);
+        examDto.setCreateTime("2013-12-12");
+        examDto.setExamTime("2014-12-12");
+        examDto.setCorrectPercent("66%");
+        examDto.setFinishPercent("100");
+        examDto.setDuration(16);
+
+        List<ExamItem> examItems = new ArrayList<ExamItem>(0);
+
+        ExamItem examItem = new ExamItem();
+        examItem.setItemId(1);
+        examItem.setTitle("这里是题目标题");
+        examItem.setType(1);
+        examItem.setCreateTime("2014-12-12");
+        examItems.add(examItem);
+
+        ItemOption option = new ItemOption();
+        option.setOptionId(1);
+        option.setOptionCode("t");
+        option.setTitle("答案一");
+
+        ItemOption option1 = new ItemOption();
+        option1.setOptionId(2);
+        option1.setOptionCode("f");
+        option1.setTitle("答案二");
+
+        List<ItemOption> options = new ArrayList<ItemOption>(0);
+        options.add(option);
+        options.add(option1);
+        examItem.setItemOptions(options);
+
+
+        ExamItem examItem1 = new ExamItem();
+        examItem1.setItemId(2);
+        examItem1.setTitle("这里是题目二标题");
+        examItem1.setType(1);
+        examItem1.setCreateTime("2014-12-12");
+        examItems.add(examItem1);
+
+        ItemOption option2 = new ItemOption();
+        option2.setOptionId(1);
+        option2.setOptionCode("t");
+        option2.setTitle("答案一");
+
+        ItemOption option3 = new ItemOption();
+        option3.setOptionId(2);
+        option3.setOptionCode("f");
+        option3.setTitle("答案二");
+
+        List<ItemOption> options1 = new ArrayList<ItemOption>(0);
+        options1.add(option2);
+        options1.add(option3);
+        examItem1.setItemOptions(options1);
+
+
+        examItem1 = new ExamItem();
+        examItem1.setItemId(3);
+        examItem1.setTitle("这里是题目三标题");
+        examItem1.setType(3);
+        examItem1.setCreateTime("2014-12-12");
+        examItems.add(examItem1);
+
+        option2 = new ItemOption();
+        option2.setOptionId(1);
+        option2.setOptionCode("t");
+        option2.setTitle("答案一");
+
+        option3 = new ItemOption();
+        option3.setOptionId(2);
+        option3.setOptionCode("f");
+        option3.setTitle("答案二");
+
+        options1 = new ArrayList<ItemOption>(0);
+        options1.add(option2);
+        options1.add(option3);
+        examItem1.setItemOptions(options1);
+
+
+        examDto.setExamItems(examItems);
+        return examDto;
     }
 }

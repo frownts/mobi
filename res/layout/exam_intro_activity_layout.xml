@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent">
+    <!--Title-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="50dp"
+            android:background="@drawable/head_bg_red"
+            android:gravity="center_vertical">
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></LinearLayout>
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="8"
+                android:gravity="center_horizontal">
+
+            <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/title"/>
+        </LinearLayout>
+
+        <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"></LinearLayout>
+    </LinearLayout>
+
+    <!--测试标题-->
+    <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="测试标题"
+            android:textSize="18sp"
+            android:textColor="@color/red"
+            android:layout_margin="10dp"/>
+
+    <!--共几点试题-->
+    <TextView
+            android:id="@+id/itemCount"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="共 0 道试题"/>
+
+    <!--共几点试题-->
+    <TextView
+            android:id="@+id/timeLimit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:text="限时 30:00"/>
+
+
+    <!--测试结果-->
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:minHeight="120dp"
+            android:background="@color/gray"
+            android:padding="10dp">
+
+        <TextView
+                android:id="@+id/examTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="您已经在 $1 完成了该测试，用时$2"/>
+
+        <TextView
+                android:id="@+id/finishPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:text="完成率 $1"/>
+
+        <TextView
+                android:id="@+id/correctPercent"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="正确率 $1"/>
+
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="@string/exam_notice"/>
+
+    </LinearLayout>
+
+    <!--说明-->
+    <TextView
+            android:id="@+id/intro"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginLeft="20dp"
+            android:text="@string/exam_intro"
+            android:textColor="@color/holo_blue_light"/>
+
+    <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:gravity="center_vertical">
+
+        <ImageView
+                android:id="@+id/back"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/return_course"
+                android:layout_gravity="center"/>
+
+        <ImageView
+                android:id="@+id/startExam"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:src="@drawable/start_exam"
+                android:layout_gravity="center"/>
+
+    </LinearLayout>
+
+</LinearLayout>

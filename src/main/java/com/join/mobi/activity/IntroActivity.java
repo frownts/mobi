@@ -19,6 +19,12 @@ public class IntroActivity extends BaseActivity {
 
     @AfterViews
     void afterViews() {
+        webView.getSettings().setJavaScriptEnabled(true);
+        webView.addJavascriptInterface(new Object(){
+            public void back(){
+                finish();
+            }
+        },"ji");
         webView.loadUrl("file:///android_asset/intro.html");
     }
 }

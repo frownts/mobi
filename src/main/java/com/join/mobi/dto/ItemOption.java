@@ -1,14 +1,18 @@
 package com.join.mobi.dto;
 
+import java.io.Serializable;
+
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-8
  * Time: 下午12:55
  */
-public class ItemOption {
+public class ItemOption implements Serializable {
     private long optionId;
     private String optionCode;
     private String title;
+
+    private boolean selected;
 
     public long getOptionId() {
         return optionId;
@@ -32,5 +36,13 @@ public class ItemOption {
 
     public void setTitle(String title) {
         this.title = title;
+    }
+
+    public boolean isSelected() {
+        return selected;
+    }
+
+    public void setSelected(boolean selected) {
+        this.selected = selected;
     }
 }
