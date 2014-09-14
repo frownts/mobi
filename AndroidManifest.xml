@@ -61,6 +61,8 @@
         <activity android:name="com.join.mobi.activity.IntroActivity_" />
         <activity android:name="com.join.mobi.activity.ExamActivity_" />
         <activity android:name="com.join.mobi.activity.ExamListActivity_" />
+        <activity android:name="com.join.mobi.activity.ExamResultActivity_" />
+        <activity android:name="com.join.mobi.activity.ShareActivity_" />
 
 
     </application>

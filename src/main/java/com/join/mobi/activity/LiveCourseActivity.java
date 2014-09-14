@@ -12,12 +12,12 @@ import com.BaseActivity;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.manager.CourseManager;
 import com.join.android.app.common.db.tables.Course;
+import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.adapter.LiveCourseAdapter;
 import com.join.mobi.dto.MainContentDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
-import com.join.mobi.rpc.RPCTestData;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -44,7 +44,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
     ListView listView;
 
     @ViewById
-    EditText loginName;
+    EditText search;
     @ViewById
     ImageView searchIcon;
 
@@ -52,7 +52,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
     List<Course> origLiveCourses = new ArrayList<Course>(0);
     List<Course> filterLiveCourses = new ArrayList<Course>(0);
-
+    MainContentDto mainContent;
 
     @AfterViews
     void afterViews() {
@@ -64,13 +64,13 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         listView.setAdapter(mAdapter);
 
         wrapEvent();
-
-//        swipeRefreshLayout.performClick();
+        showLoading();
+        retrieveDataFromServer();
     }
 
     private void wrapEvent() {
         //搜索图标事件，聚焦时，图片隐藏
-        loginName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+        search.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View view, boolean focused) {
                 if(focused){
@@ -81,7 +81,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         });
 
         //搜索事件
-        loginName.addTextChangedListener(new TextWatcher() {
+        search.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
 
@@ -116,10 +116,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
     @Background
     void retrieveDataFromServer() {
-//        MainContentDto mainContent = rpcService.getMainContent(myPref.userId().get());
-        MainContentDto mainContent = RPCTestData.getMainContentDto();
-
-        updateMainContent(mainContent);
+        mainContent = refreshMainData();
         updateView();
     }
 
@@ -129,6 +126,7 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         mAdapter.updateItems(origLiveCourses);
         mAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
+        dismissLoading();
     }
 
 
@@ -141,6 +139,13 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
     public void onRefresh() {
         Log.i(TAG, "onRefresh() called.");
         retrieveDataFromServer();
+    }
+
+    @UiThread
+    @Override
+    public void rpcException(Throwable e){
+        DialogManager.getInstance().makeText(this,getString(R.string.net_excption),DialogManager.DIALOG_TYPE_WARRING);
+        dismissLoading();
     }
 
 }

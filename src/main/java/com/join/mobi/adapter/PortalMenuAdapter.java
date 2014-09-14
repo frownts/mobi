@@ -10,6 +10,7 @@ import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.mobi.activity.LiveCourseActivity_;
 import com.join.mobi.activity.PortalActivity_;
+import com.join.mobi.activity.ShareActivity_;
 
 
 /**
@@ -89,6 +90,8 @@ public class PortalMenuAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     if(position==1){
                         LiveCourseActivity_.intent(mContext).start();
+                    }else if(position==2){
+                        ShareActivity_.intent(mContext).start();
                     }else if(position==7)
                         ((PortalActivity_)mContext).showSetting();
                 }

@@ -57,6 +57,38 @@ public class RPCTestData {
 
         mainContentDto.setCourses(courseDtos);
 
+        //共享资源
+        List<ResourceShareDto> resourceShares = new ArrayList<ResourceShareDto>(0);
+        ResourceShareDto share = new ResourceShareDto();
+        share.setName("视频一");
+        share.setFileSize(1232434);
+        share.setType(1);
+        share.setUrl("http://xx.mp4");
+        resourceShares.add(share);
+
+        share = new ResourceShareDto();
+        share.setName("音乐");
+        share.setFileSize(1232434);
+        share.setType(2);
+        share.setUrl("http://xx.mp4");
+        resourceShares.add(share);
+
+        share = new ResourceShareDto();
+        share.setName("pdf");
+        share.setFileSize(1232434);
+        share.setType(3);
+        share.setUrl("http://xx.mp4");
+        resourceShares.add(share);
+
+        share = new ResourceShareDto();
+        share.setName("img");
+        share.setFileSize(1232434);
+        share.setType(4);
+        share.setUrl("http://xx.mp4");
+        resourceShares.add(share);
+
+        mainContentDto.setResourceShares(resourceShares);
+
 
         return mainContentDto;
     }

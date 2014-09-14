@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.os.CountDownTimer;
 import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -10,22 +11,22 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
+import com.join.android.app.common.manager.DialogManager;
 import com.join.mobi.adapter.ExamView;
 import com.join.mobi.adapter.ExamViewPagerAdapter;
 import com.join.mobi.dto.ExamDto;
 import com.join.mobi.dto.ExamItem;
 import com.join.mobi.dto.ItemOption;
 import com.join.mobi.pref.PrefDef_;
+import com.join.mobi.rpc.ExamResult;
 import com.join.mobi.rpc.RPCService;
 import com.join.mobi.utils.MarkerMap;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.text.DecimalFormat;
+import java.util.*;
 
 /**
  * User: mawanjin@join-cn.com
@@ -89,7 +90,9 @@ public class ExamActivity extends BaseActivity {
     private int CurrentPageIndex = 0;//当前页面下标
     ExamItem currentExamItem;
 
-    String startTime;
+    Date startTime = new Date();
+    MyCountDownTimer myCountDownTimer;
+    boolean hasFinished = false;
 
     @AfterViews
     void afterViews() {
@@ -214,23 +217,11 @@ public class ExamActivity extends BaseActivity {
         }
     }
 
-    @Background
+
     void startCountDown() {
         count = examDto.getDurationLimit();
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    for (long i = count; i >= 0; i--) {
-                        updatCountDown(i + "");
-                        Thread.sleep(1000);
-                    }
-
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
+        myCountDownTimer = new MyCountDownTimer(count * 1000);
+        myCountDownTimer.start();
     }
 
     @UiThread
@@ -264,11 +255,86 @@ public class ExamActivity extends BaseActivity {
      */
     @Click
     void commitExamClicked() {
-        String correctPercent = "50";
-        String finishPersenct = "80";
-        String startTime = "2014-12-12 12:12:12";
-        String duration = "80";
-        rpcService.submitExamResult(myPref.userId().get(), examDto.getExamId() + "", correctPercent, finishPersenct, startTime, duration);
+        //计算结果
+        final ExamResult examResult = speculateExamResult();
+        if(!hasFinished){
+            DialogManager.getInstance().createNormalDialog(this,"交卷提醒","还有尚未完成的试题,确定要交卷吗?提示:列表中显示为黑色粗体的试题是尚未完成的。");
+            DialogManager.getInstance().setOk("不,继续完成试题",new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogManager.getInstance().dismiss();
+                }
+            });
+            DialogManager.getInstance().setCancel("是的,我要交卷",new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogManager.getInstance().dismiss();
+                    sumit(examResult);
+                }
+            });
+
+        }
+
+
+
+    }
+
+    /**
+     * 将结果提交到服务器
+     */
+    @Background
+    void sumit(ExamResult examResult) {
+    //        rpcService.submitExamResult(myPref.userId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
+        showExamResult(examResult);
+    }
+
+    @UiThread
+    void showExamResult(ExamResult examResult){
+        ExamResultActivity_.intent(this).examDto(examDto).examResult(examResult).start();
+        finish();
+    }
+
+    private ExamResult speculateExamResult() {
+        int finishNum = 0;
+        int correctNum = 0;
+
+        List<ExamItem> examItems = examDto.getExamItems();
+        for (ExamItem examItem : examItems) {
+            boolean selected = false;
+            boolean correct = true;
+            List<ItemOption> options = examItem.getItemOptions();
+
+            for (ItemOption option : options) {
+                if (option.isSelected()) {
+                    selected = true;
+                } else {
+                    if (option.getOptionCode().equals("t")) correct = false;
+                }
+            }
+
+            if (correct) {correctNum++;examItem.setCorrect(true);}
+            if (selected) finishNum++;
+
+        }
+
+        if(finishNum==examItems.size())hasFinished = true;
+        float finishPercent = ((float)finishNum / (float)examItems.size())*100 ;
+        float correctPercent = ((float)correctNum / (float)examItems.size())*100 ;
+
+        DecimalFormat decimalFormat=new DecimalFormat(".00");
+
+
+        ExamResult examResult = new ExamResult();
+        examResult.setCorrectNum(correctNum+"");
+        examResult.setIncorrectNum((examItems.size()-correctNum)+"");
+        examResult.setCorrectPercent(decimalFormat.format(correctPercent));
+        examResult.setFinishPersenct(decimalFormat.format(finishPercent));
+        examResult.setStartTime(startTime.toLocaleString());
+
+        examResult.setDuration(count - Integer.parseInt(countDown.getText().toString()) + "");
+        return examResult;
+
+
     }
 
 
@@ -360,5 +426,22 @@ public class ExamActivity extends BaseActivity {
             reload();
         }
 
+    }
+    class MyCountDownTimer extends CountDownTimer {
+
+        public MyCountDownTimer(long millisInFuture) {
+//            super(millisInFuture, countDownInterval);
+            super(millisInFuture, 1000);
+        }
+
+        @Override
+        public void onTick(long l) {
+            updatCountDown((l/1000)+"");
+        }
+
+        @Override
+        public void onFinish() {
+            DialogManager.getInstance().makeText(getBaseContext(), "timeOut", DialogManager.DIALOG_TYPE_OK);
+        }
     }
 }

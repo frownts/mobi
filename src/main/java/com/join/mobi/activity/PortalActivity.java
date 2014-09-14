@@ -11,10 +11,9 @@ import com.join.android.app.common.manager.DialogManager;
 import com.join.mobi.adapter.PortalMenuAdapter;
 import com.join.mobi.customview.MySpinner;
 import com.join.mobi.pref.PrefDef_;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.Click;
-import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.ViewById;
+import com.join.mobi.rpc.RPCService;
+import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.ArrayList;
@@ -33,18 +32,21 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     GridView gridViewMenu;
     @ViewById(resName = "imgLogin")
     ImageView imgLogin;
-
     @ViewById
     RelativeLayout userNameContainer;
     @ViewById
     TextView userName;
 
+    @RestService
+    RPCService rpcService;
+    Dialog loginDialog;
 
     long waitTime = 2000;
     long touchTime = 0;
     ArrayList<String> data = new ArrayList<String>();
     EditText branch;
     PortalMenuAdapter menuAdapter;
+
 
     @AfterViews
     void afterViews() {
@@ -129,19 +131,19 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @Click
     void imgLoginClicked() {
-        final Dialog dialog = new Dialog(this);
+        loginDialog = new Dialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_login, null);
         final EditText loginName = (EditText) view.findViewById(R.id.loginName);
-        EditText passWord = (EditText) view.findViewById(R.id.passWord);
-        EditText branch = (EditText) view.findViewById(R.id.branch);
+        final EditText passWord = (EditText) view.findViewById(R.id.passWord);
+        final EditText branch = (EditText) view.findViewById(R.id.branch);
 
         //登录
         view.findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                myPref.userId().put(loginName.getText().toString());
-                reloadAfterLogin("张三");
-                dialog.dismiss();
+                showLoading();
+                doLogin(loginName.getText().toString(),passWord.getText().toString(),branch.getText().toString());
+
             }
         });
 
@@ -165,9 +167,9 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         spinner.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
 
 
-        dialog.setCancelable(false);
-        dialog.show();
-        Window dialogWindow = dialog.getWindow();
+        loginDialog.setCancelable(false);
+        loginDialog.show();
+        Window dialogWindow = loginDialog.getWindow();
         dialogWindow.setBackgroundDrawable(new ColorDrawable(0));
         WindowManager.LayoutParams lp = dialogWindow.getAttributes();
         dialogWindow.setGravity(Gravity.CENTER);
@@ -176,16 +178,30 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
 //        lp.alpha = 0.7f; // 透明度
         dialogWindow.setAttributes(lp);
-        dialog.setContentView(view);
+        loginDialog.setContentView(view);
 
         TextView cancel = (TextView) view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dialog.dismiss();
+                loginDialog.dismiss();
             }
         });
 
+    }
+
+    @Background
+     void doLogin(String userId,String password,String companyId) {
+        myPref.userId().put(userId);
+
+        try{
+//            rpcService.login(userId,password,companyId);
+        }catch (Exception e){
+            rpcException();
+            return;
+        }
+
+        reloadAfterLogin(userId);
     }
 
 
@@ -249,7 +265,10 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         }
     }
 
+    @UiThread
     public void reloadAfterLogin(String _userName) {
+        dismissLoading();
+        loginDialog.dismiss();
         createDB(myPref.userId().get());
         menuAdapter.setLogin(true);
         menuAdapter.notifyDataSetChanged();
@@ -263,6 +282,12 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         menuAdapter.notifyDataSetChanged();
         userNameContainer.setVisibility(View.GONE);
         imgLogin.setEnabled(true);
+    }
+
+    @UiThread
+    public void rpcException(){
+        DialogManager.getInstance().makeText(this,getString(R.string.net_excption),DialogManager.DIALOG_TYPE_WARRING);
+        dismissLoading();
     }
 
     class SpinnerOnItemSelectedListener implements AdapterView.OnItemSelectedListener {

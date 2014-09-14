@@ -76,7 +76,7 @@ public class ExamIntroActivity extends BaseActivity {
     @Click
     void startExamClicked(){
         ExamActivity_.intent(this).examDto(examDto).start();
-//        DialogManager.getInstance().makeText(this,"start exam ..go go go ",DialogManager.DIALOG_TYPE_OK);
+        finish();
     }
 
     @Click

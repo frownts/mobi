@@ -17,7 +17,7 @@ public class ResourceShare {
     @DatabaseField
     private long rsId;
     @DatabaseField
-    private long name;
+    private String name;
     @DatabaseField
     private int type;
     @DatabaseField
@@ -47,11 +47,11 @@ public class ResourceShare {
         this.rsId = rsId;
     }
 
-    public long getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(long name) {
+    public void setName(String name) {
         this.name = name;
     }
 

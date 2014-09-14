@@ -14,7 +14,14 @@ public class ExamItem implements Serializable{
     private int type;
     private String createTime;
 
+
     private List<ItemOption> itemOptions;
+
+    private boolean isCorrect;
+    /**
+     * 用户选择的答案
+     */
+    private List<String> userSelected;
 
     public long getItemId() {
         return itemId;
@@ -54,6 +61,22 @@ public class ExamItem implements Serializable{
 
     public void setItemOptions(List<ItemOption> itemOptions) {
         this.itemOptions = itemOptions;
+    }
+
+    public List<String> getUserSelected() {
+        return userSelected;
+    }
+
+    public void setUserSelected(List<String> userSelected) {
+        this.userSelected = userSelected;
+    }
+
+    public boolean isCorrect() {
+        return isCorrect;
+    }
+
+    public void setCorrect(boolean isCorrect) {
+        this.isCorrect = isCorrect;
     }
 }
 

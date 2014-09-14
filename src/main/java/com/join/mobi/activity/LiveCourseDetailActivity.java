@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.dialog.CommonDialogLoading;
 import com.join.mobi.dto.CourseDetailDto;
 import com.join.mobi.fragment.LiveCourseChapterFragment_;
 import com.join.mobi.fragment.LiveCourseDetailFragment_;
@@ -39,6 +40,8 @@ public class LiveCourseDetailActivity extends FragmentActivity {
     @ViewById
     TextView detailTab;
     @ViewById
+    TextView title;
+    @ViewById
     TextView chapterTab;
     @ViewById
     TextView examTab;
@@ -57,6 +60,9 @@ public class LiveCourseDetailActivity extends FragmentActivity {
     @Extra(EXTRA_COURSE_ID)
     String courseId;
 
+    @Extra
+    String name;
+
     LiveCourseDetailFragment_ liveCourseDetailFragment;
     LiveCourseChapterFragment_ liveCourseChapterFragment;
     LiveCourseExamFragment_ liveCourseExamFragment;
@@ -66,11 +72,16 @@ public class LiveCourseDetailActivity extends FragmentActivity {
     Fragment currentFragment;
 
     CourseDetailDto courseDetail;
+    CommonDialogLoading loading;
 
     @AfterViews
     void afterViews() {
+        title.setText(name);
+
         //加载数据
         retrieveDataFromServer();
+        loading = new CommonDialogLoading(this);
+        loading.show();
     }
 
     @Background
@@ -78,6 +89,7 @@ public class LiveCourseDetailActivity extends FragmentActivity {
 //        courseDetail = rpcService.getCourseDetail(myPref.userId().get(),courseId);
         courseDetail = RPCTestData.getCourseDetailDto();
         afterRetrieveDataFromServer();
+
     }
 
     @UiThread
@@ -100,6 +112,7 @@ public class LiveCourseDetailActivity extends FragmentActivity {
         currentFragment = liveCourseDetailFragment;
 
         transaction.commit();
+        loading.dismiss();
     }
 
     @Click
@@ -149,4 +162,12 @@ public class LiveCourseDetailActivity extends FragmentActivity {
     public CourseDetailDto getCourseDetail() {
         return courseDetail;
     }
+
+
+//    @Override
+//    protected void onDestroy() {
+//        loading = null;
+//        super.onDestroy();
+//    }
+
 }

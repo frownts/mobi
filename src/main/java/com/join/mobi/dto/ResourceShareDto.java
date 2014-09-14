@@ -20,7 +20,7 @@ public class ResourceShareDto {
     /**
      * 上传资料-保险001,(共享资源标题)
      */
-    private long name;
+    private String name;
 
     /**
      * 共享资源ID (共享资源类型：1—视频，2—音乐，3—PDF，4—照片)
@@ -48,11 +48,11 @@ public class ResourceShareDto {
         this.rsId = rsId;
     }
 
-    public long getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(long name) {
+    public void setName(String name) {
         this.name = name;
     }
 

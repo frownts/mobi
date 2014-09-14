@@ -70,7 +70,7 @@ public class LiveCourseAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        Course course = liveCourses.get(position);
+        final Course course = liveCourses.get(position);
         GirdHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.livecourse_listview_layout, null);
@@ -93,7 +93,7 @@ public class LiveCourseAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LiveCourseDetailActivity_.intent(mContext).start();
+                LiveCourseDetailActivity_.intent(mContext).courseId(course.getId()+"").name(course.getTitle()).start();
             }
         });
 

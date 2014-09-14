@@ -20,7 +20,7 @@ import java.io.IOException;
  * Date: 14-9-8
  * Time: 下午7:54
  */
-@Rest(rootUrl = " http://192.168.1.190/app/", converters = MappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
+@Rest(rootUrl = "http://192.168.1.190/app/", converters = MappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
 public interface RPCService {
 
     /**

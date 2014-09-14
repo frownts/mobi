@@ -41,6 +41,21 @@
     <string name="mark">做记号</string>
     <string name="exam_list">试题列表</string>
     <string name="exam_notice">注：继续测试会覆盖以前的记录</string>
+    <string name="test_duration">测试用时</string>
+    <string name="test_correct_num">正确题目数</string>
+    <string name="test_incorrect_num">错误题目数</string>
+    <string name="test_correct_percent">正确率</string>
+    <string name="correct_answer">正确答案: </string>
+    <string name="your_answer">您的答案</string>
+    <string name="net_excption">网络异常</string>
+    <string name="share_resource">共享资源</string>
+    <string name="img">图片</string>
+    <string name="select_all">全选</string>
+    <string name="doc">文档</string>
+    <string name="audio">音频</string>
+    <string name="video">视频</string>
+    <string name="share_download_hint">资源下载已经开始，可以从主界面点击[下载任务] 查看进度</string>
+    <string name="share_downloading_hint">该资源已经下载或正在下载，请到本地资源和下载任务中查看</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

@@ -7,8 +7,10 @@ import com.join.android.app.common.db.tables.Course;
 import com.join.android.app.common.db.tables.Live;
 import com.join.android.app.common.db.tables.Notice;
 import com.join.android.app.common.db.tables.ResourceShare;
+import com.join.android.app.common.dialog.CommonDialogLoading;
 import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
+import com.join.mobi.rpc.RPCTestData;
 
 import java.util.List;
 
@@ -20,6 +22,7 @@ import java.util.List;
 public class BaseActivity extends Activity {
 
     private DatabaseHelper databaseHelper = null;
+    private CommonDialogLoading loading;
 
     @Override
     protected void onDestroy() {
@@ -84,6 +87,7 @@ public class BaseActivity extends Activity {
 
         }
 
+        ResourceShareManager.getInstance().deleteAll();
         if (resourceShareDtos != null) {
             for (ResourceShareDto resourceShareDto : resourceShareDtos) {
                 ResourceShare resourceShare = new ResourceShare();
@@ -97,6 +101,7 @@ public class BaseActivity extends Activity {
 
         }
 
+        NoticeManager.getInstance().deleteAll();
         if (noticeDtos != null) {
             for (NoticeDto noticeDto : noticeDtos) {
                 Notice notice = new Notice();
@@ -112,5 +117,40 @@ public class BaseActivity extends Activity {
 
 
     }
+
+
+    public void showLoading() {
+        loading = new CommonDialogLoading(this);
+        loading.show();
+    }
+
+    public void dismissLoading() {
+        if (loading == null) return;
+        loading.dismiss();
+    }
+
+
+    public MainContentDto refreshMainData() {
+        MainContentDto mainContent;
+        try {
+            mainContent = RPCTestData.getMainContentDto();
+//          mainContent = rpcService.getMainContent(myPref.userId().get());
+
+        } catch (Throwable e) {
+            try {
+                rpcException(e);
+            } catch (Throwable throwable) {
+                throwable.printStackTrace();
+            }
+            return null;
+        }
+
+        updateMainContent(mainContent);
+        return mainContent;
+    }
+
+    public  void rpcException(Throwable e) throws Throwable {
+        throw e;
+    };
 
 }
