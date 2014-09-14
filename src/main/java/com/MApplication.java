@@ -1,12 +1,12 @@
 package com;
 
-import android.app.Application;
 import com.join.android.app.common.db.manager.DBManager;
 import com.join.android.app.common.utils.ImageOptionFactory;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.LruMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.php25.PDownload.DownloadApplication;
 import org.androidannotations.annotations.EApplication;
 
 
@@ -16,7 +16,7 @@ import org.androidannotations.annotations.EApplication;
  * Time: 下午4:58
  */
 @EApplication
-public class MApplication extends Application {
+public class MApplication extends DownloadApplication {
     @Override
     public void onCreate() {
         super.onCreate();

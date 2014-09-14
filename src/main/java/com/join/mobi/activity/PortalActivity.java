@@ -12,6 +12,7 @@ import com.join.mobi.adapter.PortalMenuAdapter;
 import com.join.mobi.customview.MySpinner;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
+import com.php25.PDownload.DownloadApplication;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -50,6 +51,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @AfterViews
     void afterViews() {
+        if(myPref.uncompleteDownload().get())((DownloadApplication)getApplicationContext()).startAllUnCompleteDownload();
+
         menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().get(), new PortalMenuAdapter.NeedLogin() {
             @Override
             public void login() {

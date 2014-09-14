@@ -120,6 +120,11 @@
             <version>3.3.1</version>
         </dependency>
 
+        <dependency>
+            <groupId>com.php25.tools</groupId>
+            <artifactId>ptools</artifactId>
+            <version>0.1-SNAPSHOT</version>
+        </dependency>
 
     </dependencies>
 

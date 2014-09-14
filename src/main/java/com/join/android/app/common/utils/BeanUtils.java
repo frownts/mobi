@@ -60,7 +60,13 @@ public class BeanUtils {
                             setmethod.invoke(dist, obj);
                         }
 
-                        if (StringUtils.containsIgnoreCase(typeNameOfOrig, "int") && StringUtils.containsIgnoreCase(typeNameOfdist, "float")) {
+                        if (StringUtils.containsIgnoreCase(typeNameOfOrig, "Integer") && StringUtils.containsIgnoreCase(typeNameOfdist, "Integer")) {
+
+                            Method setmethod = reflectionUtils.getDeclaredMethod(dist, addSetString(field.getName()), distType);
+                            setmethod.invoke(dist, obj);
+                        }
+
+                        if (StringUtils.containsIgnoreCase(typeNameOfOrig, "boolean") && StringUtils.containsIgnoreCase(typeNameOfdist, "boolean")) {
 
                             Method setmethod = reflectionUtils.getDeclaredMethod(dist, addSetString(field.getName()), distType);
                             setmethod.invoke(dist, obj);
@@ -91,6 +97,9 @@ public class BeanUtils {
 
     public static String addGetString(String fieldName) {
         StringBuffer sb = new StringBuffer();
+        if(fieldName.startsWith("is")){
+            return fieldName;
+        }
         sb.append("get");
         sb.append(fieldName.substring(0, 1).toUpperCase());
         sb.append(fieldName.substring(1));
@@ -98,6 +107,9 @@ public class BeanUtils {
     }
 
     public static String addSetString(String fieldName) {
+        if(fieldName.startsWith("is")){
+            return  fieldName.replace("is","set");
+        }
         StringBuffer sb = new StringBuffer();
         sb.append("set");
         sb.append(fieldName.substring(0, 1).toUpperCase());

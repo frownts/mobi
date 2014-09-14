@@ -56,6 +56,9 @@
     <string name="video">视频</string>
     <string name="share_download_hint">资源下载已经开始，可以从主界面点击[下载任务] 查看进度</string>
     <string name="share_downloading_hint">该资源已经下载或正在下载，请到本地资源和下载任务中查看</string>
+    <string name="del">删除</string>
+    <string name="sail">启动</string>
+    <string name="local_resource">本地资源</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

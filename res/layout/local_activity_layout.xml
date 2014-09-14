@@ -18,24 +18,10 @@
                 android:background="@drawable/head_bg_red"
                 android:gravity="center_vertical">
 
-
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right">
-
-                <ImageView
-                        android:id="@+id/trash"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/trash"/>
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_weight="2"
                     android:gravity="right">
 
                 <ImageView
@@ -55,7 +41,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:text="@string/local_resource"
+                        android:text="@string/share_resource"
                         android:textSize="20sp"/>
             </LinearLayout>
 

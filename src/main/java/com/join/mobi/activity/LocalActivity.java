@@ -8,14 +8,12 @@ import android.view.View;
 import android.widget.*;
 import com.BaseActivity;
 import com.join.android.app.common.R;
-import com.join.android.app.common.db.manager.ResourceShareManager;
-import com.join.android.app.common.db.tables.ResourceShare;
 import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.BeanUtils;
-import com.join.mobi.adapter.ShareAdapter;
-import com.join.mobi.dto.MainContentDto;
+import com.join.mobi.adapter.LocalAdapter;
 import com.join.mobi.enums.Dtype;
 import com.php25.PDownload.DownloadApplication;
+import com.php25.PDownload.DownloadFile;
 import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.*;
 
@@ -28,7 +26,7 @@ import java.util.*;
  */
 
 @EActivity(R.layout.share_activity_layout)
-public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
+public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     @ViewById
     LinearLayout titleContainer;
@@ -39,15 +37,16 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
     @ViewById
     ImageView filterCup;
     @ViewById
+    ImageView trash;
+    @ViewById
     GridView listView;
     @ViewById
     SwipeRefreshLayout swipeRefreshLayout;
 
-    MainContentDto mainContent = null;
-    ShareAdapter shareAdapter;
+    LocalAdapter localAdapter;
 
-    List<ResourceShare> origResourceShare = new ArrayList<ResourceShare>(0);
-    List<ResourceShare> filterResourceShare = new ArrayList<ResourceShare>(0);
+    List<DownloadFile> origDownloadFile = new ArrayList<DownloadFile>(0);
+    List<DownloadFile> filterDownloadFile = new ArrayList<DownloadFile>(0);
     PopupWindow popFilter;
     PopupWindow popDownloadHint;
 
@@ -57,52 +56,25 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        shareAdapter = new ShareAdapter(this);
-        origResourceShare = ResourceShareManager.getInstance().findAll();
+        localAdapter = new LocalAdapter(this);
+        origDownloadFile = DownloadTool.getAllDownloaded((DownloadApplication) getApplicationContext(), Dtype.Share);
 
-        listView.setAdapter(shareAdapter);
+        listView.setAdapter(localAdapter);
 
         showLoading();
         retrieveDataFromServer();
     }
 
     @ItemClick
-    void listViewItemClicked(ResourceShare resourceShare) {
-        View view = LayoutInflater.from(this).inflate(R.layout.pop_share_download, null);
-        TextView textView = (TextView) view.findViewById(R.id.hint);
-
-        //检查是否正在下载
-        boolean isDownloading = DownloadTool.isDownloading((DownloadApplication) getApplicationContext(), resourceShare.getUrl());
-        if (isDownloading) {
-            textView.setText(getString(R.string.share_downloading_hint));
-        } else {
-            DownloadTool.startDownload((DownloadApplication) getApplicationContext(), resourceShare.getUrl(), resourceShare.getName(), Dtype.Share,resourceShare.getType()+"");
-            textView.setText(getString(R.string.share_download_hint));
-        }
-
-        popDownloadHint = new PopupWindow(view, LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT, false);
-        popDownloadHint.setOutsideTouchable(true);
-        popDownloadHint.showAsDropDown(titleContainer);
-
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                try {
-                    Thread.sleep(3000);
-                    dismissDownloadHint();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-            }
-        }).start();
-
+    void listViewItemClicked(DownloadFile DownloadFile) {
+        DialogManager.getInstance().makeText(this, "open file", DialogManager.DIALOG_TYPE_OK);
     }
 
     @UiThread
     void dismissDownloadHint() {
-        try{
+        try {
             if (popDownloadHint != null && popDownloadHint.isShowing()) popDownloadHint.dismiss();
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -110,16 +82,15 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     @Background
     void retrieveDataFromServer() {
-        mainContent = refreshMainData();
         updateView();
     }
 
 
     @UiThread
     public void updateView() {
-        origResourceShare = ResourceShareManager.getInstance().findAll();
-        shareAdapter.setItems(origResourceShare);
-        shareAdapter.notifyDataSetChanged();
+        origDownloadFile = DownloadTool.getAllDownloaded((DownloadApplication) getApplicationContext(), Dtype.Share);
+        localAdapter.setItems(origDownloadFile);
+        localAdapter.notifyDataSetChanged();
         dismissLoading();
         swipeRefreshLayout.setRefreshing(false);
     }
@@ -168,12 +139,6 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     }
 
-    @UiThread
-    @Override
-    public void rpcException(Throwable e) {
-        DialogManager.getInstance().makeText(this, getString(R.string.net_excption), DialogManager.DIALOG_TYPE_WARRING);
-        dismissLoading();
-    }
 
     @Override
     public void onRefresh() {
@@ -201,21 +166,21 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                filterResourceShare.clear();
+                filterDownloadFile.clear();
 
                 if (charSequence.toString().equals("")) {
-                    shareAdapter.setItems(origResourceShare);
+                    localAdapter.setItems(origDownloadFile);
                 } else {
-                    for (ResourceShare share : origResourceShare) {
-                        if (share.getName().contains(charSequence)) {
-                            ResourceShare _share = new ResourceShare();
+                    for (DownloadFile share : origDownloadFile) {
+                        if (share.getShowName().contains(charSequence)) {
+                            DownloadFile _share = new DownloadFile();
                             BeanUtils.copyProperties(_share, share);
-                            filterResourceShare.add(_share);
+                            filterDownloadFile.add(_share);
                         }
                     }
-                    shareAdapter.setItems(filterResourceShare);
+                    localAdapter.setItems(filterDownloadFile);
                 }
-                shareAdapter.notifyDataSetChanged();
+                localAdapter.notifyDataSetChanged();
             }
 
             @Override
@@ -228,21 +193,22 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
 
     void filterByType() {
-        filterResourceShare.clear();
+        filterDownloadFile.clear();
 
         Iterator keys = types.keySet().iterator();
         while (keys.hasNext()) {
             int _type = types.get(keys.next());
-            for (ResourceShare share : origResourceShare) {
-                if (_type == share.getType()) {
-                    ResourceShare _share = new ResourceShare();
+            for (DownloadFile share : origDownloadFile) {
+
+                if (_type == Integer.parseInt(share.getFileType())) {
+                    DownloadFile _share = new DownloadFile();
                     BeanUtils.copyProperties(_share, share);
-                    filterResourceShare.add(_share);
+                    filterDownloadFile.add(_share);
                 }
             }
         }
-        shareAdapter.setItems(filterResourceShare);
-        shareAdapter.notifyDataSetChanged();
+        localAdapter.setItems(filterDownloadFile);
+        localAdapter.notifyDataSetChanged();
     }
 
     @Override

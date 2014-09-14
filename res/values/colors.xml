@@ -13,4 +13,6 @@
     <color name="spinner_list_select">#7BCBEE</color>
     <color name="spinner_list_divider">#D8D8D8</color>
     <color name="holo_blue_light">#ff33b5e5</color>
+    <color name="green">#00df1f</color>
+    <color name="goldYellow">#deb423</color>
 </resources>
