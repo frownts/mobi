@@ -93,7 +93,7 @@ public class LiveCourseAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LiveCourseDetailActivity_.intent(mContext).courseId(course.getId()+"").name(course.getTitle()).start();
+                LiveCourseDetailActivity_.intent(mContext).url(course.getUrl()).courseId(course.getId()+"").name(course.getTitle()).start();
             }
         });
 

@@ -1,5 +1,5 @@
 #
-# generated on 2014/09/08 11:25:21
+# generated on 2014/09/17 01:25:20
 #
 # --table-start--
 dataClass=com.join.android.app.common.db.tables.Account
@@ -16,6 +16,48 @@ indexName=account_name_idx
 # --field-start--
 fieldName=orders
 foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.join.android.app.common.db.tables.Chapter
+tableName=chapter
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=chapterId
+# --field-end--
+# --field-start--
+fieldName=title
+# --field-end--
+# --field-start--
+fieldName=chapterDuration
+# --field-end--
+# --field-start--
+fieldName=learnedTime
+# --field-end--
+# --field-start--
+fieldName=bookmark
+# --field-end--
+# --field-start--
+fieldName=filesize
+# --field-end--
+# --field-start--
+fieldName=playUrl
+# --field-end--
+# --field-start--
+fieldName=downloadUrl
+# --field-end--
+# --field-start--
+fieldName=localCourse
+columnName=localcourse_id
+foreign=true
+foreignAutoRefresh=true
+foreignAutoCreate=true
 # --field-end--
 # --table-fields-end--
 # --table-end--
@@ -80,6 +122,37 @@ fieldName=url
 # --table-end--
 #################################
 # --table-start--
+dataClass=com.join.android.app.common.db.tables.LocalCourse
+tableName=localcourse
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=learningTimes
+# --field-end--
+# --field-start--
+fieldName=title
+# --field-end--
+# --field-start--
+fieldName=courseId
+# --field-end--
+# --field-start--
+fieldName=url
+# --field-end--
+# --field-start--
+fieldName=chapters
+foreignCollection=true
+# --field-end--
+# --field-start--
+fieldName=references
+foreignCollection=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
 dataClass=com.join.android.app.common.db.tables.Notice
 tableName=notice
 # --table-fields-start--
@@ -122,6 +195,44 @@ fieldName=date
 # --field-start--
 fieldName=account
 columnName=account_id
+foreign=true
+foreignAutoRefresh=true
+foreignAutoCreate=true
+# --field-end--
+# --table-fields-end--
+# --table-end--
+#################################
+# --table-start--
+dataClass=com.join.android.app.common.db.tables.Reference
+tableName=reference
+# --table-fields-start--
+# --field-start--
+fieldName=id
+generatedId=true
+# --field-end--
+# --field-start--
+fieldName=referenceId
+indexName=reference_referenceId_idx
+# --field-end--
+# --field-start--
+fieldName=title
+indexName=reference_title_idx
+# --field-end--
+# --field-start--
+fieldName=fileSize
+indexName=reference_fileSize_idx
+# --field-end--
+# --field-start--
+fieldName=type
+indexName=reference_type_idx
+# --field-end--
+# --field-start--
+fieldName=url
+indexName=reference_url_idx
+# --field-end--
+# --field-start--
+fieldName=localCourse
+columnName=localcourse_id
 foreign=true
 foreignAutoRefresh=true
 foreignAutoCreate=true

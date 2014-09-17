@@ -69,6 +69,7 @@ public class BaseManager<E> {
         return dao.queryForFieldValues(params);
     }
 
+
     /**
      * @param start     begin from 0
      * @param size      the size of per page

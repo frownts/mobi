@@ -30,6 +30,9 @@ public class DownloadFile implements Serializable {
     private boolean isDownloadingNow;
 
 
+    private String percent;
+
+
 
     public Long getId() {
         return id;
@@ -157,6 +160,14 @@ public class DownloadFile implements Serializable {
 
     public void setDownloading(boolean downloading) {
         this.downloading = downloading;
+    }
+
+    public String getPercent() {
+        return percent;
+    }
+
+    public void setPercent(String percent) {
+        this.percent = percent;
     }
 
     @Override

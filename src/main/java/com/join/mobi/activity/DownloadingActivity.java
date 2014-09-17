@@ -14,11 +14,14 @@ import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.*;
 
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.Future;
 
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-14
  * Time: 下午5:37
+ * 下载任务
  */
 
 @EActivity(R.layout.downloading_activity_layout)
@@ -43,9 +46,16 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
         downloadAdapter = new DownloadAdapter(this);
         listView.setAdapter(downloadAdapter);
         retrieveDataFromDB();
+
     }
 
-    private void retrieveDataFromDB() {
+    @UiThread
+    public void refreshAdapter() {
+        downloadAdapter.notifyDataSetChanged();
+    }
+
+    @UiThread()
+    void retrieveDataFromDB() {
         List<DownloadFile> downloadFiles = DownloadTool.getAllDownloadingTask((DownloadApplication) getApplicationContext());
 //        List<DownloadFile> downloadFiles = DownloadTool.getAllDownload((DownloadApplication) getApplicationContext());
         downloadAdapter.setItems(downloadFiles);
@@ -70,6 +80,12 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
             public void onOpAction() {
                 if (downloadFile.isDownloadingNow()) {//执行暂停操作
                     DownloadTool.stopDownload((DownloadApplication) (getApplicationContext()), downloadFile.getUrl());
+                    Map<String, Future> futureMap = ((DownloadApplication) getApplicationContext()).getFutureMap();
+                    futureMap.clear();
+                    for (DownloadFile file : downloadAdapter.getItems()) {
+                        DownloadTool.stopUpdateProgress((DownloadApplication) getApplicationContext(), file);
+                    }
+                    downloadAdapter.notifyDataSetChanged();
                 } else {//执行启动操作
                     Dtype dtype = Dtype.Share;
                     if (downloadFile.getDtype().equals(Dtype.Share)) {
@@ -79,10 +95,11 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
                     } else if (downloadFile.getDtype().equals(Dtype.Rference)) {
                         dtype = Dtype.Rference;
                     }
-                    DownloadTool.startDownload((DownloadApplication) (getApplicationContext()), downloadFile.getUrl(), downloadFile.getShowName(), dtype,downloadFile.getFileType());
+                    DownloadTool.startDownload((DownloadApplication) (getApplicationContext()), downloadFile.getUrl(), downloadFile.getShowName(), dtype, downloadFile.getFileType());
+                    retrieveDataFromDB();
                 }
                 downloadOpDialog.dismiss();
-                retrieveDataFromDB();
+
             }
         });
         downloadOpDialog.show();
@@ -97,5 +114,15 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
     @Override
     public void onRefresh() {
         retrieveDataFromDB();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Map<String, Future> futureMap = ((DownloadApplication) getApplicationContext()).getFutureMap();
+        futureMap.clear();
+        for (DownloadFile file : downloadAdapter.getItems()) {
+            DownloadTool.stopUpdateProgress((DownloadApplication) getApplicationContext(), file);
+        }
+        super.onDestroy();
     }
 }

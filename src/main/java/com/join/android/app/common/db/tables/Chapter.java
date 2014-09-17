@@ -1,56 +1,82 @@
-package com.join.mobi.dto;
+package com.join.android.app.common.db.tables;
+
+import com.j256.ormlite.field.DatabaseField;
 
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-8
  * Time: 下午12:17
  */
-public class ChapterDto {
+public class Chapter {
+    @DatabaseField(generatedId = true)
+    private int id;
+
     /**
      * 章节ID
      */
+    @DatabaseField
     private long chapterId;
 
     /**
      * 章节标题
      */
+    @DatabaseField
     private String title;
 
     /**
      * 章节时长
      */
+    @DatabaseField
     private long chapterDuration;
 
     /**
      * 章节学习时间
      */
+    @DatabaseField
     private long learnedTime;
 
     /**
      * 书签
      */
+    @DatabaseField
     private String bookmark;
 
     /**
      * 章节关联资源的文件大小
      */
+    @DatabaseField
     private long filesize;
 
     /**
      * 章节资源播放链接
      */
+    @DatabaseField
     private String playUrl;
 
     /**
      * 章节资源下载链接
      */
+    @DatabaseField
     private String downloadUrl;
 
     /**
      * 有效期
      */
+    @DatabaseField
     private String validUntil;
 
+    @DatabaseField(columnName = "localcourse_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    private LocalCourse localCourse;
+
+    private boolean playing;
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public long getChapterId() {
         return chapterId;
@@ -116,11 +142,27 @@ public class ChapterDto {
         this.downloadUrl = downloadUrl;
     }
 
+    public LocalCourse getLocalCourse() {
+        return localCourse;
+    }
+
+    public void setLocalCourse(LocalCourse localCourse) {
+        this.localCourse = localCourse;
+    }
+
     public String getValidUntil() {
         return validUntil;
     }
 
     public void setValidUntil(String validUntil) {
         this.validUntil = validUntil;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 }

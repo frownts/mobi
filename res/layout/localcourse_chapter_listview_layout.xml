@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:id="@+id/main"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:padding="2dp"
+              android:background="@drawable/border_bg">
+
+
+    <!--缩略图-->
+    <ImageView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/icon"/>
+
+    <!--章节信息-->
+    <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+        <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:text="标题"
+                android:layout_centerVertical="true"/>
+
+        <TextView
+                android:id="@+id/validUtil"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="天后过期"/>
+
+        <TextView
+                android:id="@+id/filesize"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="文件大小"/>
+
+
+        <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent">
+            <!--进度条-->
+            <!--学习时长-->
+            <TextView
+                    android:id="@+id/learnedTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="10:50"/>
+            <!--总时长-->
+            <TextView
+                    android:id="@+id/_chapterDuration "
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:text="25:00"/>
+        </RelativeLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

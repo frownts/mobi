@@ -5,11 +5,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.db.tables.Chapter;
 import com.join.android.app.common.manager.DialogManager;
-import com.join.mobi.dto.ChapterDto;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,47 +19,47 @@ import java.util.List;
  * Date: 14-9-5
  * Time: 下午11:21
  */
-public class LiveCourseChapterAdapter extends BaseAdapter {
+public class LocalCourseChapterAdapter extends BaseAdapter {
 
-    private List<ChapterDto> chapterDtos = new ArrayList<ChapterDto>(0);
+    private List<Chapter> Chapters = new ArrayList<Chapter>(0);
 
-    private Download download;
     private Context mContext;
     private LayoutInflater inflater;
 
     private class ViewHolder {
         TextView title;
-        TextView chapterDuration;
-        TextView learnedTime;
+        TextView validUtil;
         TextView filesize;
-        ImageView download;
+        TextView learnedTime;
+        TextView chapterDuration;
+        View main;
     }
 
-    public List<ChapterDto> getItems() {
-        return chapterDtos;
+    public List<Chapter> getItems() {
+
+        return Chapters;
     }
 
-    public void updateItems(List<ChapterDto> _chapters) {
-        chapterDtos.clear();
-        chapterDtos.addAll(_chapters);
+    public void updateItems(List<Chapter> _chapters) {
+        Chapters.clear();
+        Chapters.addAll(_chapters);
     }
 
-    public LiveCourseChapterAdapter(Context c, List<ChapterDto> _chapters,Download _download) {
+    public LocalCourseChapterAdapter(Context c, List<Chapter> _chapters) {
         mContext = c;
-        chapterDtos.clear();
-        chapterDtos.addAll(_chapters);
+        Chapters.clear();
+        Chapters.addAll(_chapters);
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.download = _download;
     }
 
     @Override
     public int getCount() {
-        return chapterDtos.size();
+        return Chapters.size();
     }
 
     @Override
     public Object getItem(int position) {
-        return position;
+        return Chapters.get(position);
     }
 
     @Override
@@ -70,16 +69,17 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final ChapterDto chapter = chapterDtos.get(position);
+        final Chapter chapter = Chapters.get(position);
         ViewHolder holder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.livecourse_chapter_listview_layout, null);
+            convertView = inflater.inflate(R.layout.localcourse_chapter_listview_layout, null);
             holder = new ViewHolder();
+            holder.main = convertView.findViewById(R.id.main);
             holder.title = (TextView) convertView.findViewById(R.id.title);
-            holder.chapterDuration = (TextView) convertView.findViewById(R.id.chapterDuration);
+            holder.chapterDuration = (TextView) convertView.findViewById(R.id._chapterDuration);
             holder.learnedTime = (TextView) convertView.findViewById(R.id.learnedTime);
             holder.filesize = (TextView) convertView.findViewById(R.id.filesize);
-            holder.download = (ImageView) convertView.findViewById(R.id.download);
+            holder.validUtil = (TextView) convertView.findViewById(R.id.validUtil);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -89,28 +89,22 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         holder.filesize.setText(chapter.getFilesize() + "byte");
         holder.chapterDuration.setText(chapter.getChapterDuration() + "");
         holder.learnedTime.setText(chapter.getLearnedTime() + "");
+        holder.validUtil.setText(chapter.getValidUntil() + "");
 
-
-        holder.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(download!=null)download.download(chapter);
-            }
-        });
+        if (chapter.isPlaying()) {//红色背影框
+            holder.main.setBackgroundResource(R.drawable.red_border_frame);
+        }
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //播放
-                DialogManager.getInstance().makeText(mContext,"play video",DialogManager.DIALOG_TYPE_OK);
+                DialogManager.getInstance().makeText(mContext, "play video" + chapter.getDownloadUrl(), DialogManager.DIALOG_TYPE_OK);
             }
         });
 
         return convertView;
     }
 
-    public interface Download{
-        public void download(ChapterDto chapterDto);
-    }
 }
 

@@ -32,6 +32,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
     private RuntimeExceptionDao<Live, Integer> liveRuntimeDao = null;
     private RuntimeExceptionDao<Notice, Integer> noticeRuntimeDao = null;
     private RuntimeExceptionDao<ResourceShare, Integer> resourceShareRuntimeDao = null;
+    private RuntimeExceptionDao<LocalCourse, Integer> localCourseRuntimeDao = null;
+    private RuntimeExceptionDao<Chapter, Integer> chapterRuntimeDao = null;
+    private RuntimeExceptionDao<Reference, Integer> referenceRuntimeDao = null;
 
 
     public DatabaseHelper(Context context) {
@@ -56,6 +59,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.createTable(connectionSource, Live.class);
             TableUtils.createTable(connectionSource, Notice.class);
             TableUtils.createTable(connectionSource, ResourceShare.class);
+            TableUtils.createTable(connectionSource, LocalCourse.class);
+            TableUtils.createTable(connectionSource, Chapter.class);
+            TableUtils.createTable(connectionSource, Reference.class);
 
         } catch (SQLException e) {
             Log.e(DatabaseHelper.class.getName(), "Can't create database", e);
@@ -87,6 +93,9 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             TableUtils.dropTable(connectionSource, Live.class, true);
             TableUtils.dropTable(connectionSource, Notice.class, true);
             TableUtils.dropTable(connectionSource, ResourceShare.class, true);
+            TableUtils.dropTable(connectionSource, LocalCourse.class, true);
+            TableUtils.dropTable(connectionSource, Chapter.class, true);
+            TableUtils.dropTable(connectionSource, Reference.class, true);
 
 
             // after we drop the old databases, we create the new ones
@@ -163,6 +172,27 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         return resourceShareRuntimeDao;
     }
 
+    public RuntimeExceptionDao<LocalCourse, Integer> getLocalCourseDao() {
+        if (localCourseRuntimeDao == null) {
+            localCourseRuntimeDao = getRuntimeExceptionDao(LocalCourse.class);
+        }
+        return localCourseRuntimeDao;
+    }
+
+    public RuntimeExceptionDao<Chapter, Integer> getChapterDao() {
+        if (chapterRuntimeDao == null) {
+            chapterRuntimeDao = getRuntimeExceptionDao(Chapter.class);
+        }
+        return chapterRuntimeDao;
+    }
+
+    public RuntimeExceptionDao<Reference, Integer> getReferenceDao() {
+        if (referenceRuntimeDao == null) {
+            referenceRuntimeDao = getRuntimeExceptionDao(Reference.class);
+        }
+        return referenceRuntimeDao;
+    }
+
     /**
      * Close the database connections and clear any cached DAOs.
      */
@@ -175,5 +205,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         liveRuntimeDao = null;
         noticeRuntimeDao = null;
         resourceShareRuntimeDao = null;
+        localCourseRuntimeDao = null;
+        chapterRuntimeDao = null;
+        referenceRuntimeDao = null;
     }
 }

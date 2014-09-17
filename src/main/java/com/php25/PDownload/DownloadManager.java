@@ -25,6 +25,8 @@ public class DownloadManager {
 
     private boolean stopped;
 
+    private boolean stoppedProgress;
+
     private DownloadHandler downloadHandler;
 
     private Context context;
@@ -37,6 +39,14 @@ public class DownloadManager {
 
     public synchronized void setFinished(boolean finished) {
         this.finished = finished;
+    }
+
+    public boolean isStoppedProgress() {
+        return stoppedProgress;
+    }
+
+    public void setStoppedProgress(boolean stoppedProgress) {
+        this.stoppedProgress = stoppedProgress;
     }
 
     public synchronized boolean isStopped() {
@@ -93,30 +103,19 @@ public class DownloadManager {
                     conn.setConnectTimeout(10000);
                     conn.setReadTimeout(30000);
 
-                    String contentType = conn.getContentType();
-                    final int contentLength = conn.getContentLength();
-
-                    if (contentType == null) {
-                        contentType = conn.guessContentTypeFromName(url);
-                    }
-
-                    if (contentType != null && contentType.startsWith("text/") || contentLength == -1) {
-                        throw new RuntimeException("This is not a binary file.");
-                    }
-
                     String filePath = null;
                     String fileName = null;
 
-                    if (contentType != null) {
-                        int start = contentType.lastIndexOf("/");
-                        int end = contentType.length();
-                        String postfix = contentType.substring(start + 1, end);
-                        filePath = basePath + "/" + DigestTool.md5(url) + "." + postfix;
-                        fileName = DigestTool.md5(url) + "." + postfix;
-                    } else {
+//                    if (contentType != null) {
+//                        int start = contentType.lastIndexOf("/");
+//                        int end = contentType.length();
+//                        String postfix = contentType.substring(start + 1, end);
+//                        filePath = basePath + "/" + DigestTool.md5(url) + "." + postfix;
+//                        fileName = DigestTool.md5(url) + "." + postfix;
+//                    } else {
                         filePath = basePath + "/" + DigestTool.md5(url);
                         fileName = DigestTool.md5(url);
-                    }
+//                    }
 
                     final File downloadFile = new File(filePath);
                     //创建meta文件
@@ -130,7 +129,7 @@ public class DownloadManager {
                         temp.setName(fileName);
                         temp.setShowName(showName);
                         temp.setDtype(dtype.name());
-                        temp.setTotalSize(contentLength);
+
                         temp.setDownloading(true);
                         temp.setFinished(false);
                         temp.setFileType(fileType);
@@ -144,6 +143,24 @@ public class DownloadManager {
                         conn.setRequestProperty("RANGE", "bytes="+ff.length()+"-");
                         out = new FileOutputStream(downloadFile,true);
                     }
+
+                    String contentType = conn.getContentType();
+                    final int contentLength = conn.getContentLength();
+                    if(temp.getTotalSize()==null||temp.getTotalSize()==0){
+                        temp.setTotalSize(contentLength);
+                    }
+
+
+                    if (contentType == null) {
+                        contentType = conn.guessContentTypeFromName(url);
+                    }
+
+                    if (contentType != null && contentType.startsWith("text/") || contentLength == -1) {
+                        throw new RuntimeException("This is not a binary file.");
+                    }
+
+
+                    app.getDownloadFileDao().update(temp);
 
                     //开始下载
                     in = conn.getInputStream();
@@ -224,9 +241,15 @@ public class DownloadManager {
             @Override
             public void run() {
                 try {
-                    while (!isFinished()) {
-                        if (null != downloadHandler)
-                            downloadHandler.updateProcess(downloadFile.length() / new Float(file.getTotalSize()));
+                    while (!isFinished()&&!stopped) {
+                        if (null != downloadHandler){
+                            float filelength = downloadFile.length();
+                            float totalSize = new Float(file.getTotalSize());
+
+                            float p = filelength/totalSize;
+                            downloadHandler.updateProcess(p);
+                        }
+
                         Thread.sleep(2000);
                     }
                     if (isFinished()) {

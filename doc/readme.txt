@@ -23,5 +23,5 @@ org.androidannotations
    It will  output a ormlite_config.txt in the folder : raw
 3. There are two different ways for usage of database.One is creating database manually(Refer to DBActivity),the other one can manipulate the database by extends class OrmLiteBaseActivity.
    com.join.android.app.common.db.HelloAndroid will be a good example for the case.
-
+4. Note! You must do some config stuff int DatabaseHelper after adding some table entities.
 Have a nice trip :)

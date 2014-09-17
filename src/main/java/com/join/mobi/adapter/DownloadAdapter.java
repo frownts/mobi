@@ -1,19 +1,22 @@
 package com.join.mobi.adapter;
 
 import android.content.Context;
-import android.os.Handler;
-import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.utils.DateUtils;
+import com.join.android.app.common.utils.FileUtils;
+import com.join.mobi.activity.DownloadingActivity;
+import com.join.mobi.enums.Dtype;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadFile;
 import com.php25.PDownload.DownloadHandler;
 import com.php25.PDownload.DownloadTool;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -27,8 +30,6 @@ import java.util.concurrent.Future;
  */
 public class DownloadAdapter extends BaseAdapter {
 
-
-    GirdHolder holder;
     private Context mContext;
     private LayoutInflater inflater;
     private List<DownloadFile> downloadFiles = new ArrayList<DownloadFile>(0);
@@ -45,6 +46,10 @@ public class DownloadAdapter extends BaseAdapter {
     public DownloadAdapter(Context c) {
         mContext = c;
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    }
+
+    public List<DownloadFile> getItems(){
+            return downloadFiles;
     }
 
     public void setItems(List<DownloadFile> _downloadFiles) {
@@ -69,8 +74,8 @@ public class DownloadAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
+        GirdHolder holder;
         DownloadFile downloadFile = downloadFiles.get(position);
-
 
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.gridview_download, null);
@@ -86,16 +91,18 @@ public class DownloadAdapter extends BaseAdapter {
             holder = (GirdHolder) convertView.getTag();
         }
         holder.fileName.setText(downloadFile.getShowName());
-        holder.downloadTime.setText(downloadFile.getCreateTime());
+        holder.downloadTime.setText(DateUtils.FormatForDownloadTime(Long.parseLong(downloadFile.getCreateTime())));
+
         holder.dtype.setText(downloadFile.getDtype());
+        if(downloadFile.getDtype().equals(Dtype.Share.name()))holder.dtype.setText("共享资源");
         String status = getDownloadingStatus(downloadFile);
         holder.downloadStatus.setText(status);
         if (status.equals("正在下载")) holder.downloadStatus.setTextColor(mContext.getResources().getColor(R.color.green));
         else
             holder.downloadStatus.setTextColor(mContext.getResources().getColor(R.color.goldYellow));
 
-        holder.totalSize.setText(downloadFile.getTotalSize() + "");
-        holder.downloadPercent.setText(updateProgress(downloadFile));
+        holder.totalSize.setText(FileUtils.FormatFileSize(downloadFile.getTotalSize()));
+        holder.downloadPercent.setText(downloadFile.getPercent());
 
         return convertView;
     }
@@ -105,16 +112,27 @@ public class DownloadAdapter extends BaseAdapter {
             downloadFile.setDownloadingNow(true);
             updateDownloadProgress(downloadFile);
             return "正在下载";
+        }else{
+            downloadFile.setDownloadingNow(false);
+            if(downloadFile.getPercent()==null){
+                final File file = new File(downloadFile.getAbsolutePath());
+                float filelength = file.length();
+                float totalSize = new Float(downloadFile.getTotalSize());
+                float f = filelength/totalSize;
+                String p = ((f*100)+"");
+                if(p.length()>4)
+                    p = p.substring(0,4);
+                downloadFile.setPercent(p+"%");
+            }
         }
-        downloadFile.setDownloadingNow(false);
+
         return "暂停";
+
     }
 
-    private String updateProgress(DownloadFile downloadFile) {
-        return "80%";
-    }
 
-    private void updateDownloadProgress(DownloadFile file) {
+    public void updateDownloadProgress(final DownloadFile file) {
+
         Map<String,Future> futureMap = ((DownloadApplication) mContext.getApplicationContext()).getFutureMap();
 
         if(futureMap.get(file.getTag())==null){
@@ -122,29 +140,25 @@ public class DownloadAdapter extends BaseAdapter {
 
                 @Override
                 public void updateProcess(float process) {
-                    Message msg = new Message();
-                    msg.what = 0;
-                    msg.obj = process;
-                    mHandler.sendMessage(msg);
+                    String p = (((process)*100)+"");
+                    if(p.length()>4)
+                        p = p.substring(0,4);
+                    file.setPercent(p+"%");
+                    ((DownloadingActivity)(mContext)).refreshAdapter();
                 }
 
                 @Override
                 public void finished() {
-
+                    downloadFiles.remove(file);
+                    ((DownloadingActivity)(mContext)).refreshAdapter();
                 }
             }, file);
+
+            futureMap.put(file.getTag(),future);
         }
     }
 
-    private Handler mHandler = new Handler(){
-        @Override
-        public void handleMessage(Message msg) {
-            super.handleMessage(msg);
-            if(msg.what==0){
-                holder.downloadPercent.setText(msg.what+"%");
-            }
-        }
-    };
+
 
 }
 

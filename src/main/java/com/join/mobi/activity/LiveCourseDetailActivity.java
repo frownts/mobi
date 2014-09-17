@@ -25,6 +25,7 @@ import org.androidannotations.annotations.sharedpreferences.Pref;
  * User: mawanjin@join-cn.com
  * Date: 14-9-10
  * Time: 上午10:25
+ * 在线课程
  */
 @EActivity(R.layout.livecourse_detail_activity_layout)
 public class LiveCourseDetailActivity extends FragmentActivity {
@@ -60,8 +61,14 @@ public class LiveCourseDetailActivity extends FragmentActivity {
     @Extra(EXTRA_COURSE_ID)
     String courseId;
 
+    /** 课程海报*/
+    @Extra
+    String url;
+
     @Extra
     String name;
+
+
 
     LiveCourseDetailFragment_ liveCourseDetailFragment;
     LiveCourseChapterFragment_ liveCourseChapterFragment;
@@ -73,6 +80,7 @@ public class LiveCourseDetailActivity extends FragmentActivity {
 
     CourseDetailDto courseDetail;
     CommonDialogLoading loading;
+
 
     @AfterViews
     void afterViews() {
@@ -89,7 +97,6 @@ public class LiveCourseDetailActivity extends FragmentActivity {
 //        courseDetail = rpcService.getCourseDetail(myPref.userId().get(),courseId);
         courseDetail = RPCTestData.getCourseDetailDto();
         afterRetrieveDataFromServer();
-
     }
 
     @UiThread
@@ -163,11 +170,8 @@ public class LiveCourseDetailActivity extends FragmentActivity {
         return courseDetail;
     }
 
-
-//    @Override
-//    protected void onDestroy() {
-//        loading = null;
-//        super.onDestroy();
-//    }
+    public String getUrl(){
+        return url;
+    }
 
 }

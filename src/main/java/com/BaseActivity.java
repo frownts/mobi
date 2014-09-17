@@ -3,16 +3,15 @@ package com;
 import android.app.Activity;
 import com.join.android.app.common.db.DatabaseHelper;
 import com.join.android.app.common.db.manager.*;
-import com.join.android.app.common.db.tables.Course;
-import com.join.android.app.common.db.tables.Live;
-import com.join.android.app.common.db.tables.Notice;
-import com.join.android.app.common.db.tables.ResourceShare;
+import com.join.android.app.common.db.tables.*;
 import com.join.android.app.common.dialog.CommonDialogLoading;
 import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
 import com.join.mobi.rpc.RPCTestData;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * User: mawanjin@join-cn.com
@@ -80,6 +79,16 @@ public class BaseActivity extends Activity {
                 try {
                     BeanUtils.copyProperties(course, liveCourseDto);
                     CourseManager.getInstance().save(course);
+
+                    //判断是否某课程已下载到本地
+                    Map<String, Object> params = new HashMap<String, Object>(0);
+                    params.put("courseId", course.getCourseId());
+                    List<LocalCourse> localCourses = LocalCourseManager.getInstance().findForParams(params);
+                    if(localCourses!=null&&localCourses.size()>0){
+                        //更新学习总时长
+                        localCourses.get(0).setLearningTimes(Integer.parseInt(course.getTotalDuration()));
+                        LocalCourseManager.getInstance().saveOrUpdate(localCourses.get(0));
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -149,8 +158,10 @@ public class BaseActivity extends Activity {
         return mainContent;
     }
 
-    public  void rpcException(Throwable e) throws Throwable {
+    public void rpcException(Throwable e) throws Throwable {
         throw e;
-    };
+    }
+
+    ;
 
 }

@@ -23,14 +23,14 @@ public class DownloadTool {
      * @param context
      * @param url
      */
-    public static void startDownload(DownloadApplication context, String url, String showName, Dtype dtype,String fileType) {
+    public static void startDownload(DownloadApplication context, String url, String showName, Dtype dtype, String fileType) {
         if (context.containsDownloadManager(DigestTool.md5(url))) {
             DownloadManager downloadManager = context.getDownloadManager(DigestTool.md5(url));
-            downloadManager.download(url, showName, dtype,fileType);
+            downloadManager.download(url, showName, dtype, fileType);
         } else {
             DownloadManager downloadManager = new DownloadManager(context);
             context.addDownloadManager(DigestTool.md5(url), downloadManager);
-            downloadManager.download(url, showName, dtype,fileType);
+            downloadManager.download(url, showName, dtype, fileType);
         }
     }
 
@@ -47,7 +47,7 @@ public class DownloadTool {
     }
 
     public static boolean isDownloadingNow(DownloadApplication context, String url) {
-        if (context.containsDownloadManager(DigestTool.md5(url))&&!isStopped(context,url)) return true;
+        if (context.containsDownloadManager(DigestTool.md5(url)) && !isStopped(context, url)) return true;
         return false;
     }
 
@@ -66,6 +66,12 @@ public class DownloadTool {
         return downloadManager.updateDownloadProgress(downloadFile);
     }
 
+    public static void stopUpdateProgress(DownloadApplication context, DownloadFile downloadFile) {
+        final DownloadManager downloadManager = context.getDownloadManager(DigestTool.md5(downloadFile.getUrl()));
+        if (downloadManager != null)
+            downloadManager.setStopped(false);
+    }
+
     /**
      * 停止下载线程
      *
@@ -74,8 +80,11 @@ public class DownloadTool {
      */
     public static void stopDownload(DownloadApplication context, String url) {
         DownloadManager downloadManager = context.getDownloadManager(DigestTool.md5(url));
-        if (downloadManager != null)
+        if (downloadManager != null) {
             downloadManager.setStopped(true);
+            context.removeDownloadManager(DigestTool.md5(url));
+        }
+
     }
 
     /**
@@ -116,7 +125,7 @@ public class DownloadTool {
      * @param context
      * @return
      */
-    public static List<DownloadFile> getAllDownloaded(DownloadApplication context,Dtype dtype) {
+    public static List<DownloadFile> getAllDownloaded(DownloadApplication context, Dtype dtype) {
         return context.getDownloadFileDao().queryAllDownloaded(dtype);
     }
 
@@ -146,5 +155,12 @@ public class DownloadTool {
         //删除数据库中的记录
         context.getDownloadFileDao().delete(downloadFile);
 
+    }
+
+    /**
+     * 根据url删除文件
+     */
+    public static void deleteDownloadTask(DownloadApplication context, String url) {
+        delDownloadTask(context, context.getDownloadFileDao().queryByTag(DigestTool.md5(url)));
     }
 }

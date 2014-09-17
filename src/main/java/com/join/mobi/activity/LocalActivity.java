@@ -23,6 +23,7 @@ import java.util.*;
  * User: mawanjin@join-cn.com
  * Date: 14-9-13
  * Time: 下午5:10
+ * 本地资源
  */
 
 @EActivity(R.layout.share_activity_layout)
@@ -58,16 +59,21 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
         localAdapter = new LocalAdapter(this);
         origDownloadFile = DownloadTool.getAllDownloaded((DownloadApplication) getApplicationContext(), Dtype.Share);
-
         listView.setAdapter(localAdapter);
 
-        showLoading();
+
         retrieveDataFromServer();
     }
 
     @ItemClick
     void listViewItemClicked(DownloadFile DownloadFile) {
         DialogManager.getInstance().makeText(this, "open file", DialogManager.DIALOG_TYPE_OK);
+    }
+
+    @Click
+    void trashClicked(){
+        localAdapter.setTrashIsShowing(!localAdapter.isTrashIsShowing());
+        localAdapter.notifyDataSetChanged();
     }
 
     @UiThread
@@ -91,7 +97,6 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
         origDownloadFile = DownloadTool.getAllDownloaded((DownloadApplication) getApplicationContext(), Dtype.Share);
         localAdapter.setItems(origDownloadFile);
         localAdapter.notifyDataSetChanged();
-        dismissLoading();
         swipeRefreshLayout.setRefreshing(false);
     }
 

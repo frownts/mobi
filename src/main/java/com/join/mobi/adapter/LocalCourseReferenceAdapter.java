@@ -5,10 +5,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
-import com.join.mobi.dto.ReferenceDto;
+import com.join.android.app.common.db.tables.Reference;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,11 +18,10 @@ import java.util.List;
  * Date: 14-9-5
  * Time: 下午11:21
  */
-public class LiveCourseReferenceAdapter extends BaseAdapter {
+public class LocalCourseReferenceAdapter extends BaseAdapter {
 
-    private List<ReferenceDto> referenceDtos = new ArrayList<ReferenceDto>(0);
+    private List<Reference> references = new ArrayList<Reference>(0);
 
-    private Download download;
     private Context mContext;
     private LayoutInflater inflater;
 
@@ -31,29 +29,27 @@ public class LiveCourseReferenceAdapter extends BaseAdapter {
         TextView title;
         TextView fileSize;
         TextView type;
-        ImageView download;
     }
 
-    public List<ReferenceDto> getItems() {
-        return referenceDtos;
+    public List<Reference> getItems() {
+        return references;
     }
 
-    public void updateItems(List<ReferenceDto> referenceDtos) {
-        referenceDtos.clear();
-        referenceDtos.addAll(referenceDtos);
+    public void updateItems(List<Reference> References) {
+        References.clear();
+        References.addAll(References);
     }
 
-    public LiveCourseReferenceAdapter(Context c, List<ReferenceDto> _chapters,Download _download) {
+    public LocalCourseReferenceAdapter(Context c, List<Reference> _reference) {
         mContext = c;
-        referenceDtos.clear();
-        referenceDtos.addAll(_chapters);
+        references.clear();
+        references.addAll(_reference);
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        this.download = _download;
     }
 
     @Override
     public int getCount() {
-        return referenceDtos.size();
+        return references.size();
     }
 
     @Override
@@ -68,15 +64,14 @@ public class LiveCourseReferenceAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final ReferenceDto reference = referenceDtos.get(position);
+        final Reference reference = references.get(position);
         ViewHolder holder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.livecourse_reference_listview_layout, null);
+            convertView = inflater.inflate(R.layout.localcourse_reference_listview_layout, null);
             holder = new ViewHolder();
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.fileSize = (TextView) convertView.findViewById(R.id.fileSize);
             holder.type = (TextView) convertView.findViewById(R.id._type);
-            holder.download = (ImageView) convertView.findViewById(R.id.download);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
@@ -87,19 +82,7 @@ public class LiveCourseReferenceAdapter extends BaseAdapter {
         //根据类型，判断生成文字。
         holder.type.setText(reference.getType()+"");
 
-
-        holder.download.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if(download!=null)download.download(reference);
-            }
-        });
-
         return convertView;
-    }
-
-    public interface Download{
-        public void download(ReferenceDto referenceId);
     }
 
 }

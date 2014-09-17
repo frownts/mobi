@@ -20,7 +20,7 @@ public class RPCTestData {
         live.setCreateTime("2012-12-12");
         live.setLiveId(1000);
         live.setTitle("直播一");
-        live.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        live.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         liveDtos.add(live);
 
         LiveDto live1 = new LiveDto();
@@ -28,27 +28,27 @@ public class RPCTestData {
         live1.setCreateTime("2012-12-12");
         live1.setLiveId(1001);
         live1.setTitle("直播二");
-        live1.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        live1.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         liveDtos.add(live1);
         mainContentDto.setLives(liveDtos);
         //在线课程
         List<LiveCourseDto> courseDtos = new ArrayList<LiveCourseDto>(0);
         LiveCourseDto liveCourseDto = new LiveCourseDto();
-        liveCourseDto.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        liveCourseDto.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         liveCourseDto.setTitle("课程一");
         liveCourseDto.setCourseHour(1000);
         liveCourseDto.setCourseId(1);
         liveCourseDto.setLastLearn("1小时前");
         liveCourseDto.setLearningTimes(1);
-        liveCourseDto.setTotalDuration("20:20");
+        liveCourseDto.setTotalDuration("60");
 
         courseDtos.add(liveCourseDto);
 
         LiveCourseDto liveCourseDto1 = new LiveCourseDto();
-        liveCourseDto1.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        liveCourseDto1.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         liveCourseDto1.setTitle("课程二");
         liveCourseDto1.setCourseHour(2000);
-        liveCourseDto1.setCourseId(1);
+        liveCourseDto1.setCourseId(2);
         liveCourseDto1.setLastLearn("2小时前");
         liveCourseDto1.setLearningTimes(1);
         liveCourseDto1.setTotalDuration("21:20");
@@ -63,21 +63,21 @@ public class RPCTestData {
         share.setName("视频一");
         share.setFileSize(1232434);
         share.setType(1);
-        share.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        share.setUrl("http://download.springsource.com/release/STS/3.2.0/dist/e3.8/spring-tool-suite-3.2.0.RELEASE-e3.8.2-macosx-cocoa-x86_64-installer.dmg");
         resourceShares.add(share);
 
         share = new ResourceShareDto();
         share.setName("音乐一");
         share.setFileSize(1232434);
         share.setType(2);
-        share.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        share.setUrl("http://download-ln.jetbrains.com/idea/ideaIU-12.1.4.dmg");
         resourceShares.add(share);
 
         share = new ResourceShareDto();
         share.setName("pdf一");
         share.setFileSize(1232434);
         share.setType(3);
-        share.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        share.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         resourceShares.add(share);
 
         share = new ResourceShareDto();
@@ -96,6 +96,7 @@ public class RPCTestData {
     public static CourseDetailDto getCourseDetailDto() {
         CourseDetailDto courseDetailDto = new CourseDetailDto();
         //详情
+        courseDetailDto.setCourseId(1);
         courseDetailDto.setName("课程标题一");
         courseDetailDto.setDescription("课程描述");
         courseDetailDto.setInstructor("课程老师一");
@@ -139,8 +140,9 @@ public class RPCTestData {
         chapter.setLearnedTime(260);
         chapter.setBookmark("书签");
         chapter.setFilesize(260000);
-        chapter.setPlayUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
-        chapter.setDownloadUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        chapter.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
+        chapter.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
+        chapter.setValidUntil("30");
         chapterDtos.add(chapter);
 
         ChapterDto chapter1 = new ChapterDto();
@@ -150,19 +152,21 @@ public class RPCTestData {
         chapter1.setLearnedTime(260);
         chapter1.setBookmark("书签");
         chapter1.setFilesize(260000);
-        chapter1.setPlayUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
-        chapter1.setDownloadUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        chapter1.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
+        chapter1.setDownloadUrl("http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.10-osx10.7-x86_64.tar.gz");
+        chapter.setValidUntil("30");
         chapterDtos.add(chapter1);
 
         ChapterDto chapter2 = new ChapterDto();
-        chapter2.setChapterId(101);
+        chapter2.setChapterId(102);
         chapter2.setTitle("第三章");
         chapter2.setChapterDuration(2000);
         chapter2.setLearnedTime(260);
         chapter2.setBookmark("书签");
         chapter2.setFilesize(260000);
-        chapter2.setPlayUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
-        chapter2.setDownloadUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        chapter2.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
+        chapter2.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
+        chapter.setValidUntil("30");
         chapterDtos.add(chapter2);
         courseDetailDto.setChapters(chapterDtos);
 
@@ -173,7 +177,7 @@ public class RPCTestData {
         reference.setTitle("资料一");
         reference.setFileSize(20034343);
         reference.setType(1);
-        reference.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        reference.setUrl("http://s0.hao123img.com/res/r/image/2014-09-17/d6f8c018bd3e21e10a2911e1fac7e474.jpg");
         referenceDtos.add(reference);
 
         ReferenceDto reference1 = new ReferenceDto();
@@ -181,7 +185,7 @@ public class RPCTestData {
         reference1.setTitle("资料二");
         reference1.setFileSize(20034343);
         reference1.setType(1);
-        reference1.setUrl("http://su.bdimg.com/static/superplus/img/logo_white_ee663702.png");
+        reference1.setUrl("https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.5.0/mule-standalone-3.5.0.zip");
         referenceDtos.add(reference1);
         courseDetailDto.setReferences(referenceDtos);
 

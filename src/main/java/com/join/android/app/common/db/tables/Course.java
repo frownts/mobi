@@ -19,7 +19,7 @@ public class Course {
     @DatabaseField
     private String totalDuration;
     @DatabaseField
-    private int courseId;
+    private long courseId;
     @DatabaseField
     private long courseHour;
     @DatabaseField
@@ -65,11 +65,11 @@ public class Course {
         this.totalDuration = totalDuration;
     }
 
-    public int getCourseId() {
+    public long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(long courseId) {
         this.courseId = courseId;
     }
 

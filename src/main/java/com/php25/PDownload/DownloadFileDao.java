@@ -48,7 +48,7 @@ public class DownloadFileDao {
     }
 
     public void update(DownloadFile downloadFile) {
-        database.execSQL("update DownloadFile set downloading=? ,finished=? ,finishTime=? where id=?", new Object[]{downloadFile.getDownloading(),downloadFile.getFinished(),downloadFile.getFinishTime(), downloadFile.getId()});
+        database.execSQL("update DownloadFile set downloading=? ,finished=? ,finishTime=?,totalSize=? where id=?", new Object[]{downloadFile.getDownloading(),downloadFile.getFinished(),downloadFile.getFinishTime(), downloadFile.getTotalSize(),downloadFile.getId()});
     }
 
     public void delete(DownloadFile downloadFile) {
@@ -181,7 +181,7 @@ public class DownloadFileDao {
     public List<DownloadFile> queryAllDownloaded(Dtype dtype) {
 
         List<DownloadFile> downloadFiles = new ArrayList<DownloadFile>();
-        Cursor cursor = database.rawQuery("select * from DownloadFile where dtype=?", new String[]{dtype.name()});
+        Cursor cursor = database.rawQuery("select * from DownloadFile where dtype=? and finished =1 ", new String[]{dtype.name()});
         while (cursor.moveToNext()) {
             DownloadFile downloadFile = new DownloadFile();
             downloadFile.setId(cursor.getLong(cursor.getColumnIndex("id")));
