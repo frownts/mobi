@@ -9,18 +9,49 @@ public class DateUtils {
 
     /**
      * 下载日期是几分钟前、几天前
+     *
      * @return
      */
-    public static String FormatForDownloadTime(long begin){
+    public static String FormatForDownloadTime(long begin) {
         long now = System.currentTimeMillis();
-        long gap = (now-begin)/1000;
-        if(gap<60)return "刚刚";
-        else if(gap>60&&gap<60*60){
-            return gap/60+"分钟前";
-        }else if(gap>60&&gap<60*60*60){
-            return gap/60/60+"小时前";
+        long gap = (now - begin) / 1000;
+        if (gap < 60) return "刚刚";
+        else if (gap > 60 && gap < 60 * 60) {
+            return gap / 60 + "分钟前";
+        } else if (gap > 60 && gap < 60 * 60 * 60) {
+            return gap / 60 / 60 + "小时前";
         }
 
-        return gap/60/60/24+"天前";
+        return gap / 60 / 60 / 24 + "天前";
+    }
+
+    /**
+     * 秒数转化成标准时间格式
+     *
+     * @return
+     */
+    public static String SecondToNormalTime(long s) {
+        String _N, _K, _M;
+        long N = s / 3600;
+
+        s = s % 3600;
+        long K = s / 60;
+        s = s % 60;
+        long M = s;
+
+        _N = N + "";
+        _K = K + "";
+        _M = M + "";
+        if (N == 0) {
+            if (K < 10) _K = "0" + K;
+            if (M < 10) _M = "0" + M;
+
+            return _K + ":" + _M;
+        } else {
+            if (N < 10) _N = "0" + N;
+        }
+
+        return _N + ":" + K + ":" + M;
+
     }
 }

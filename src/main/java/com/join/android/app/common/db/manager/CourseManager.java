@@ -3,6 +3,10 @@ package com.join.android.app.common.db.manager;
 import com.j256.ormlite.dao.RuntimeExceptionDao;
 import com.join.android.app.common.db.tables.Course;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-2-21
@@ -26,4 +30,13 @@ public class CourseManager extends BaseManager<Course> {
         return courseManager;
     }
 
+
+    public Course getByCourseId(long courseId){
+
+        Map params = new HashMap(0);
+        params.put("courseId",courseId);
+        List<Course> courseList = findForParams(params);
+        if(courseList!=null&&courseList.size()>0)return courseList.get(0);
+        return null;
+    }
 }

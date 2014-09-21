@@ -53,20 +53,27 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-
-        <activity android:name="com.join.mobi.activity.PortalActivity_" />
-        <activity android:name="com.join.mobi.activity.LiveCourseActivity_" />
-        <activity android:name="com.join.mobi.activity.LiveCourseDetailActivity_" />
-        <activity android:name="com.join.mobi.activity.ExamIntroActivity_" />
-        <activity android:name="com.join.mobi.activity.IntroActivity_" />
-        <activity android:name="com.join.mobi.activity.ExamActivity_" />
-        <activity android:name="com.join.mobi.activity.ExamListActivity_" />
-        <activity android:name="com.join.mobi.activity.ExamResultActivity_" />
-        <activity android:name="com.join.mobi.activity.ShareActivity_" />
-        <activity android:name="com.join.mobi.activity.DownloadingActivity_" />
-        <activity android:name="com.join.mobi.activity.LocalActivity_" />
-        <activity android:name="com.join.mobi.activity.LocalCourseActivity_" />
-        <activity android:name="com.join.mobi.activity.LocalCourseDetailActivity_" />
+        <activity
+                android:name="io.vov.vitamio.activity.InitActivity"
+                android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+                android:launchMode="singleTop"
+                android:theme="@android:style/Theme.NoTitleBar"
+                android:windowSoftInputMode="stateAlwaysHidden"/>
+        <activity android:name="com.join.mobi.activity.PortalActivity_"/>
+        <activity android:name="com.join.mobi.activity.LiveCourseActivity_"/>
+        <activity android:name="com.join.mobi.activity.LiveCourseDetailActivity_" android:screenOrientation="portrait"/>
+        <activity android:name="com.join.mobi.activity.ExamIntroActivity_"/>
+        <activity android:name="com.join.mobi.activity.IntroActivity_"/>
+        <activity android:name="com.join.mobi.activity.ExamActivity_"/>
+        <activity android:name="com.join.mobi.activity.ExamListActivity_"/>
+        <activity android:name="com.join.mobi.activity.ExamResultActivity_"/>
+        <activity android:name="com.join.mobi.activity.ShareActivity_"/>
+        <activity android:name="com.join.mobi.activity.DownloadingActivity_"/>
+        <activity android:name="com.join.mobi.activity.LocalActivity_"/>
+        <activity android:name="com.join.mobi.activity.LocalCourseActivity_"/>
+        <activity android:name="com.join.mobi.activity.LocalCourseDetailActivity_" android:screenOrientation="portrait"/>
+        <activity android:name="com.join.mobi.activity.VideoWebViewActivity_"></activity>
+        <activity android:name="com.join.mobi.activity.MyVideoViewBufferFullScreen_" android:screenOrientation="landscape" />
 
 
     </application>

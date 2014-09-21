@@ -6,6 +6,7 @@ import com.join.android.app.common.R;
 import com.join.android.app.common.db.manager.CourseManager;
 import com.join.android.app.common.db.manager.LocalCourseManager;
 import com.join.android.app.common.db.manager.ReferenceManager;
+import com.join.android.app.common.db.tables.Course;
 import com.join.android.app.common.db.tables.LocalCourse;
 import com.join.android.app.common.db.tables.Reference;
 import com.join.android.app.common.manager.DialogManager;
@@ -43,7 +44,10 @@ public class LiveCourseReferenceFragment extends Fragment {
     void afterViews() {
         courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
         url = ((LiveCourseDetailActivity_) getActivity()).getUrl();
-        totalDuration = CourseManager.getInstance().findForId(courseDetailDto.getCourseId()).getTotalDuration();
+
+        Course course = CourseManager.getInstance().getByCourseId(courseDetailDto.getCourseId());
+        if(course!=null)
+        totalDuration = course.getTotalDuration();
         liveCourseReferenceAdapter = new LiveCourseReferenceAdapter(getActivity(), courseDetailDto.getReferences(), new LiveCourseReferenceAdapter.Download() {
             @Override
             public void download(ReferenceDto reference) {//下载工作

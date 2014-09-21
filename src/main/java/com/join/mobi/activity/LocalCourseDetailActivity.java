@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -58,6 +59,9 @@ public class LocalCourseDetailActivity extends FragmentActivity {
     @ViewById
     ImageView curveMarkerReference;
 
+    @ViewById
+    ImageView trash;
+
     @Extra
     String courseId;
 
@@ -65,7 +69,6 @@ public class LocalCourseDetailActivity extends FragmentActivity {
     String name;
 
     LocalCourse localCourse;
-
     LocalCourseDetailFragment_ localCourseDetailFragment;
     LocalCourseChapterFragment_ localCourseChapterFragment;
     LocalCourseReferenceFragment_ localCourseReferenceFragment;
@@ -74,6 +77,8 @@ public class LocalCourseDetailActivity extends FragmentActivity {
     Fragment currentFragment;
 
     CommonDialogLoading loading;
+
+    boolean trashShowing;
 
     @AfterViews
     void afterViews() {
@@ -129,6 +134,15 @@ public class LocalCourseDetailActivity extends FragmentActivity {
         finish();
     }
 
+
+    @Click
+    void trashClicked(){
+        trashShowing = !trashShowing;
+        Intent intent = new Intent();
+        intent.setAction("org.androidannotations.ACTION_1");
+        sendBroadcast(intent);
+    }
+
     void invisibleAll() {
         curveMarkerDetail.setVisibility(View.INVISIBLE);
         curveMarkerChapter.setVisibility(View.INVISIBLE);
@@ -147,5 +161,13 @@ public class LocalCourseDetailActivity extends FragmentActivity {
 
     public void setLocalCourse(LocalCourse localCourse) {
         this.localCourse = localCourse;
+    }
+
+    public boolean isTrashShowing() {
+        return trashShowing;
+    }
+
+    public void setTrashShowing(boolean trashShowing) {
+        this.trashShowing = trashShowing;
     }
 }

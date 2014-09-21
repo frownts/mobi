@@ -21,7 +21,7 @@ public class MApplication extends DownloadApplication {
     public void onCreate() {
         super.onCreate();
         initCache();
-
+        DBManager.getInstance(this).createDB("abc");
     }
 
     private void initCache() {

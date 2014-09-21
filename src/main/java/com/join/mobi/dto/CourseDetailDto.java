@@ -48,8 +48,9 @@ public class CourseDetailDto {
      * 课程时长
      */
     private long courseHour;
+
     /**
-     * 课件有效时间
+     * 课程有效期
      */
     private long validUntil;
 
@@ -139,14 +140,6 @@ public class CourseDetailDto {
         this.courseHour = courseHour;
     }
 
-    public long getValidUntil() {
-        return validUntil;
-    }
-
-    public void setValidUntil(long validUntil) {
-        this.validUntil = validUntil;
-    }
-
     public List<ExamDto> getExams() {
         return exams;
     }
@@ -169,5 +162,13 @@ public class CourseDetailDto {
 
     public void setReferences(List<ReferenceDto> references) {
         this.references = references;
+    }
+
+    public long getValidUntil() {
+        return validUntil;
+    }
+
+    public void setValidUntil(long validUntil) {
+        this.validUntil = validUntil;
     }
 }

@@ -7,6 +7,8 @@ import com.join.android.app.common.db.tables.*;
 import com.join.android.app.common.dialog.CommonDialogLoading;
 import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
+import com.join.mobi.pref.PrefDef_;
+import com.join.mobi.rpc.RPCService;
 import com.join.mobi.rpc.RPCTestData;
 
 import java.util.HashMap;
@@ -20,6 +22,8 @@ import java.util.Map;
  */
 public class BaseActivity extends Activity {
 
+    private PrefDef_ pref;
+    private RPCService webService;
     private DatabaseHelper databaseHelper = null;
     private CommonDialogLoading loading;
 
@@ -135,7 +139,10 @@ public class BaseActivity extends Activity {
 
     public void dismissLoading() {
         if (loading == null) return;
-        loading.dismiss();
+        try{
+            loading.dismiss();
+        }catch (Exception e){}
+
     }
 
 
@@ -143,7 +150,8 @@ public class BaseActivity extends Activity {
         MainContentDto mainContent;
         try {
             mainContent = RPCTestData.getMainContentDto();
-//          mainContent = rpcService.getMainContent(myPref.userId().get());
+
+//          mainContent = webService.getMainContent(pref.userId().get());
 
         } catch (Throwable e) {
             try {
@@ -164,4 +172,20 @@ public class BaseActivity extends Activity {
 
     ;
 
+
+    public RPCService getWebService() {
+        return webService;
+    }
+
+    public void setWebService(RPCService webService) {
+        this.webService = webService;
+    }
+
+    public PrefDef_ getPref() {
+        return pref;
+    }
+
+    public void setPref(PrefDef_ pref) {
+        this.pref = pref;
+    }
 }

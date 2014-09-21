@@ -4,11 +4,13 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.BaseAdapter;
-import android.widget.TextView;
+import android.widget.*;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.tables.Chapter;
-import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.utils.DateUtils;
+import com.join.android.app.common.utils.FileUtils;
+import com.join.mobi.activity.LocalCourseDetailActivity;
+import com.join.mobi.customview.SpringProgressView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -21,10 +23,11 @@ import java.util.List;
  */
 public class LocalCourseChapterAdapter extends BaseAdapter {
 
-    private List<Chapter> Chapters = new ArrayList<Chapter>(0);
+    private List<Chapter> chapters = new ArrayList<Chapter>(0);
 
     private Context mContext;
     private LayoutInflater inflater;
+    private int mRightWidth = 0;
 
     private class ViewHolder {
         TextView title;
@@ -33,33 +36,41 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
         TextView learnedTime;
         TextView chapterDuration;
         View main;
+        RelativeLayout item_left;
+        RelativeLayout item_right;
+        TextView item_right_txt;
+        ImageView roundDel;
+        SpringProgressView springProgressView;
     }
 
     public List<Chapter> getItems() {
 
-        return Chapters;
+        return chapters;
     }
 
     public void updateItems(List<Chapter> _chapters) {
-        Chapters.clear();
-        Chapters.addAll(_chapters);
+        chapters.clear();
+        chapters.addAll(_chapters);
     }
 
-    public LocalCourseChapterAdapter(Context c, List<Chapter> _chapters) {
+    public LocalCourseChapterAdapter(Context c, List<Chapter> _chapters, int rightWidth, OnRightItemClickListener onRightItemClickListener) {
         mContext = c;
-        Chapters.clear();
-        Chapters.addAll(_chapters);
+        chapters.clear();
+        chapters.addAll(_chapters);
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mRightWidth = rightWidth;
+        this.mListener = onRightItemClickListener;
     }
 
     @Override
     public int getCount() {
-        return Chapters.size();
+        return chapters.size();
     }
 
     @Override
-    public Object getItem(int position) {
-        return Chapters.get(position);
+    public Chapter getItem(int position) {
+        if (chapters == null || chapters.size() == 0) return null;
+        return chapters.get(position);
     }
 
     @Override
@@ -69,41 +80,74 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        final Chapter chapter = Chapters.get(position);
+        final Chapter chapter = chapters.get(position);
         ViewHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.localcourse_chapter_listview_layout, null);
             holder = new ViewHolder();
+            holder.item_left = (RelativeLayout) convertView.findViewById(R.id.item_left);
+            holder.item_right = (RelativeLayout) convertView.findViewById(R.id.item_right);
+            holder.item_right_txt = (TextView) convertView.findViewById(R.id.item_right_txt);
             holder.main = convertView.findViewById(R.id.main);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.chapterDuration = (TextView) convertView.findViewById(R.id._chapterDuration);
             holder.learnedTime = (TextView) convertView.findViewById(R.id.learnedTime);
             holder.filesize = (TextView) convertView.findViewById(R.id.filesize);
             holder.validUtil = (TextView) convertView.findViewById(R.id.validUtil);
+            holder.roundDel = (ImageView) convertView.findViewById(R.id.roundDel);
+
+            holder.springProgressView = (SpringProgressView) convertView.findViewById(R.id.springProgressView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
+        LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT);
+        holder.item_left.setLayoutParams(lp1);
+        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(mRightWidth, LinearLayout.LayoutParams.MATCH_PARENT);
+        holder.item_right.setLayoutParams(lp2);
 
         holder.title.setText(chapter.getTitle());
-        holder.filesize.setText(chapter.getFilesize() + "byte");
-        holder.chapterDuration.setText(chapter.getChapterDuration() + "");
-        holder.learnedTime.setText(chapter.getLearnedTime() + "");
-        holder.validUtil.setText(chapter.getValidUntil() + "");
+        holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFilesize()));
+        holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
+        holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
+        holder.validUtil.setText(chapter.getValidUntil() + "天后过期");
+
+        if (((LocalCourseDetailActivity) mContext).isTrashShowing()) {
+            holder.roundDel.setVisibility(View.VISIBLE);
+        } else
+            holder.roundDel.setVisibility(View.GONE);
 
         if (chapter.isPlaying()) {//红色背影框
             holder.main.setBackgroundResource(R.drawable.red_border_frame);
         }
 
-        convertView.setOnClickListener(new View.OnClickListener() {
+        holder.item_right.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View view) {
-                //播放
-                DialogManager.getInstance().makeText(mContext, "play video" + chapter.getDownloadUrl(), DialogManager.DIALOG_TYPE_OK);
+            public void onClick(View v) {
+                if (mListener != null) {
+                    mListener.onRightItemClick(v, position);
+                }
             }
         });
 
+        holder.springProgressView.setMaxCount(chapter.getChapterDuration());
+        holder.springProgressView.setCurrentCount(chapter.getLearnedTime());
+
         return convertView;
+    }
+
+    /**
+     * 单击事件监听器
+     */
+    private OnRightItemClickListener mListener = null;
+
+    public void setOnRightItemClickListener(OnRightItemClickListener listener) {
+        mListener = listener;
+    }
+
+    public interface OnRightItemClickListener {
+        void onRightItemClick(View v, int position);
     }
 
 }

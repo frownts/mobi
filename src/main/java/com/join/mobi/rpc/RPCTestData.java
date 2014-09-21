@@ -41,7 +41,6 @@ public class RPCTestData {
         liveCourseDto.setLastLearn("1小时前");
         liveCourseDto.setLearningTimes(1);
         liveCourseDto.setTotalDuration("60");
-
         courseDtos.add(liveCourseDto);
 
         LiveCourseDto liveCourseDto1 = new LiveCourseDto();
@@ -51,8 +50,7 @@ public class RPCTestData {
         liveCourseDto1.setCourseId(2);
         liveCourseDto1.setLastLearn("2小时前");
         liveCourseDto1.setLearningTimes(1);
-        liveCourseDto1.setTotalDuration("21:20");
-
+        liveCourseDto1.setTotalDuration("80");
         courseDtos.add(liveCourseDto1);
 
         mainContentDto.setCourses(courseDtos);
@@ -106,7 +104,6 @@ public class RPCTestData {
         courseDetailDto.setLastLearn("最后学习时间:2014-06-12");
         courseDetailDto.setTotalHour(99);
         courseDetailDto.setCourseHour(1988);
-        courseDetailDto.setValidUntil(100);
 
 
         //测试
@@ -184,7 +181,7 @@ public class RPCTestData {
         reference1.setReferenceId(101);
         reference1.setTitle("资料二");
         reference1.setFileSize(20034343);
-        reference1.setType(1);
+        reference1.setType(2);
         reference1.setUrl("https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.5.0/mule-standalone-3.5.0.zip");
         referenceDtos.add(reference1);
         courseDetailDto.setReferences(referenceDtos);

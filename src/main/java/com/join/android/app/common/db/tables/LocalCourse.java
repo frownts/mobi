@@ -49,23 +49,28 @@ public class LocalCourse {
     /**
      * 开课机构名称
      */
+    @DatabaseField
     private String branch;
     /**
      * 课程创建时间
      */
+    @DatabaseField
     private String createTime;
 
     /**
      * 课程时长
      */
+    @DatabaseField
     private long courseHour;
     /**
      * 课件有效时间
      */
+    @DatabaseField
     private long validUntil;
     /**
      * 课程描述
      */
+    @DatabaseField
     private String description;
 
     /**

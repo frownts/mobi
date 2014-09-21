@@ -8,7 +8,9 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.utils.FileUtils;
 import com.join.mobi.dto.ReferenceDto;
+import com.join.mobi.utils.ContentTypeUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -83,9 +85,9 @@ public class LiveCourseReferenceAdapter extends BaseAdapter {
         }
 
         holder.title.setText(reference.getTitle());
-        holder.fileSize.setText(reference.getFileSize()+"KB");
+        holder.fileSize.setText(FileUtils.FormatFileSize(reference.getFileSize()));
         //根据类型，判断生成文字。
-        holder.type.setText(reference.getType()+"");
+        holder.type.setText(ContentTypeUtils.convertReferenceType(reference.getType()));
 
 
         holder.download.setOnClickListener(new View.OnClickListener() {

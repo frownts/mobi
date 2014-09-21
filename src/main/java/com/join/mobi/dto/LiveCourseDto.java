@@ -29,7 +29,7 @@ public class LiveCourseDto {
     /**
      * 课程ID
      */
-    private int courseId;
+    private long courseId;
 
     /**
      * 课程的总时长，单位：秒
@@ -40,6 +40,8 @@ public class LiveCourseDto {
      * 海报链接
      */
     private String url;
+
+
 
 
     public String getLastLearn() {
@@ -74,11 +76,11 @@ public class LiveCourseDto {
         this.totalDuration = totalDuration;
     }
 
-    public int getCourseId() {
+    public long getCourseId() {
         return courseId;
     }
 
-    public void setCourseId(int courseId) {
+    public void setCourseId(long courseId) {
         this.courseId = courseId;
     }
 
@@ -97,4 +99,5 @@ public class LiveCourseDto {
     public void setUrl(String url) {
         this.url = url;
     }
+
 }

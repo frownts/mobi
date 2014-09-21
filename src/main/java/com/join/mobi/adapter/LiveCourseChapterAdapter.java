@@ -9,6 +9,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.utils.DateUtils;
+import com.join.android.app.common.utils.FileUtils;
+import com.join.mobi.customview.SpringProgressView;
 import com.join.mobi.dto.ChapterDto;
 
 import java.util.ArrayList;
@@ -27,13 +30,18 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
     private Download download;
     private Context mContext;
     private LayoutInflater inflater;
+    /** 当前播放的是哪一个**/
+    private int currentPosition;
+
 
     private class ViewHolder {
+        View main;
         TextView title;
         TextView chapterDuration;
         TextView learnedTime;
         TextView filesize;
         ImageView download;
+        SpringProgressView springProgressView;
     }
 
     public List<ChapterDto> getItems() {
@@ -59,8 +67,9 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
     }
 
     @Override
-    public Object getItem(int position) {
-        return position;
+    public ChapterDto getItem(int position) {
+        if(chapterDtos==null||chapterDtos.size()==0)return null;
+        return chapterDtos.get(position);
     }
 
     @Override
@@ -71,24 +80,34 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
         final ChapterDto chapter = chapterDtos.get(position);
-        ViewHolder holder;
+        final ViewHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.livecourse_chapter_listview_layout, null);
             holder = new ViewHolder();
+            holder.main = convertView.findViewById(R.id.main);
             holder.title = (TextView) convertView.findViewById(R.id.title);
             holder.chapterDuration = (TextView) convertView.findViewById(R.id.chapterDuration);
             holder.learnedTime = (TextView) convertView.findViewById(R.id.learnedTime);
             holder.filesize = (TextView) convertView.findViewById(R.id.filesize);
             holder.download = (ImageView) convertView.findViewById(R.id.download);
+            holder.springProgressView = (SpringProgressView) convertView.findViewById(R.id.springProgressView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
         holder.title.setText(chapter.getTitle());
-        holder.filesize.setText(chapter.getFilesize() + "byte");
-        holder.chapterDuration.setText(chapter.getChapterDuration() + "");
-        holder.learnedTime.setText(chapter.getLearnedTime() + "");
+        holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFilesize()));
+        holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
+        holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
+
+        holder.springProgressView.setMaxCount(chapter.getChapterDuration());
+        holder.springProgressView.setCurrentCount(chapter.getLearnedTime());
+
+        if(chapter.isPlaying())
+            holder.main.setBackgroundResource(R.drawable.red_border_frame);
+        else
+            holder.main.setBackgroundResource(R.drawable.border_bg);
 
 
         holder.download.setOnClickListener(new View.OnClickListener() {
@@ -101,12 +120,22 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                currentPosition = position;
+                for (ChapterDto c : chapterDtos) c.setPlaying(false);
+                LiveCourseChapterAdapter.this.notifyDataSetChanged();
+
+                chapter.setPlaying(true);
                 //播放
                 DialogManager.getInstance().makeText(mContext,"play video",DialogManager.DIALOG_TYPE_OK);
             }
         });
 
         return convertView;
+    }
+
+    public int getCurrentPosition() {
+        return currentPosition;
     }
 
     public interface Download{

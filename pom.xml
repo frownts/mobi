@@ -12,7 +12,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <android.version>4.2.2</android.version>
         <android.platform>17</android.platform>
-        <androidannotations.version>3.0</androidannotations.version>
+        <androidannotations.version>3.1</androidannotations.version>
         <java.version>1.6</java.version>
         <android.plugin.version>3.8.0</android.plugin.version>
         <android.ormlite.version>4.48</android.ormlite.version>

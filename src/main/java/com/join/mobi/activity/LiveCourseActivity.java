@@ -58,6 +58,8 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
     @AfterViews
     void afterViews() {
+        setWebService(rpcService);
+        setPref(myPref);
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
@@ -66,7 +68,10 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         listView.setAdapter(mAdapter);
 
         wrapEvent();
-        showLoading();
+        try{
+            showLoading();
+        }catch (Exception e){}
+
         retrieveDataFromServer();
     }
 

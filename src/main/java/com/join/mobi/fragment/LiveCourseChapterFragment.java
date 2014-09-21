@@ -7,6 +7,7 @@ import com.join.android.app.common.db.manager.ChapterManager;
 import com.join.android.app.common.db.manager.CourseManager;
 import com.join.android.app.common.db.manager.LocalCourseManager;
 import com.join.android.app.common.db.tables.Chapter;
+import com.join.android.app.common.db.tables.Course;
 import com.join.android.app.common.db.tables.LocalCourse;
 import com.join.android.app.common.manager.DialogManager;
 import com.join.mobi.activity.LiveCourseDetailActivity_;
@@ -18,6 +19,7 @@ import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.HashMap;
@@ -45,7 +47,9 @@ public class LiveCourseChapterFragment extends Fragment {
 
         courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
         url = ((LiveCourseDetailActivity_) getActivity()).getUrl();
-        totalDuration = CourseManager.getInstance().findForId(courseDetailDto.getCourseId()).getTotalDuration();
+        Course course = CourseManager.getInstance().getByCourseId(courseDetailDto.getCourseId());
+        if(course!=null)
+        totalDuration = course.getTotalDuration();
 
         liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(),courseDetailDto.getChapters(),new LiveCourseChapterAdapter.Download(){
             @Override
@@ -77,6 +81,9 @@ public class LiveCourseChapterFragment extends Fragment {
             course = LocalCourseManager.getInstance().saveIfNotExists(entity);
         }else{
             course = courseList.get(0);
+            //更新总学习时间
+            course.setLearningTimes(Integer.parseInt(totalDuration));
+            course = LocalCourseManager.getInstance().saveOrUpdate(course);
         }
 
         //判断该章节是否已经存在
@@ -94,6 +101,7 @@ public class LiveCourseChapterFragment extends Fragment {
             entity.setLearnedTime(chapter.getLearnedTime());
             entity.setChapterDuration(chapter.getChapterDuration());
             entity.setDownloadUrl(chapter.getDownloadUrl());
+            entity.setValidUntil(chapter.getValidUntil());
 
             ChapterManager.getInstance().save(entity);
             DialogManager.getInstance().makeText(getActivity(),"开始下载",DialogManager.DIALOG_TYPE_OK);
@@ -106,4 +114,25 @@ public class LiveCourseChapterFragment extends Fragment {
 
     }
 
+
+
+    /**
+     * 当播放进行时，更新进度和学习时间
+     */
+    @Receiver(actions = "org.androidannotations.updateLearningTime", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+    public void updateProgressAndLearningTime(){
+        ChapterDto chapterDto = liveCourseChapterAdapter.getItem(liveCourseChapterAdapter.getCurrentPosition());
+        if(chapterDto==null)return;
+        chapterDto.setLearnedTime(chapterDto.getLearnedTime()+1);
+        liveCourseChapterAdapter.notifyDataSetChanged();
+
+    }
+
+    public CourseDetailDto getCourseDetailDto() {
+        return courseDetailDto;
+    }
+
+    public void setCourseDetailDto(CourseDetailDto courseDetailDto) {
+        this.courseDetailDto = courseDetailDto;
+    }
 }

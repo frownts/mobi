@@ -1,14 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:sp="http://schemas.android.com/apk/res/com.join.android.app.common"
               android:orientation="vertical"
               android:layout_width="match_parent"
               android:layout_height="match_parent">
-    <ListView
+
+    <com.join.android.app.common.view.SwipeListView
             android:id="@+id/listView"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
             android:listSelector="#00000000"
-            android:divider="#00000000"
-            android:dividerHeight="28dp"/>
+            android:background="@android:color/transparent"
+            android:cacheColorHint="#00000000"
+            android:divider="@android:color/transparent"
+            android:dividerHeight="28dp"
+            sp:right_width="120dp"/>
 </LinearLayout>

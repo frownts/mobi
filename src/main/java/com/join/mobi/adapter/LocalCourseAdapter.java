@@ -121,7 +121,6 @@ public class LocalCourseAdapter extends BaseAdapter {
             public void onClick(View view) {
                 List<Integer> ids = new ArrayList<Integer>(0);
 
-                DialogManager.getInstance().makeText(mContext, "del..", DialogManager.DIALOG_TYPE_OK);
                 //先删除文件、再删除记录
 
                 CloseableIterable<Chapter> closeableIterable = course.getChapters().getWrappedIterable();

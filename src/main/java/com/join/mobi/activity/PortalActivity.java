@@ -196,15 +196,38 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     @Background
      void doLogin(String userId,String password,String companyId) {
         myPref.userId().put(userId);
-
-        try{
-//            rpcService.login(userId,password,companyId);
-        }catch (Exception e){
-            rpcException();
-            return;
+        String _companyCode = "0986";
+        if(companyId.equals("深圳分公司")){
+            _companyCode = "1086";
+        }else if(companyId.equals("北京分公司")){
+            _companyCode = "1186";
+        }else if(companyId.equals("江苏分公司")){
+            _companyCode = "1286";
+        }else if(companyId.equals("广东分公司")){
+            _companyCode = "2586";
+        }else if(companyId.equals("佛山分公司")){
+            _companyCode = "2686";
+        }else if(companyId.equals("江门分公司")){
+            _companyCode = "2786";
+        }else if(companyId.equals("东莞分公司")){
+            _companyCode = "2886";
         }
+//        try{
+//
+//            LoginDto loginDto = rpcService.login(userId, password, _companyCode);
+//            String a = loginDto.getLogined();
+//            if(!a.equals("S0008")){
+//                DialogManager.getInstance().makeText(this,"用户名或密码错误",DialogManager.DIALOG_TYPE_OK);
+//                return;
+//            }
+//            myPref.showName().put(loginDto.getUserName());
+//            reloadAfterLogin(loginDto.getUserName());
+//        }catch (Exception e){
+//            rpcException();
+//            return;
+//        }
 
-        reloadAfterLogin(userId);
+        reloadAfterLogin("abc");
     }
 
 
@@ -272,7 +295,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     public void reloadAfterLogin(String _userName) {
         dismissLoading();
         loginDialog.dismiss();
-        createDB(myPref.userId().get());
+//        createDB(myPref.userId().get());
         menuAdapter.setLogin(true);
         menuAdapter.notifyDataSetChanged();
         userNameContainer.setVisibility(View.VISIBLE);

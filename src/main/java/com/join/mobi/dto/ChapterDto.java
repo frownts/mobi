@@ -51,6 +51,15 @@ public class ChapterDto {
      */
     private String validUntil;
 
+    /**
+     * 开始播放学习的时间
+     */
+    private String startTime;
+
+    private boolean playing;
+
+
+
 
     public long getChapterId() {
         return chapterId;
@@ -122,5 +131,13 @@ public class ChapterDto {
 
     public void setValidUntil(String validUntil) {
         this.validUntil = validUntil;
+    }
+
+    public boolean isPlaying() {
+        return playing;
+    }
+
+    public void setPlaying(boolean playing) {
+        this.playing = playing;
     }
 }

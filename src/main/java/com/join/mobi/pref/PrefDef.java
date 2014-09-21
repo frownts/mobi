@@ -14,6 +14,8 @@ public interface PrefDef {
 
     String userId();
 
+    String showName();
+
     @DefaultBoolean(true)
     boolean uncompleteDownload();
 

@@ -1,5 +1,5 @@
 #
-# generated on 2014/09/17 01:25:20
+# generated on 2014/09/18 10:34:27
 #
 # --table-start--
 dataClass=com.join.android.app.common.db.tables.Account
@@ -51,6 +51,9 @@ fieldName=playUrl
 # --field-end--
 # --field-start--
 fieldName=downloadUrl
+# --field-end--
+# --field-start--
+fieldName=validUntil
 # --field-end--
 # --field-start--
 fieldName=localCourse
@@ -144,10 +147,27 @@ fieldName=url
 # --field-start--
 fieldName=chapters
 foreignCollection=true
+foreignCollectionEager=true
 # --field-end--
 # --field-start--
 fieldName=references
 foreignCollection=true
+foreignCollectionEager=true
+# --field-end--
+# --field-start--
+fieldName=branch
+# --field-end--
+# --field-start--
+fieldName=createTime
+# --field-end--
+# --field-start--
+fieldName=courseHour
+# --field-end--
+# --field-start--
+fieldName=validUntil
+# --field-end--
+# --field-start--
+fieldName=description
 # --field-end--
 # --table-fields-end--
 # --table-end--
