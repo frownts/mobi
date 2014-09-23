@@ -33,14 +33,18 @@ public class LiveCourseDetailFragment extends Fragment {
 
     CourseDetailDto courseDetailDto;
 
+    long originTime;
+
     @AfterViews
     void afterViews() {
         courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
-        createTime.setText(courseDetailDto.getCreateTime());
+        createTime.setText(DateUtils.FormatForCourseLastLearningTime(courseDetailDto.getCreateTime()));
         branch.setText(courseDetailDto.getBranch());
         courseHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getCourseHour()));
         totalHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getTotalHour()));
         description.setText(courseDetailDto.getDescription());
+
+        originTime = courseDetailDto.getTotalHour();
     }
 
     /**
@@ -53,5 +57,8 @@ public class LiveCourseDetailFragment extends Fragment {
         totalHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getTotalHour()));
     }
 
+    public long getDuration(){
+        return courseDetailDto.getTotalHour()- originTime;
+    }
 
 }

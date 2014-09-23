@@ -7,6 +7,7 @@ package com.join.mobi.dto;
  */
 public class ResourceShareDto {
 
+
     /**
      * 共享资源文件大小
      */

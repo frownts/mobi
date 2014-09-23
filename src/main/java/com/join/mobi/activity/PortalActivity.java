@@ -10,6 +10,7 @@ import com.join.android.app.common.R;
 import com.join.android.app.common.manager.DialogManager;
 import com.join.mobi.adapter.PortalMenuAdapter;
 import com.join.mobi.customview.MySpinner;
+import com.join.mobi.dto.LoginDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
 import com.php25.PDownload.DownloadApplication;
@@ -42,6 +43,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     RPCService rpcService;
     Dialog loginDialog;
 
+    TextView textViewUserId;
+
     long waitTime = 2000;
     long touchTime = 0;
     ArrayList<String> data = new ArrayList<String>();
@@ -53,13 +56,20 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     void afterViews() {
         if(myPref.uncompleteDownload().get())((DownloadApplication)getApplicationContext()).startAllUnCompleteDownload();
 
-        menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().get(), new PortalMenuAdapter.NeedLogin() {
+        menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().getOr(true), new PortalMenuAdapter.NeedLogin() {
             @Override
             public void login() {
                 imgLogin.performClick();
             }
         });
         gridViewMenu.setAdapter(menuAdapter);
+
+        boolean autoLogin = myPref.autoLogin().getOr(false);
+
+        if(autoLogin){
+            reloadAfterLogin(myPref.showName().get());
+        }
+
     }
 
 
@@ -78,7 +88,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
         dialogWindow.setAttributes(lp);
         settingDialog.setContentView(view);
-
+        textViewUserId = (TextView) view.findViewById(R.id.userId);
         ImageView cancel = (ImageView) view.findViewById(R.id.cancel);
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -93,7 +103,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         boolean buncompleteDownload = myPref.uncompleteDownload().get();
         boolean bcontinueOnWifi = myPref.continueOnWifi().get();
         boolean bannonunceWhenDownload = myPref.annonunceWhenDownload().get();
-        boolean bautoLogin = myPref.autoLogin().get();
+        boolean bautoLogin = myPref.autoLogin().getOr(false);
 
         if (buncompleteDownload) {
             uncompleteDownload.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));
@@ -114,6 +124,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             autoLogin.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));
         } else
             autoLogin.setImageDrawable(getResources().getDrawable(R.drawable.switch_off));
+
+        textViewUserId.setText(myPref.userId().get());
 
     }
 
@@ -212,22 +224,25 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         }else if(companyId.equals("东莞分公司")){
             _companyCode = "2886";
         }
-//        try{
-//
-//            LoginDto loginDto = rpcService.login(userId, password, _companyCode);
-//            String a = loginDto.getLogined();
-//            if(!a.equals("S0008")){
-//                DialogManager.getInstance().makeText(this,"用户名或密码错误",DialogManager.DIALOG_TYPE_OK);
-//                return;
-//            }
-//            myPref.showName().put(loginDto.getUserName());
-//            reloadAfterLogin(loginDto.getUserName());
-//        }catch (Exception e){
-//            rpcException();
-//            return;
-//        }
+        try{
+            LoginDto loginDto = rpcService.login(userId, password, _companyCode);
 
-        reloadAfterLogin("abc");
+
+            String a = loginDto.getLogined();
+            if(!a.equals("S0008")){
+                DialogManager.getInstance().makeText(this,"用户名或密码错误",DialogManager.DIALOG_TYPE_OK);
+                return;
+            }
+            myPref.rpcUserId().put(_companyCode+"-"+userId);
+            myPref.showName().put(loginDto.getUserName());
+            textViewUserId.setText(userId);
+            reloadAfterLogin(loginDto.getUserName());
+        }catch (Exception e){
+            rpcException();
+            return;
+        }
+
+//        reloadAfterLogin("abc");
     }
 
 
@@ -284,7 +299,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
                 break;
             case R.id.logout:
-                myPref.clear();
+                myPref.autoLogin().put(false);
                 reloadAfterLogout();
                 settingDialog.dismiss();
                 break;
@@ -294,6 +309,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     @UiThread
     public void reloadAfterLogin(String _userName) {
         dismissLoading();
+        if(loginDialog!=null&&loginDialog.isShowing())
         loginDialog.dismiss();
 //        createDB(myPref.userId().get());
         menuAdapter.setLogin(true);

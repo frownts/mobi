@@ -1,6 +1,7 @@
 package com.join.mobi.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,7 +9,6 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
-import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.DateUtils;
 import com.join.android.app.common.utils.FileUtils;
 import com.join.mobi.customview.SpringProgressView;
@@ -32,6 +32,7 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
     private LayoutInflater inflater;
     /** 当前播放的是哪一个**/
     private int currentPosition;
+
 
 
     private class ViewHolder {
@@ -97,7 +98,7 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         }
 
         holder.title.setText(chapter.getTitle());
-        holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFilesize()));
+        holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFileSize()));
         holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
         holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
 
@@ -124,10 +125,11 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
                 currentPosition = position;
                 for (ChapterDto c : chapterDtos) c.setPlaying(false);
                 LiveCourseChapterAdapter.this.notifyDataSetChanged();
-
                 chapter.setPlaying(true);
-                //播放
-                DialogManager.getInstance().makeText(mContext,"play video",DialogManager.DIALOG_TYPE_OK);
+
+                Intent intent = new Intent("org.androidannotations.play");
+                intent.putExtra("playUrl",chapter.getPlayUrl());
+                mContext.sendBroadcast(intent);
             }
         });
 

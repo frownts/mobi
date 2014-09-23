@@ -1,6 +1,7 @@
 package com.join.mobi.rpc;
 
 import android.util.Log;
+import com.join.mobi.MyMappingJacksonHttpMessageConverter;
 import com.join.mobi.dto.CourseDetailDto;
 import com.join.mobi.dto.ExamDto;
 import com.join.mobi.dto.LoginDto;
@@ -11,7 +12,6 @@ import org.springframework.http.HttpRequest;
 import org.springframework.http.client.ClientHttpRequestExecution;
 import org.springframework.http.client.ClientHttpRequestInterceptor;
 import org.springframework.http.client.ClientHttpResponse;
-import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
 import java.io.IOException;
 
@@ -20,8 +20,9 @@ import java.io.IOException;
  * Date: 14-9-8
  * Time: 下午7:54
  */
-@Rest(rootUrl = "http://test.fortune-net.cn:8999/app/", converters = MappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
+@Rest(rootUrl = "http://aia.fortune-net.cn/app/", converters = MyMappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
 public interface RPCService {
+
 
     /**
      * 登录
@@ -129,7 +130,7 @@ public interface RPCService {
      * @param startTime
      * @param duration
      */
-    @Get("submitExamResult.jsp?userId={userId}&examId={examId}&correctPercent={correctPercent}&finishPercent={finishPercent}&startTime={startTime}&duration={duration}")
+    @Get("submitExamResult.jsp?userId={userId}&examId={examId}&correctPercent={correctPercent}&finishPercent={finishPercent}&examTime={startTime}&duration={duration}")
     public void submitExamResult(String userId,String examId,String correctPercent,String finishPercent,String startTime,String duration);
 
 }

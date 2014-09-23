@@ -50,15 +50,22 @@ public class CourseDetailDto {
     private long courseHour;
 
     /**
+     * 上将的课程编号
+     */
+    private long lastLearnChptId;
+
+    /**
      * 课程有效期
      */
     private long validUntil;
 
-    private List<ExamDto> exams;
+    private String bookmark;
 
-    private List<ChapterDto> chapters;
+    private List<ExamDto> exam;
 
-    private List<ReferenceDto> references;
+    private List<ChapterDto> chapter;
+
+    private List<ReferenceDto> reference;
 
     public long getCourseId() {
         return courseId;
@@ -140,28 +147,28 @@ public class CourseDetailDto {
         this.courseHour = courseHour;
     }
 
-    public List<ExamDto> getExams() {
-        return exams;
+    public List<ExamDto> getExam() {
+        return exam;
     }
 
-    public void setExams(List<ExamDto> exams) {
-        this.exams = exams;
+    public void setExam(List<ExamDto> exam) {
+        this.exam = exam;
     }
 
-    public List<ChapterDto> getChapters() {
-        return chapters;
+    public List<ChapterDto> getChapter() {
+        return chapter;
     }
 
-    public void setChapters(List<ChapterDto> chapters) {
-        this.chapters = chapters;
+    public void setChapter(List<ChapterDto> chapter) {
+        this.chapter = chapter;
     }
 
-    public List<ReferenceDto> getReferences() {
-        return references;
+    public List<ReferenceDto> getReference() {
+        return reference;
     }
 
-    public void setReferences(List<ReferenceDto> references) {
-        this.references = references;
+    public void setReference(List<ReferenceDto> reference) {
+        this.reference = reference;
     }
 
     public long getValidUntil() {
@@ -171,4 +178,21 @@ public class CourseDetailDto {
     public void setValidUntil(long validUntil) {
         this.validUntil = validUntil;
     }
+
+    public long getLastLearnChptId() {
+        return lastLearnChptId;
+    }
+
+    public void setLastLearnChptId(long lastLearnChptId) {
+        this.lastLearnChptId = lastLearnChptId;
+    }
+
+    public String getBookmark() {
+        return bookmark;
+    }
+
+    public void setBookmark(String bookmark) {
+        this.bookmark = bookmark;
+    }
 }
+

@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.tables.ResourceShare;
+import com.join.android.app.common.utils.FileUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +73,7 @@ public class ShareAdapter extends BaseAdapter {
             holder = (GirdHolder) convertView.getTag();
         }
         holder.fileName.setText(resourceShare.getName());
-        holder.fileSize.setText(resourceShare.getFileSize() + "");
+        holder.fileSize.setText(FileUtils.FormatFileSize(resourceShare.getFileSize()));
         int type = resourceShare.getType();
         if (type == 1) holder.fileLegend.setImageDrawable(mContext.getResources().getDrawable(R.drawable.video));
         else if (type == 2) holder.fileLegend.setImageDrawable(mContext.getResources().getDrawable(R.drawable.music));

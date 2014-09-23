@@ -29,12 +29,12 @@ public class ChapterDto {
     /**
      * 书签
      */
-    private String bookmark;
+    private String bookMark;
 
     /**
      * 章节关联资源的文件大小
      */
-    private long filesize;
+    private long fileSize;
 
     /**
      * 章节资源播放链接
@@ -93,20 +93,20 @@ public class ChapterDto {
         this.learnedTime = learnedTime;
     }
 
-    public String getBookmark() {
-        return bookmark;
+    public String getBookMark() {
+        return bookMark;
     }
 
-    public void setBookmark(String bookmark) {
-        this.bookmark = bookmark;
+    public void setBookMark(String bookMark) {
+        this.bookMark = bookMark;
     }
 
-    public long getFilesize() {
-        return filesize;
+    public long getFileSize() {
+        return fileSize;
     }
 
-    public void setFilesize(long filesize) {
-        this.filesize = filesize;
+    public void setFileSize(long fileSize) {
+        this.fileSize = fileSize;
     }
 
     public String getPlayUrl() {

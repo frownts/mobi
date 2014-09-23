@@ -51,7 +51,7 @@ public class LiveCourseChapterFragment extends Fragment {
         if(course!=null)
         totalDuration = course.getTotalDuration();
 
-        liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(),courseDetailDto.getChapters(),new LiveCourseChapterAdapter.Download(){
+        liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(),courseDetailDto.getChapter(),new LiveCourseChapterAdapter.Download(){
             @Override
             public void download(ChapterDto chapterDto) {
                 doDownload(chapterDto);
@@ -97,7 +97,7 @@ public class LiveCourseChapterFragment extends Fragment {
             entity.setLocalCourse(course);
             entity.setTitle(chapter.getTitle());
             entity.setChapterId(chapter.getChapterId());
-            entity.setFilesize(chapter.getFilesize());
+            entity.setFilesize(chapter.getFileSize());
             entity.setLearnedTime(chapter.getLearnedTime());
             entity.setChapterDuration(chapter.getChapterDuration());
             entity.setDownloadUrl(chapter.getDownloadUrl());
@@ -113,8 +113,6 @@ public class LiveCourseChapterFragment extends Fragment {
         DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), chapter.getDownloadUrl(), chapter.getTitle(), Dtype.Chapter,  "0");
 
     }
-
-
 
     /**
      * 当播放进行时，更新进度和学习时间
@@ -134,5 +132,9 @@ public class LiveCourseChapterFragment extends Fragment {
 
     public void setCourseDetailDto(CourseDetailDto courseDetailDto) {
         this.courseDetailDto = courseDetailDto;
+    }
+
+    public long getLastChapterId(){
+        return liveCourseChapterAdapter.getItems().get(liveCourseChapterAdapter.getCurrentPosition()).getChapterId();
     }
 }

@@ -53,7 +53,7 @@ public class RPCTestData {
         liveCourseDto1.setTotalDuration("80");
         courseDtos.add(liveCourseDto1);
 
-        mainContentDto.setCourses(courseDtos);
+        mainContentDto.setCourse(courseDtos);
 
         //共享资源
         List<ResourceShareDto> resourceShares = new ArrayList<ResourceShareDto>(0);
@@ -85,7 +85,7 @@ public class RPCTestData {
         share.setUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         resourceShares.add(share);
 
-        mainContentDto.setResourceShares(resourceShares);
+        mainContentDto.setResourceShare(resourceShares);
 
 
         return mainContentDto;
@@ -125,7 +125,7 @@ public class RPCTestData {
         exam1.setFinishPercent("80");
         exam1.setDurationLimit(50);
         exams.add(exam1);
-        courseDetailDto.setExams(exams);
+        courseDetailDto.setExam(exams);
 
         //章节
 
@@ -135,8 +135,8 @@ public class RPCTestData {
         chapter.setTitle("第一章");
         chapter.setChapterDuration(2000);
         chapter.setLearnedTime(260);
-        chapter.setBookmark("书签");
-        chapter.setFilesize(260000);
+        chapter.setBookMark("书签");
+        chapter.setFileSize(260000);
         chapter.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter.setValidUntil("30");
@@ -147,8 +147,8 @@ public class RPCTestData {
         chapter1.setTitle("第二章");
         chapter1.setChapterDuration(2000);
         chapter1.setLearnedTime(260);
-        chapter1.setBookmark("书签");
-        chapter1.setFilesize(260000);
+        chapter1.setBookMark("书签");
+        chapter1.setFileSize(260000);
         chapter1.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter1.setDownloadUrl("http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.10-osx10.7-x86_64.tar.gz");
         chapter.setValidUntil("30");
@@ -159,13 +159,13 @@ public class RPCTestData {
         chapter2.setTitle("第三章");
         chapter2.setChapterDuration(2000);
         chapter2.setLearnedTime(260);
-        chapter2.setBookmark("书签");
-        chapter2.setFilesize(260000);
+        chapter2.setBookMark("书签");
+        chapter2.setFileSize(260000);
         chapter2.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter2.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter.setValidUntil("30");
         chapterDtos.add(chapter2);
-        courseDetailDto.setChapters(chapterDtos);
+        courseDetailDto.setChapter(chapterDtos);
 
         //资料
         List<ReferenceDto> referenceDtos = new ArrayList<ReferenceDto>(0);
@@ -184,7 +184,7 @@ public class RPCTestData {
         reference1.setType(2);
         reference1.setUrl("https://repository.mulesoft.org/nexus/content/repositories/releases/org/mule/distributions/mule-standalone/3.5.0/mule-standalone-3.5.0.zip");
         referenceDtos.add(reference1);
-        courseDetailDto.setReferences(referenceDtos);
+        courseDetailDto.setReference(referenceDtos);
 
 
         return courseDetailDto;

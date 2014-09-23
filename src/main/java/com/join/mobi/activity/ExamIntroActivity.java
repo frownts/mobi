@@ -1,13 +1,15 @@
 package com.join.mobi.activity;
 
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
+import com.join.android.app.common.utils.DateUtils;
+import com.join.android.app.common.utils.ExamUtils;
 import com.join.mobi.dto.ExamDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
-import com.join.mobi.rpc.RPCTestData;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
@@ -39,6 +41,11 @@ public class ExamIntroActivity extends BaseActivity {
     @ViewById
     TextView correctPercent;
 
+    @ViewById
+    View examResult;
+
+
+
     @Pref
     PrefDef_ myPref;
     @Extra
@@ -50,22 +57,46 @@ public class ExamIntroActivity extends BaseActivity {
 
     @AfterViews
     void afterViews(){
-        //加载考试详情
-//        examDto = rpcService.getExamDetail(myPref.userId().get(), examId);
-        examDto = RPCTestData.getExamDetail();
-        updateData();
-
+        showLoading();
+        retrieveDataFromServer();
+//        examDto = RPCTestData.getExamDetail();
     }
 
+    @Background
+    void retrieveDataFromServer(){
+        //加载考试详情
+        examDto = rpcService.getExamDetail(myPref.rpcUserId().get(), examId);
+        updateData();
+    }
+    @UiThread
     public void updateData(){
         title.setText(examDto.getTitle());
         itemCount.setText("共 "+examDto.getItemCount()+" 道试题");
-        timeLimit.setText("限时 "+examDto.getDurationLimit());
+        timeLimit.setText("限时 "+ DateUtils.SecondToNormalTime(examDto.getDurationLimit()));
 
-        examTime.setText(examTime.getText().toString().replace("$1",examDto.getExamTime()).replace("$2",examDto.getCost()));
-        finishPercent.setText(finishPercent.getText().toString().replace("$1",examDto.getFinishPercent()+"%"));
-        correctPercent.setText(correctPercent.getText().toString().replace("$1",examDto.getCorrectPercent()+"%"));
+        examTime.setText(examTime.getText().toString().replace("$1", DateUtils.FormatForCourseLastLearningTime(examDto.getExamTime())).replace("$2", DateUtils.SecondToNormalTime(examDto.getDuration())));
+//        finishPercent.setText(finishPercent.getText().toString().replace("$1",examDto.getFinishPercent()+"%"));
+        finishPercent.setText(finishPercent.getText().toString().replace("$1", ExamUtils.SpeculatePercent(examDto.getFinishPercent(), examDto.getItemCount() + "")+"%"));
 
+
+
+
+        String correctP = examDto.getCorrectPercent();
+
+        if(correctP.equals(".0")){
+            correctP = "0";
+        }
+        else if(correctP.endsWith(".0")){
+            correctP = correctP.substring(0,correctP.indexOf("."));
+        }
+
+        correctPercent.setText(correctPercent.getText().toString().replace("$1",correctP+"%"));
+
+        if(examDto.getExamTime()==null||examDto.getExamTime().equals("")){
+            examResult.setVisibility(View.INVISIBLE);
+        }else
+            examResult.setVisibility(View.VISIBLE);
+        dismissLoading();
     }
 
     @Click

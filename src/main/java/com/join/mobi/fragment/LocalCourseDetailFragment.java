@@ -31,7 +31,7 @@ public class LocalCourseDetailFragment extends Fragment {
     @AfterViews
     void afterViews() {
         LocalCourse course = ((LocalCourseDetailActivity) getActivity()).getLocalCourse();
-        createTime.setText(course.getTitle());
+        createTime.setText(course.getCreateTime());
         branch.setText(course.getBranch());
         courseHour.setText(course.getCourseHour() + "");
         totalHour.setText(course.getLearningTimes() + "");

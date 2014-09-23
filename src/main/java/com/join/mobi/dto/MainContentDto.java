@@ -9,9 +9,9 @@ import java.util.List;
  */
 public class MainContentDto {
     private List<LiveDto> lives;
-    private List<LiveCourseDto> courses;
-    private List<ResourceShareDto> resourceShares;
-    private List<NoticeDto> notices;
+    private List<LiveCourseDto> course;
+    private List<ResourceShareDto> resourceShare;
+    private List<NoticeDto> notice;
 
     public List<LiveDto> getLives() {
         return lives;
@@ -21,27 +21,28 @@ public class MainContentDto {
         this.lives = lives;
     }
 
-    public List<LiveCourseDto> getCourses() {
-        return courses;
+    public List<LiveCourseDto> getCourse() {
+        return course;
     }
 
-    public void setCourses(List<LiveCourseDto> courses) {
-        this.courses = courses;
+    public void setCourse(List<LiveCourseDto> course) {
+        this.course = course;
     }
 
-    public List<ResourceShareDto> getResourceShares() {
-        return resourceShares;
+    public List<ResourceShareDto> getResourceShare() {
+        return resourceShare;
     }
 
-    public void setResourceShares(List<ResourceShareDto> resourceShares) {
-        this.resourceShares = resourceShares;
+    public void setResourceShare(List<ResourceShareDto> resourceShare) {
+        this.resourceShare = resourceShare;
     }
 
-    public List<NoticeDto> getNotices() {
-        return notices;
+    public List<NoticeDto> getNotice() {
+        return notice;
     }
 
-    public void setNotices(List<NoticeDto> notices) {
-        this.notices = notices;
+    public void setNotice(List<NoticeDto> notice) {
+        this.notice = notice;
     }
+
 }

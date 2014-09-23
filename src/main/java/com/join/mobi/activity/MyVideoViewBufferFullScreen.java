@@ -45,7 +45,9 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
      * TODO: Set the path variable to a streaming video URL or a local media file
      * path.
      */
-    private String path = "http://192.168.1.104/apple.mp4";
+//    private String path = "http://192.168.1.104/apple.mp4";
+    @Extra
+    String path = "http://192.168.1.104/apple.mp4";
     private Uri uri;
     @ViewById(resName = "buffer")
      VideoView mVideoView;
@@ -55,6 +57,9 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
      TextView downloadRateView;
     @ViewById(resName = "load_rate")
      TextView loadRateView;
+
+    @ViewById(resName = "progressBar")
+    ProgressBar progressBar;
 
     @Extra
      long seekTo;
@@ -88,6 +93,8 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
                 @Override
                 public void onFullScreen() {
 //                    LiveCourseDetailActivity_.intent(MyVideoViewBufferFullScreen.this).seekTo(mVideoView.getCurrentPosition()).start();
+                    Intent intent = new Intent("org.androidannotations.seekTo");
+                    sendBroadcast(intent);
                     mVideoView.stopPlayback();
                     System.gc();
 //                    Intent data = new Intent(MyVideoViewBufferFullScreen.this,LiveCourseDetailActivity_.class);
@@ -109,7 +116,7 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
                 }
             });
         }
-
+        startUpdateLearningTime();
     }
 
     @Override
@@ -123,15 +130,16 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
                     loadRateView.setText("");
                     downloadRateView.setVisibility(View.VISIBLE);
                     loadRateView.setVisibility(View.VISIBLE);
-
+                    progressBar.setVisibility(View.VISIBLE);
                 }
                 break;
             case MediaPlayer.MEDIA_INFO_BUFFERING_END:
                 mVideoView.start();
+                progressBar.setVisibility(View.GONE);
                 pb.setVisibility(View.GONE);
                 downloadRateView.setVisibility(View.GONE);
                 loadRateView.setVisibility(View.GONE);
-                startUpdateLearningTime();
+
                 break;
             case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                 downloadRateView.setText("" + extra + "kb/s" + "  ");

@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
 import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.utils.DateUtils;
 import com.join.mobi.adapter.ExamView;
 import com.join.mobi.adapter.ExamViewPagerAdapter;
 import com.join.mobi.dto.ExamDto;
@@ -226,7 +227,19 @@ public class ExamActivity extends BaseActivity {
 
     @UiThread
     void updatCountDown(String _count) {
-        countDown.setText(_count);
+        examDto.setDurationLimit(Long.parseLong(_count));
+        countDown.setText(DateUtils.SecondToNormalTime(Long.parseLong(_count)));
+        if (_count.equals(0)) {
+            DialogManager.getInstance().createNormalDialog(this, "时间到", "测试时间已到，系统将自动为您交卷。");
+            DialogManager.getInstance().setOk("好的", new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogManager.getInstance().dismiss();
+                    hasFinished=true;
+                    commitExamClicked();
+                }
+            });
+        }
     }
 
     @Click
@@ -247,6 +260,7 @@ public class ExamActivity extends BaseActivity {
     @Click
     void examListClicked() {
         ExamListActivity_.intent(this).examItems(examDto.getExamItems()).start();
+        finish();
     }
 
 
@@ -257,15 +271,15 @@ public class ExamActivity extends BaseActivity {
     void commitExamClicked() {
         //计算结果
         final ExamResult examResult = speculateExamResult();
-        if(!hasFinished){
-            DialogManager.getInstance().createNormalDialog(this,"交卷提醒","还有尚未完成的试题,确定要交卷吗?提示:列表中显示为黑色粗体的试题是尚未完成的。");
-            DialogManager.getInstance().setOk("不,继续完成试题",new View.OnClickListener() {
+        if (!hasFinished) {
+            DialogManager.getInstance().createNormalDialog(this, "交卷提醒", "还有尚未完成的试题,确定要交卷吗?提示:列表中显示为黑色粗体的试题是尚未完成的。");
+            DialogManager.getInstance().setOk("不,继续完成试题", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DialogManager.getInstance().dismiss();
                 }
             });
-            DialogManager.getInstance().setCancel("是的,我要交卷",new View.OnClickListener() {
+            DialogManager.getInstance().setCancel("是的,我要交卷", new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     DialogManager.getInstance().dismiss();
@@ -273,8 +287,8 @@ public class ExamActivity extends BaseActivity {
                 }
             });
 
-        }
-
+        }else
+            sumit(examResult);
 
 
     }
@@ -284,12 +298,12 @@ public class ExamActivity extends BaseActivity {
      */
     @Background
     void sumit(ExamResult examResult) {
-    //        rpcService.submitExamResult(myPref.userId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
+        rpcService.submitExamResult(myPref.rpcUserId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
         showExamResult(examResult);
     }
 
     @UiThread
-    void showExamResult(ExamResult examResult){
+    void showExamResult(ExamResult examResult) {
         ExamResultActivity_.intent(this).examDto(examDto).examResult(examResult).start();
         finish();
     }
@@ -312,26 +326,38 @@ public class ExamActivity extends BaseActivity {
                 }
             }
 
-            if (correct) {correctNum++;examItem.setCorrect(true);}
+            if (correct) {
+                correctNum++;
+                examItem.setCorrect(true);
+            }
             if (selected) finishNum++;
 
         }
 
-        if(finishNum==examItems.size())hasFinished = true;
-        float finishPercent = ((float)finishNum / (float)examItems.size())*100 ;
-        float correctPercent = ((float)correctNum / (float)examItems.size())*100 ;
+        if (finishNum == examItems.size()) hasFinished = true;
+        float finishPercent = ((float) finishNum / (float) examItems.size()) * 100;
+        float correctPercent = ((float) correctNum / (float) examItems.size()) * 100;
 
-        DecimalFormat decimalFormat=new DecimalFormat(".00");
-
+        DecimalFormat decimalFormat = new DecimalFormat(".00");
 
         ExamResult examResult = new ExamResult();
-        examResult.setCorrectNum(correctNum+"");
-        examResult.setIncorrectNum((examItems.size()-correctNum)+"");
-        examResult.setCorrectPercent(decimalFormat.format(correctPercent));
-        examResult.setFinishPersenct(decimalFormat.format(finishPercent));
-        examResult.setStartTime(startTime.toLocaleString());
+        examResult.setCorrectNum(correctNum + "");
+        examResult.setIncorrectNum((examItems.size() - correctNum) + "");
 
-        examResult.setDuration(count - Integer.parseInt(countDown.getText().toString()) + "");
+        String tempCorrectPercent = decimalFormat.format(correctPercent);
+        if(tempCorrectPercent.equals(".00")){
+            tempCorrectPercent = "0";
+        }else if(tempCorrectPercent.endsWith(".0")||tempCorrectPercent.equals(".00")){
+            tempCorrectPercent = tempCorrectPercent.substring(0,tempCorrectPercent.indexOf("."));
+        }
+
+
+        examResult.setCorrectPercent(tempCorrectPercent);
+//        examResult.setFinishPersenct(decimalFormat.format(finishPercent));
+        examResult.setFinishPersenct(finishNum+"");
+        examResult.setDuration(((System.currentTimeMillis()-startTime.getTime())/1000)+"");
+        examResult.setStartTime(DateUtils.ConvertDateToNormalString(startTime));
+
         return examResult;
 
 
@@ -427,6 +453,7 @@ public class ExamActivity extends BaseActivity {
         }
 
     }
+
     class MyCountDownTimer extends CountDownTimer {
 
         public MyCountDownTimer(long millisInFuture) {
@@ -436,7 +463,7 @@ public class ExamActivity extends BaseActivity {
 
         @Override
         public void onTick(long l) {
-            updatCountDown((l/1000)+"");
+            updatCountDown((l / 1000) + "");
         }
 
         @Override

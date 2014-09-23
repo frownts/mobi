@@ -7,7 +7,10 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.utils.DateUtils;
+import com.join.android.app.common.utils.ExamUtils;
 import com.join.mobi.activity.ExamIntroActivity_;
+import com.join.mobi.customview.SpringProgressView;
 import com.join.mobi.dto.ExamDto;
 
 import java.util.ArrayList;
@@ -32,6 +35,7 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         TextView itemCount;
         TextView finishPercent;
         TextView durationLimit;
+        SpringProgressView springProgressView;
     }
 
     public List<ExamDto> getItems() {
@@ -67,7 +71,7 @@ public class LiveCourseExamAdapter extends BaseAdapter {
 
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
-        ExamDto exam = examDtos.get(position);
+        final ExamDto exam = examDtos.get(position);
         ViewHolder holder;
         if (convertView == null) {
             convertView = inflater.inflate(R.layout.livecourse_exam_listview_layout, null);
@@ -76,21 +80,36 @@ public class LiveCourseExamAdapter extends BaseAdapter {
             holder.itemCount = (TextView) convertView.findViewById(R.id.itemCount);
             holder.finishPercent = (TextView) convertView.findViewById(R.id.finishPercent);
             holder.durationLimit = (TextView) convertView.findViewById(R.id.durationLimit);
+            holder.springProgressView = (SpringProgressView) convertView.findViewById(R.id.springProgressView);
             convertView.setTag(holder);
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
 
+        holder.springProgressView.setMaxCount(exam.getItemCount());
+        holder.springProgressView.setCurrentCount(Long.parseLong(exam.getFinishPercent()));
         holder.name.setText(exam.getName());
         holder.itemCount.setText("共"+exam.getItemCount()+"题");
-        holder.finishPercent.setText(exam.getFinishPercent()+"%");
-        holder.durationLimit.setText("限时:"+exam.getDurationLimit());
+
+
+//        DecimalFormat decimalFormat = new DecimalFormat(".00");
+//        float finishPercent = (Float.parseFloat(exam.getFinishPercent()) / (float) exam.getItemCount()) * 100;
+//
+//        String tempFinishPercent = decimalFormat.format(finishPercent);
+//        if(tempFinishPercent.equals(".00")){
+//            tempFinishPercent = "0";
+//        }else if(tempFinishPercent.endsWith(".0")||tempFinishPercent.equals(".00")){
+//            tempFinishPercent = tempFinishPercent.substring(0,tempFinishPercent.indexOf("."));
+//        }
+
+        holder.finishPercent.setText(ExamUtils.SpeculatePercent(exam.getFinishPercent(),exam.getItemCount()+"")+"%");
+        holder.durationLimit.setText("限时:"+ DateUtils.SecondToNormalTime(exam.getDurationLimit()));
 
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExamIntroActivity_.intent(mContext).start();
+                ExamIntroActivity_.intent(mContext).examId(exam.getExamId()+"").start();
             }
         });
 

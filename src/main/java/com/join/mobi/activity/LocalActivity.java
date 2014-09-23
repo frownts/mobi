@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.content.ActivityNotFoundException;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -8,8 +9,8 @@ import android.view.View;
 import android.widget.*;
 import com.BaseActivity;
 import com.join.android.app.common.R;
-import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.BeanUtils;
+import com.join.android.app.common.utils.FileOpenUtils;
 import com.join.mobi.adapter.LocalAdapter;
 import com.join.mobi.enums.Dtype;
 import com.php25.PDownload.DownloadApplication;
@@ -66,12 +67,33 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
     }
 
     @ItemClick
-    void listViewItemClicked(DownloadFile DownloadFile) {
-        DialogManager.getInstance().makeText(this, "open file", DialogManager.DIALOG_TYPE_OK);
+    void listViewItemClicked(DownloadFile downloadFile) {
+        int type = Integer.parseInt(downloadFile.getFileType());
+
+        if (type == 1 || type == 2) {//todo 调用视频播放器
+            MyVideoViewBufferFullScreen_.intent(this).path(downloadFile.getAbsolutePath()).start();
+        } else if (type == 3) {
+//            Uri path = Uri.fromFile(new File(downloadFile.getAbsolutePath()));
+//            Intent intent = new Intent(Intent.ACTION_VIEW);
+//            intent.setDataAndType(path, "application/pdf");
+//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
+            try {
+                startActivity(FileOpenUtils.getPdfFileIntent(downloadFile.getAbsolutePath()));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(this,
+                        "No Application Available to View PDF",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (type == 4) {
+            //todo 图片查看器
+            startActivity(FileOpenUtils.getImageFileIntent(downloadFile.getAbsolutePath()));
+        }
+
     }
 
     @Click
-    void trashClicked(){
+    void trashClicked() {
         localAdapter.setTrashIsShowing(!localAdapter.isTrashIsShowing());
         localAdapter.notifyDataSetChanged();
     }

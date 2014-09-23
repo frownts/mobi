@@ -65,6 +65,7 @@
 
     <!--测试结果-->
     <LinearLayout
+
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
@@ -72,6 +73,11 @@
             android:background="@color/gray"
             android:padding="10dp">
 
+        <LinearLayout
+                android:id="@+id/examResult"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
         <TextView
                 android:id="@+id/examTime"
                 android:layout_width="wrap_content"
@@ -96,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="@string/exam_notice"/>
-
+        </LinearLayout>
     </LinearLayout>
 
     <!--说明-->

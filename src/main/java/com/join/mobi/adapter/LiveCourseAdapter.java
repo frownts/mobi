@@ -9,6 +9,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.tables.Course;
+import com.join.android.app.common.utils.DateUtils;
 import com.join.mobi.activity.LiveCourseDetailActivity_;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
@@ -86,14 +87,14 @@ public class LiveCourseAdapter extends BaseAdapter {
         }
         ImageLoader.getInstance().displayImage(course.getUrl(),holder.url);
         holder.title.setText(course.getTitle());
-        holder.lastLearn.setText("上次学习:"+course.getLastLearn());
-        holder.courseHour.setText("课程总时长:"+course.getCourseHour());
-        holder.totalDuration.setText("累计学习:"+course.getTotalDuration());
+        holder.lastLearn.setText("上次学习:  "+ DateUtils.FormatForCourseLastLearningTime(course.getLastLearn()));
+        holder.courseHour.setText("课程总时长:  "+DateUtils.SecondToNormalTime(course.getCourseHour()));
+        holder.totalDuration.setText("累计学习:  "+DateUtils.SecondToNormalTime(Long.parseLong(course.getTotalDuration())));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LiveCourseDetailActivity_.intent(mContext).url(course.getUrl()).courseId(course.getId()+"").name(course.getTitle()).start();
+                LiveCourseDetailActivity_.intent(mContext).url(course.getUrl()).courseId(course.getCourseId()+"").name(course.getTitle()).start();
             }
         });
 

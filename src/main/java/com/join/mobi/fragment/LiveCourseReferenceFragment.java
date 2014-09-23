@@ -48,7 +48,7 @@ public class LiveCourseReferenceFragment extends Fragment {
         Course course = CourseManager.getInstance().getByCourseId(courseDetailDto.getCourseId());
         if(course!=null)
         totalDuration = course.getTotalDuration();
-        liveCourseReferenceAdapter = new LiveCourseReferenceAdapter(getActivity(), courseDetailDto.getReferences(), new LiveCourseReferenceAdapter.Download() {
+        liveCourseReferenceAdapter = new LiveCourseReferenceAdapter(getActivity(), courseDetailDto.getReference(), new LiveCourseReferenceAdapter.Download() {
             @Override
             public void download(ReferenceDto reference) {//下载工作
                 doDownload(reference);

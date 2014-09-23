@@ -9,8 +9,10 @@ import org.androidannotations.annotations.sharedpreferences.SharedPref;
  * Time: 上午10:34
  */
 
-@SharedPref
+@SharedPref(value = SharedPref.Scope.UNIQUE)
 public interface PrefDef {
+
+    String rpcUserId();
 
     String userId();
 

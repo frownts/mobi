@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
@@ -10,16 +11,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.dialog.CommonDialogLoading;
+import com.join.android.app.common.utils.DateUtils;
 import com.join.mobi.dto.ChapterDto;
 import com.join.mobi.dto.CourseDetailDto;
 import com.join.mobi.fragment.*;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
-import com.join.mobi.rpc.RPCTestData;
-import io.vov.vitamio.LibsChecker;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+
+import java.util.Date;
 
 /**
  * User: mawanjin@join-cn.com
@@ -99,6 +101,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     @Extra
     long seekTo;
     private Uri uri;
+
+    private String playUrl;
     @AfterViews
     void afterViews() {
         title.setText(name);
@@ -110,21 +114,22 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
 
     }
 
-    private void play() {
-        //todo 播放的代码
-
-        if (!LibsChecker.checkVitamioLibs(this))
-            return;
-
-//        initVideo();
+    public void play(String url){
+        playUrl = url;
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        videoFragment = new VideoFragment_();
+        transaction.replace(R.id.fragmentVideo,videoFragment);
+        transaction.commit();
     }
-
 
     @Background
     void retrieveDataFromServer() {
-//        courseDetail = rpcService.getCourseDetail(myPref.userId().get(),courseId);
-        courseDetail = RPCTestData.getCourseDetailDto();
+        courseDetail = rpcService.getCourseDetail(myPref.rpcUserId().get(),courseId);
         afterRetrieveDataFromServer();
+
+        if(courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0)
+        play(courseDetail.getChapter().get(0).getDownloadUrl());
     }
 
     @UiThread
@@ -134,9 +139,6 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         liveCourseChapterFragment = new LiveCourseChapterFragment_();
         liveCourseExamFragment = new LiveCourseExamFragment_();
         liveCourseReferenceFragment = new LiveCourseReferenceFragment_();
-        videoFragment = new VideoFragment_();
-
-
 
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -149,11 +151,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         transaction.hide(liveCourseChapterFragment);
         transaction.show(liveCourseDetailFragment);
         currentFragment = liveCourseDetailFragment;
-        transaction.replace(R.id.fragmentVideo,videoFragment);
         transaction.commit();
         loading.dismiss();
-        //开始播放
-        play();
     }
 
     @Click
@@ -222,7 +221,7 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         CourseDetailDto courseDetailDto = liveCourseChapterFragment.getCourseDetailDto();
         if (courseDetailDto != null) {
             //更新到数据库中
-            for (ChapterDto chapterDto : courseDetailDto.getChapters()) {
+            for (ChapterDto chapterDto : courseDetailDto.getChapter()) {
 
             }
         }
@@ -230,38 +229,89 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
 
     @Override
     protected void onDestroy() {
-        //todo 提交
+        commitLearningLog();
+
+
         super.onDestroy();
+    }
+
+    @Background
+    void commitLearningLog(){
+        try{
+            //提交学习记录
+            rpcService.commitLearningLog(myPref.rpcUserId().get(), DateUtils.ConvertDateToNormalString(new Date()),liveCourseDetailFragment.getDuration()+"",courseId,liveCourseChapterFragment.getLastChapterId()+"","0");
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     @Override
     protected void onResume() {
 
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragmentVideo,new BlankFragment_());
-        transaction.commit();
-
-        new Thread(){
-            @Override
-            public void run() {
-                super.run();
-                try {
-                    Thread.sleep(1000);
-                    FragmentTransaction transaction = fragmentManager.beginTransaction();
-                    transaction.replace(R.id.fragmentVideo,new VideoFragment_());
-                    transaction.commit();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }.start();
+        replay();
 
 
         super.onResume();
 
 
+    }
+
+    public void replay(){
+        fragmentManager = getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
+        transaction.replace(R.id.fragmentVideo,new BlankFragment_());
+        transaction.commit();
+
+        if(playUrl!=null)
+            new Thread(){
+                @Override
+                public void run() {
+                    super.run();
+                    try {
+                        Thread.sleep(1000);
+                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+                        transaction.replace(R.id.fragmentVideo,new VideoFragment_());
+                        transaction.commit();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+
+                }
+            }.start();
+    }
+
+    public String getPlayUrl() {
+        return playUrl;
+    }
+
+    public void setPlayUrl(String playUrl) {
+        this.playUrl = playUrl;
+    }
+
+
+    /**
+     * 当播放进行时，更新进度和学习时间
+     */
+    @Receiver(actions = "org.androidannotations.play", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
+    public void play(Intent intent){
+        playUrl = intent.getExtras().getString("playUrl");
+        replay();
+    }
+
+    /**
+     * 接收全屏返回回来时的当前播放时间
+     */
+    @Receiver(actions = "org.androidannotations.seekTo", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
+    public void seekTo(Intent intent){
+        seekTo = intent.getExtras().getLong("seekTo");
+    }
+
+    public long getSeekTo() {
+        return seekTo;
+    }
+
+    public void setSeekTo(long seekTo) {
+        this.seekTo = seekTo;
     }
 
     //    void initVideo() {

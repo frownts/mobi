@@ -1,9 +1,11 @@
 package com.join.mobi.activity;
 
+import android.content.Intent;
 import android.widget.ExpandableListView;
 import android.widget.TextView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
+import com.join.android.app.common.utils.DateUtils;
 import com.join.mobi.adapter.ExamResultAdapter;
 import com.join.mobi.dto.ExamDto;
 import com.join.mobi.rpc.ExamResult;
@@ -39,10 +41,11 @@ public class ExamResultActivity extends BaseActivity {
     @AfterViews
     void afterViews() {
         title.setText(examDto.getTitle());
-        testDuration.setText(examResult.getDuration());
+
+        testDuration.setText(DateUtils.SecondToNormalTime(Long.parseLong(examResult.getDuration())));
         correctNum.setText(examResult.getCorrectNum());
         incorrectNum.setText(examResult.getIncorrectNum());
-        correctPercent.setText(examResult.getCorrectPercent());
+        correctPercent.setText(examResult.getCorrectPercent() + "%");
 
         examResultAdapter = new ExamResultAdapter(this, examDto.getExamItems(), examDto.getExamItems());
         expandListView.setAdapter(examResultAdapter);
@@ -51,6 +54,15 @@ public class ExamResultActivity extends BaseActivity {
 
     @Click
     void backClicked() {
+        Intent intent = new Intent("org.androidannotations.updateProgressOfExam");
+        intent.putExtra("examId",examDto.getExamId());
+        examDto.setFinishPercent(((int)Float.parseFloat(examDto.getFinishPercent()))+"");
+
+        if(examDto.getFinishPercent().equals(".0"))examDto.setFinishPercent("0");
+
+        intent.putExtra("finishPercent",examDto.getFinishPercent());
+
+        sendBroadcast(intent);
         finish();
     }
 }

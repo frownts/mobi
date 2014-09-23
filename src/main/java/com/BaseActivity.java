@@ -9,7 +9,6 @@ import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
-import com.join.mobi.rpc.RPCTestData;
 
 import java.util.HashMap;
 import java.util.List;
@@ -58,9 +57,9 @@ public class BaseActivity extends Activity {
         if (mainContent == null) return;
         LiveManager.getInstance().deleteAll();
         List<LiveDto> liveDtos = mainContent.getLives();
-        List<LiveCourseDto> liveCourseDtos = mainContent.getCourses();
-        List<ResourceShareDto> resourceShareDtos = mainContent.getResourceShares();
-        List<NoticeDto> noticeDtos = mainContent.getNotices();
+        List<LiveCourseDto> liveCourseDtos = mainContent.getCourse();
+        List<ResourceShareDto> resourceShareDtos = mainContent.getResourceShare();
+        List<NoticeDto> noticeDtos = mainContent.getNotice();
 
         if (liveDtos != null) {
             for (LiveDto liveDto : liveDtos) {
@@ -149,9 +148,9 @@ public class BaseActivity extends Activity {
     public MainContentDto refreshMainData() {
         MainContentDto mainContent;
         try {
-            mainContent = RPCTestData.getMainContentDto();
+//            mainContent = RPCTestData.getMainContentDto();
 
-//          mainContent = webService.getMainContent(pref.userId().get());
+          mainContent = webService.getMainContent(pref.rpcUserId().get());
 
         } catch (Throwable e) {
             try {
@@ -169,8 +168,6 @@ public class BaseActivity extends Activity {
     public void rpcException(Throwable e) throws Throwable {
         throw e;
     }
-
-    ;
 
 
     public RPCService getWebService() {

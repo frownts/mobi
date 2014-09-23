@@ -1,11 +1,40 @@
 package com.join.android.app.common.utils;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-17
  * Time: 上午11:15
  */
 public class DateUtils {
+
+
+
+    public static String FormatForCourseLastLearningTime(String time){
+
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        try {
+            String rs = FormatForDownloadTime(sdf.parse(time).getTime());
+            return rs;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String FormatForExamIntroLastLearningTime(String time){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+        try {
+            String rs = FormatForDownloadTime(sdf.parse(time).getTime());
+            return rs;
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
 
     /**
      * 下载日期是几分钟前、几天前
@@ -42,16 +71,20 @@ public class DateUtils {
         _N = N + "";
         _K = K + "";
         _M = M + "";
+        if (K < 10) _K = "0" + K;
+        if (M < 10) _M = "0" + M;
         if (N == 0) {
-            if (K < 10) _K = "0" + K;
-            if (M < 10) _M = "0" + M;
-
             return _K + ":" + _M;
         } else {
             if (N < 10) _N = "0" + N;
         }
 
-        return _N + ":" + K + ":" + M;
+        return _N + ":" + K + ":" + _M;
 
+    }
+
+    public static String ConvertDateToNormalString(Date date){
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        return sdf.format(date);
     }
 }

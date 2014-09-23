@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.mobi.activity.LiveCourseDetailActivity;
 import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -24,7 +25,8 @@ import org.androidannotations.annotations.ViewById;
 @EFragment(R.layout.video_fragment_layout)
 public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListener, MediaPlayer.OnBufferingUpdateListener {
 
-    private String path = "http://192.168.1.104/apple.mp4";
+//    private String path = "http://stream.fortune-net.cn:554/vod/video/2014-5-20/1326994717.mp4.m3u8";
+    private String path = "";
     private Uri uri;
     @ViewById(resName = "buffer")
     VideoView mVideoView;
@@ -35,19 +37,20 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
     @ViewById(resName = "load_rate")
     TextView loadRateView;
 
+    long seekTo;
     @AfterViews
     void afterViews() {
 
         if (!LibsChecker.checkVitamioLibs(getActivity()))
             return;
+        path = ((LiveCourseDetailActivity)getActivity()).getPlayUrl();
         initVideo();
+        seekTo = ((LiveCourseDetailActivity)getActivity()).getSeekTo();
+        startUpdateLearningTime();
     }
 
 
     void initVideo() {
-//        uri = Uri.parse(path);
-
-//      mVideoView.setVideoURI(uri);
 
         mVideoView.setVideoPath(path);
         MediaController mediaController = new MediaController(getActivity()) {
@@ -57,7 +60,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
         mediaController.setMediaPlayerControlFullScreen(new MediaController.MediaPlayerControlFullScreen() {
             @Override
             public void onFullScreen() {
-                MyVideoViewBufferFullScreen_.intent(getActivity()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).seekTo(mVideoView.getCurrentPosition()).start();
+                MyVideoViewBufferFullScreen_.intent(getActivity()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).path(path).seekTo(mVideoView.getCurrentPosition()).start();
                 mVideoView.stopPlayback();
             }
 
@@ -73,7 +76,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
             public void onPrepared(MediaPlayer mediaPlayer) {
                 // optional need Vitamio 4.0
                 mediaPlayer.setPlaybackSpeed(1.0f);
-//                mediaPlayer.seekTo(seekTo);
+                mediaPlayer.seekTo(seekTo);
             }
         });
     }
@@ -98,7 +101,7 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
                 pb.setVisibility(View.GONE);
                 downloadRateView.setVisibility(View.GONE);
                 loadRateView.setVisibility(View.GONE);
-                startUpdateLearningTime();
+
                 break;
             case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
                 downloadRateView.setText("" + extra + "kb/s" + "  ");
