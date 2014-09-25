@@ -19,7 +19,7 @@ public class Notice {
     @DatabaseField
     private long noticeId;
     @DatabaseField
-    private long validUntil;
+    private String validUntil;
 
     public int getId() {
         return id;
@@ -61,11 +61,11 @@ public class Notice {
         this.noticeId = noticeId;
     }
 
-    public long getValidUntil() {
+    public String getValidUntil() {
         return validUntil;
     }
 
-    public void setValidUntil(long validUntil) {
+    public void setValidUntil(String validUntil) {
         this.validUntil = validUntil;
     }
 }

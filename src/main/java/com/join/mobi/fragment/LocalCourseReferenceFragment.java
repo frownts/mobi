@@ -1,16 +1,19 @@
 package com.join.mobi.fragment;
 
+import android.content.ActivityNotFoundException;
 import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.view.View;
+import android.widget.Toast;
 import com.j256.ormlite.dao.CloseableIterable;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.manager.ReferenceManager;
 import com.join.android.app.common.db.tables.LocalCourse;
 import com.join.android.app.common.db.tables.Reference;
-import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.utils.FileOpenUtils;
 import com.join.android.app.common.view.SwipeListView;
 import com.join.mobi.activity.LocalCourseDetailActivity;
+import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
 import com.join.mobi.adapter.LocalCourseReferenceAdapter;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
@@ -45,12 +48,12 @@ public class LocalCourseReferenceFragment extends Fragment {
         }
         closeableIterable.closeableIterator();
 
-        localCourseReferenceAdapter = new LocalCourseReferenceAdapter(getActivity(), references,listView.getRightViewWidth(),new LocalCourseReferenceAdapter.OnRightItemClickListener() {
+        localCourseReferenceAdapter = new LocalCourseReferenceAdapter(getActivity(), references, listView.getRightViewWidth(), new LocalCourseReferenceAdapter.OnRightItemClickListener() {
             @Override
             public void onRightItemClick(View v, int position) {
-                Reference reference =  localCourseReferenceAdapter.getItems().get(position);
+                Reference reference = localCourseReferenceAdapter.getItems().get(position);
                 //删除本地文件
-                DownloadTool.deleteDownloadTask((DownloadApplication)getActivity().getApplicationContext(),reference.getUrl());
+                DownloadTool.deleteDownloadTask((DownloadApplication) getActivity().getApplicationContext(), reference.getUrl());
                 ReferenceManager.getInstance().delete(reference);
                 retrieveDataFromDB();
 
@@ -60,20 +63,49 @@ public class LocalCourseReferenceFragment extends Fragment {
         localCourseReferenceAdapter.notifyDataSetChanged();
     }
 
-    void retrieveDataFromDB(){
+    void retrieveDataFromDB() {
         Map params = new HashMap(0);
-        params.put("localcourse_id",localCourse.getId());
+        params.put("localcourse_id", localCourse.getId());
         localCourseReferenceAdapter.setItems(ReferenceManager.getInstance().findForParams(params));
         localCourseReferenceAdapter.notifyDataSetChanged();
     }
 
     @ItemClick
     void listViewItemClicked(Reference reference) {
-        DialogManager.getInstance().makeText(getActivity(), "open file", DialogManager.DIALOG_TYPE_OK);
+        int type = reference.getType();
+        String filePath = DownloadTool.getFileByUrl((DownloadApplication) getActivity().getApplicationContext(), reference.getUrl());
+
+        if (type == 1 || type == 5) {// 调用视频播放器
+            MyVideoViewBufferFullScreen_.intent(this).path(filePath).start();
+        } else if (type == 2) {
+            try {
+                startActivity(FileOpenUtils.getWordFileIntent(filePath));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(),
+                        "No Application Available to View PDF",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else if (type == 3) {
+            //todo 图片查看器
+            startActivity(FileOpenUtils.getImageFileIntent(filePath));
+        } else if (type == 4) {//flash
+            try {
+                startActivity(FileOpenUtils.getHtmlFileIntent(filePath));
+            } catch (ActivityNotFoundException e) {
+                Toast.makeText(getActivity(),
+                        "No Application Available to View PDF",
+                        Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            Toast.makeText(getActivity(),
+                    "未知文件类型",
+                    Toast.LENGTH_SHORT).show();
+        }
     }
 
     /**
      * 当点击删除图标时，刷新list
+     *
      * @param intent
      */
     @Receiver(actions = "org.androidannotations.ACTION_1", registerAt = Receiver.RegisterAt.OnStartOnStop)
@@ -84,6 +116,7 @@ public class LocalCourseReferenceFragment extends Fragment {
 
     /**
      * 当点击某列进行播放时
+     *
      * @param intent
      */
     @Receiver(actions = "org.androidannotations.ACTION_2", registerAt = Receiver.RegisterAt.OnStartOnStop)

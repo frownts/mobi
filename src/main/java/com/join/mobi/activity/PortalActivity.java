@@ -54,24 +54,34 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @AfterViews
     void afterViews() {
-        if(myPref.uncompleteDownload().get())((DownloadApplication)getApplicationContext()).startAllUnCompleteDownload();
+        if (myPref.uncompleteDownload().get())
+            ((DownloadApplication) getApplicationContext()).startAllUnCompleteDownload();
 
-        menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().getOr(true), new PortalMenuAdapter.NeedLogin() {
+        menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().getOr(false), new PortalMenuAdapter.NeedLogin() {
             @Override
             public void login() {
                 imgLogin.performClick();
             }
         });
         gridViewMenu.setAdapter(menuAdapter);
+        menuAdapter.notifyDataSetChanged();
 
         boolean autoLogin = myPref.autoLogin().getOr(false);
 
-        if(autoLogin){
+        if (autoLogin) {
             reloadAfterLogin(myPref.showName().get());
         }
+        //执行本地文件有效期检测
+        ((DownloadApplication)getApplicationContext()).checkLocalFileExpired();
+//        if(chapter.getDownloadTime()==null){
+//            DownloadFile file = DownloadTool.getDownLoadFile((DownloadApplication) mContext.getApplicationContext(), chapter.getDownloadUrl());
+//            if(file!=null){
+//                long finishTime = Long.parseLong(file.getFinishTime());
+//                if(finishTime)
+//            }
+//        }
 
     }
-
 
     public void showSetting() {
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_setting, null);
@@ -157,7 +167,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onClick(View view) {
                 showLoading();
-                doLogin(loginName.getText().toString(),passWord.getText().toString(),branch.getText().toString());
+                doLogin(loginName.getText().toString(), passWord.getText().toString(), branch.getText().toString());
 
             }
         });
@@ -206,38 +216,38 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Background
-     void doLogin(String userId,String password,String companyId) {
+    void doLogin(String userId, String password, String companyId) {
         myPref.userId().put(userId);
         String _companyCode = "0986";
-        if(companyId.equals("深圳分公司")){
+        if (companyId.equals("深圳分公司")) {
             _companyCode = "1086";
-        }else if(companyId.equals("北京分公司")){
+        } else if (companyId.equals("北京分公司")) {
             _companyCode = "1186";
-        }else if(companyId.equals("江苏分公司")){
+        } else if (companyId.equals("江苏分公司")) {
             _companyCode = "1286";
-        }else if(companyId.equals("广东分公司")){
+        } else if (companyId.equals("广东分公司")) {
             _companyCode = "2586";
-        }else if(companyId.equals("佛山分公司")){
+        } else if (companyId.equals("佛山分公司")) {
             _companyCode = "2686";
-        }else if(companyId.equals("江门分公司")){
+        } else if (companyId.equals("江门分公司")) {
             _companyCode = "2786";
-        }else if(companyId.equals("东莞分公司")){
+        } else if (companyId.equals("东莞分公司")) {
             _companyCode = "2886";
         }
-        try{
+        try {
             LoginDto loginDto = rpcService.login(userId, password, _companyCode);
 
-
             String a = loginDto.getLogined();
-            if(!a.equals("S0008")){
-                DialogManager.getInstance().makeText(this,"用户名或密码错误",DialogManager.DIALOG_TYPE_OK);
+            if (!a.equals("S0008")) {
+                loginFailed();
                 return;
             }
-            myPref.rpcUserId().put(_companyCode+"-"+userId);
+            myPref.rpcUserId().put(_companyCode + "-" + userId);
             myPref.showName().put(loginDto.getUserName());
-            textViewUserId.setText(userId);
+            if (textViewUserId != null)
+                textViewUserId.setText(userId);
             reloadAfterLogin(loginDto.getUserName());
-        }catch (Exception e){
+        } catch (Exception e) {
             rpcException();
             return;
         }
@@ -245,6 +255,11 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 //        reloadAfterLogin("abc");
     }
 
+    @UiThread
+    public void loginFailed(){
+        dismissLoading();
+        DialogManager.getInstance().makeText(this, "用户名或密码错误", DialogManager.DIALOG_TYPE_OK);
+    }
 
     public void onBackPressed() {
         long currentTime = System.currentTimeMillis();
@@ -300,6 +315,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
                 break;
             case R.id.logout:
                 myPref.autoLogin().put(false);
+                myPref.userId().remove();
                 reloadAfterLogout();
                 settingDialog.dismiss();
                 break;
@@ -309,8 +325,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     @UiThread
     public void reloadAfterLogin(String _userName) {
         dismissLoading();
-        if(loginDialog!=null&&loginDialog.isShowing())
-        loginDialog.dismiss();
+        if (loginDialog != null && loginDialog.isShowing())
+            loginDialog.dismiss();
 //        createDB(myPref.userId().get());
         menuAdapter.setLogin(true);
         menuAdapter.notifyDataSetChanged();
@@ -327,8 +343,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     }
 
     @UiThread
-    public void rpcException(){
-        DialogManager.getInstance().makeText(this,getString(R.string.net_excption),DialogManager.DIALOG_TYPE_WARRING);
+    public void rpcException() {
+        DialogManager.getInstance().makeText(this, getString(R.string.net_excption), DialogManager.DIALOG_TYPE_WARRING);
         dismissLoading();
     }
 

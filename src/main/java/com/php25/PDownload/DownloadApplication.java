@@ -2,6 +2,8 @@ package com.php25.PDownload;
 
 import android.app.Application;
 import android.util.Log;
+import com.join.android.app.common.db.manager.ChapterManager;
+import com.join.android.app.common.db.tables.Chapter;
 import com.php25.tools.DigestTool;
 
 import java.util.HashMap;
@@ -92,5 +94,30 @@ public class DownloadApplication extends Application {
 
     public void setFutureMap(Map<String, Future> futureMap) {
         this.futureMap = futureMap;
+    }
+
+    public  void checkLocalFileExpired() {
+        //检查chapter有效性
+        List<Chapter> chapters = ChapterManager.getInstance().findAll();
+        if (chapters != null) {
+            for (Chapter chapter : chapters) {
+                if (chapter.getValidUntil() != null) {
+                    DownloadFile file = DownloadTool.getDownLoadFile((DownloadApplication) getApplicationContext(), chapter.getDownloadUrl());
+                    if (file != null) {
+                        long finishTime = Long.parseLong(file.getFinishTime());
+                        int day = (int) ((System.currentTimeMillis() - finishTime) / 1000 / 60 / 60 / 24);
+                        long left = Long.parseLong(chapter.getValidUntil()) - day;
+                        if (left <= 0) {//删除该章节
+                            DownloadTool.deleteDownloadTask((DownloadApplication) getApplicationContext(), chapter.getDownloadUrl());
+                            ChapterManager.getInstance().delete(chapter);
+                        } else {
+                            chapter.setLeftDays(left + "");
+                            ChapterManager.getInstance().saveOrUpdate(chapter);
+                        }
+                    }
+                }
+            }
+        }
+
     }
 }

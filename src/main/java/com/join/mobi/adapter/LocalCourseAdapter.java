@@ -15,7 +15,7 @@ import com.join.android.app.common.db.manager.ReferenceManager;
 import com.join.android.app.common.db.tables.Chapter;
 import com.join.android.app.common.db.tables.LocalCourse;
 import com.join.android.app.common.db.tables.Reference;
-import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.utils.DateUtils;
 import com.join.mobi.activity.LocalCourseActivity;
 import com.join.mobi.activity.LocalCourseDetailActivity_;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -102,12 +102,12 @@ public class LocalCourseAdapter extends BaseAdapter {
         holder.title.setText(course.getTitle());
         holder.chapterNum.setText(course.getChapterNum() + " 个章节");
         holder.referenceNum.setText(course.getRefNum() + " 个资料");
-        holder.learningTimes.setText(course.getLearningTimes() + "");
+        holder.learningTimes.setText(DateUtils.SecondToNormalTime(course.getLearningTimes()));
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                LocalCourseDetailActivity_.intent(mContext).courseId(course.getId() + "").name(course.getTitle()).start();
+                LocalCourseDetailActivity_.intent(mContext).courseId(course.getCourseId() + "").name(course.getTitle()).start();
             }
         });
 

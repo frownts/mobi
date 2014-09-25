@@ -65,6 +65,13 @@ public class Chapter {
     @DatabaseField
     private String validUntil;
 
+    /**
+     * 剩余天数
+     */
+    @DatabaseField
+    private String leftDays;
+
+
     @DatabaseField(columnName = "localcourse_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private LocalCourse localCourse;
 
@@ -164,5 +171,13 @@ public class Chapter {
 
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    public String getLeftDays() {
+        return leftDays;
+    }
+
+    public void setLeftDays(String leftDays) {
+        this.leftDays = leftDays;
     }
 }

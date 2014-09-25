@@ -71,9 +71,7 @@ public class BaseActivity extends Activity {
                     e.printStackTrace();
                 }
             }
-
         }
-
 
         CourseManager.getInstance().deleteAll();
         if (liveCourseDtos != null) {
@@ -149,7 +147,6 @@ public class BaseActivity extends Activity {
         MainContentDto mainContent;
         try {
 //            mainContent = RPCTestData.getMainContentDto();
-
           mainContent = webService.getMainContent(pref.rpcUserId().get());
 
         } catch (Throwable e) {
@@ -185,4 +182,6 @@ public class BaseActivity extends Activity {
     public void setPref(PrefDef_ pref) {
         this.pref = pref;
     }
+
+
 }

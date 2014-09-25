@@ -230,8 +230,6 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     @Override
     protected void onDestroy() {
         commitLearningLog();
-
-
         super.onDestroy();
     }
 
@@ -247,13 +245,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
 
     @Override
     protected void onResume() {
-
         replay();
-
-
         super.onResume();
-
-
     }
 
     public void replay(){

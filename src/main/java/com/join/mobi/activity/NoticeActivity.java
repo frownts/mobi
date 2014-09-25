@@ -10,11 +10,11 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
-import com.join.android.app.common.db.manager.CourseManager;
-import com.join.android.app.common.db.tables.Course;
+import com.join.android.app.common.db.manager.NoticeManager;
+import com.join.android.app.common.db.tables.Notice;
 import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.BeanUtils;
-import com.join.mobi.adapter.LiveCourseAdapter;
+import com.join.mobi.adapter.NoticeAdapter;
 import com.join.mobi.dto.MainContentDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
@@ -32,8 +32,8 @@ import java.util.List;
  * <p/>
  * 在线课程
  */
-@EActivity(R.layout.livecourse_activity_layout)
-public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
+@EActivity(R.layout.notice_activity_layout)
+public class NoticeActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener {
     String TAG = getClass().getName();
 
     @Pref
@@ -50,10 +50,10 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
     @ViewById
     ImageView searchIcon;
 
-    LiveCourseAdapter mAdapter;
+    NoticeAdapter mAdapter;
 
-    List<Course> origLiveCourses = new ArrayList<Course>(0);
-    List<Course> filterLiveCourses = new ArrayList<Course>(0);
+    List<Notice> origNotice = new ArrayList<Notice>(0);
+    List<Notice> filterNotice = new ArrayList<Notice>(0);
     MainContentDto mainContent;
 
     @AfterViews
@@ -63,15 +63,17 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
                 android.R.color.holo_orange_light, android.R.color.holo_red_light);
-        origLiveCourses = CourseManager.getInstance().findAll();
-        mAdapter = new LiveCourseAdapter(this, origLiveCourses);
+        origNotice = NoticeManager.getInstance().findAll();
+
+
+
+        mAdapter = new NoticeAdapter(this, filterNotice);
         listView.setAdapter(mAdapter);
 
         wrapEvent();
-        try {
+        try{
             showLoading();
-        } catch (Exception e) {
-        }
+        }catch (Exception e){}
 
         retrieveDataFromServer();
     }
@@ -97,26 +99,25 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
             @Override
             public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-                filterLiveCourses.clear();
+                filterNotice.clear();
 
                 if (charSequence.toString().equals("")) {
-                    mAdapter.updateItems(origLiveCourses);
+                    mAdapter.updateItems(origNotice);
                 } else {
-                    for (Course course : origLiveCourses) {
-                        if (course.getTitle().contains(charSequence)) {
-                            Course _course = new Course();
-                            BeanUtils.copyProperties(_course, course);
-                            filterLiveCourses.add(_course);
+                    for (Notice notice : origNotice) {
+                        if (notice.getTitle().contains(charSequence)) {
+                            Notice _notice = new Notice();
+                            BeanUtils.copyProperties(_notice, notice);
+                            filterNotice.add(_notice);
                         }
                     }
-                    mAdapter.updateItems(filterLiveCourses);
+                    mAdapter.updateItems(filterNotice);
                 }
                 mAdapter.notifyDataSetChanged();
             }
 
             @Override
             public void afterTextChanged(Editable editable) {
-
 
             }
         });
@@ -130,8 +131,9 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
 
     @UiThread
     public void updateView() {
-        origLiveCourses = CourseManager.getInstance().findAll();
-        mAdapter.updateItems(origLiveCourses);
+        origNotice = NoticeManager.getInstance().findAll();
+
+        mAdapter.updateItems(origNotice);
         mAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
         dismissLoading();

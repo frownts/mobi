@@ -15,9 +15,11 @@ import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.adapter.ShareAdapter;
 import com.join.mobi.dto.MainContentDto;
 import com.join.mobi.enums.Dtype;
+import com.join.mobi.rpc.RPCService;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.*;
+import org.androidannotations.annotations.rest.RestService;
 
 import java.util.*;
 
@@ -25,6 +27,7 @@ import java.util.*;
  * User: mawanjin@join-cn.com
  * Date: 14-9-13
  * Time: 下午5:10
+ * 共享资源
  */
 
 @EActivity(R.layout.share_activity_layout)
@@ -42,6 +45,11 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
     GridView listView;
     @ViewById
     SwipeRefreshLayout swipeRefreshLayout;
+    @ViewById
+    ImageView trash;
+
+    @RestService
+    RPCService rpcService;
 
     MainContentDto mainContent = null;
     ShareAdapter shareAdapter;
@@ -53,6 +61,7 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     @AfterViews
     void afterViews() {
+        setWebService(rpcService);
         wrapEvent();
         swipeRefreshLayout.setOnRefreshListener(this);
         swipeRefreshLayout.setColorScheme(android.R.color.holo_green_dark, android.R.color.holo_green_light,
@@ -61,7 +70,7 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
         origResourceShare = ResourceShareManager.getInstance().findAll();
 
         listView.setAdapter(shareAdapter);
-
+        trash.setVisibility(View.INVISIBLE);
         showLoading();
         retrieveDataFromServer();
     }

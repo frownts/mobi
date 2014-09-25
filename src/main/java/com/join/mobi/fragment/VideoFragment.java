@@ -8,6 +8,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.mobi.activity.LiveCourseDetailActivity;
+import com.join.mobi.activity.LocalCourseDetailActivity;
 import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
 import io.vov.vitamio.LibsChecker;
 import io.vov.vitamio.MediaPlayer;
@@ -43,9 +44,16 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
 
         if (!LibsChecker.checkVitamioLibs(getActivity()))
             return;
-        path = ((LiveCourseDetailActivity)getActivity()).getPlayUrl();
-        initVideo();
-        seekTo = ((LiveCourseDetailActivity)getActivity()).getSeekTo();
+        if(getActivity() instanceof LiveCourseDetailActivity){
+            path = ((LiveCourseDetailActivity)getActivity()).getPlayUrl();
+            initVideo();
+            seekTo = ((LiveCourseDetailActivity)getActivity()).getSeekTo();
+        }else{
+            path = ((LocalCourseDetailActivity)getActivity()).getPlayUrl();
+            initVideo();
+            seekTo = ((LocalCourseDetailActivity)getActivity()).getSeekTo();
+        }
+
         startUpdateLearningTime();
     }
 
@@ -123,12 +131,17 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
                 super.run();
                 try {
                     while (mVideoView != null) {
-                        while (mVideoView.isPlaying()) {
-                            //更新学习时间
-                            Intent intent = new Intent("org.androidannotations.updateLearningTime");
-                            getActivity().sendBroadcast(intent);
-                            Thread.sleep(1000);
+                        try{
+                            while (mVideoView.isPlaying()) {
+                                //更新学习时间
+                                Intent intent = new Intent("org.androidannotations.updateLearningTime");
+                                getActivity().sendBroadcast(intent);
+                                Thread.sleep(1000);
+                            }
+                        }catch (java.lang.IllegalStateException e){
+
                         }
+
                     }
 
                 } catch (InterruptedException e) {

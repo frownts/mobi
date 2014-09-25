@@ -178,13 +178,12 @@ public class DownloadManager {
                         app.getDownloadFileDao().update(temp);
                     }
 
-                    //完成后删除metafile
                     if (isFinished()) {
-//                        app.getDownloadFileDao().delete(temp);
                         temp.setFinished(true);
                         temp.setFinishTime(System.currentTimeMillis()+"");
                         app.getDownloadFileDao().update(temp);
                         app.removeDownloadManager(DigestTool.md5(url));
+                        app.checkLocalFileExpired();
                     }
                     in.close();
                     out.close();

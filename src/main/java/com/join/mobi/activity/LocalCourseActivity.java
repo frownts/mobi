@@ -120,8 +120,6 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
         });
     }
 
-
-
     @UiThread
     public void retrieveDataFromDB() {
         origLocalCourses.clear();
@@ -194,7 +192,9 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
         dismissLoading();
     }
 
-
-
+    @Receiver(actions = "org.androidannotations.updateLearningTimeAfterCommitLog", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
+    protected void onActionULTACRegisteredOnAttachOnDetach() {
+        onRefresh();
+    }
 
 }

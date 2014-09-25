@@ -46,6 +46,7 @@ public class LocalCourseChapterFragment extends Fragment {
                 chapters.add(c);
             }
         }
+        if(chapters.size()>0)chapters.get(0).setPlaying(true);
         closeableIterable.closeableIterator();
         localCourseChapterAdapter = new LocalCourseChapterAdapter(getActivity(), chapters,listView.getRightViewWidth(),new LocalCourseChapterAdapter.OnRightItemClickListener() {
             @Override
@@ -57,6 +58,7 @@ public class LocalCourseChapterFragment extends Fragment {
                 retrieveDataFromDB();
             }
         });
+
         listView.setAdapter(localCourseChapterAdapter);
     }
 
@@ -82,9 +84,40 @@ public class LocalCourseChapterFragment extends Fragment {
      */
     @Receiver(actions = "org.androidannotations.ACTION_2", registerAt = Receiver.RegisterAt.OnStartOnStop)
     protected void onAction2RegisteredOnAttachOnDetach(Intent intent) {
+        //将原来的播放的章节进度进行保存
+        Chapter _chapter = localCourseChapterAdapter.getItem(currentPosition);
+        if(_chapter!=null)
+        ChapterManager.getInstance().saveOrUpdate(_chapter);
+
         for (Chapter c : localCourseChapterAdapter.getItems()) c.setPlaying(false);
-        localCourseChapterAdapter.getItem(intent.getExtras().getInt("position")).setPlaying(true);
+        currentPosition = intent.getExtras().getInt("position");
+        Chapter chapter = localCourseChapterAdapter.getItem(intent.getExtras().getInt("position"));
+        chapter.setPlaying(true);
+
+        localCourseChapterAdapter.notifyDataSetChanged();
+
+        Intent _intent = new Intent("org.androidannotations.play");
+        String playUrl = DownloadTool.getFileByUrl((DownloadApplication)getActivity().getApplicationContext(),chapter.getDownloadUrl());
+        _intent.putExtra("playUrl",playUrl);
+        getActivity().sendBroadcast(_intent);
+    }
+
+    /**
+     * 当播放进行时，更新进度和学习时间
+     */
+    @Receiver(actions = "org.androidannotations.updateLearningTime", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+    public void updateProgressAndLearningTime(){
+        Chapter chapter = localCourseChapterAdapter.getItem(currentPosition);
+        if(chapter==null)return;
+        chapter.setLearnedTime(chapter.getLearnedTime()+1);
         localCourseChapterAdapter.notifyDataSetChanged();
     }
+
+
+    public long getLastChapterId(){
+        return localCourseChapterAdapter.getItems().get(currentPosition).getChapterId();
+    }
+
+    private int currentPosition;
 
 }

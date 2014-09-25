@@ -32,8 +32,9 @@
 
             <!--缩略图-->
             <ImageView
+                    android:id="@+id/thumbnail"
                     android:layout_width="80dp"
-                    android:layout_height="wrap_content"
+                    android:layout_height="80dp"
                     android:src="@drawable/icon"/>
 
             <!--章节信息-->
@@ -41,7 +42,8 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:paddingLeft="5dp">
 
                 <TextView
                         android:id="@+id/title"
@@ -49,6 +51,8 @@
                         android:layout_height="wrap_content"
                         android:textSize="18sp"
                         android:text="标题"
+                        android:singleLine="true"
+                        android:maxLength="13"
                         android:layout_centerVertical="true"/>
 
                 <TextView

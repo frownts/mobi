@@ -3,7 +3,8 @@ package com.join.mobi;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
-import java.util.Collections;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * User: mawanjin@join-cn.com
@@ -13,6 +14,16 @@ import java.util.Collections;
 public class MyMappingJacksonHttpMessageConverter extends MappingJacksonHttpMessageConverter {
     public MyMappingJacksonHttpMessageConverter(){
         super();
-        setSupportedMediaTypes(Collections.singletonList(MediaType.TEXT_HTML));
+
+        List<MediaType> supportedMediaTypes = new ArrayList<MediaType>();
+        supportedMediaTypes.add(MediaType.TEXT_HTML);
+        supportedMediaTypes.add(MediaType.APPLICATION_JSON);
+        setSupportedMediaTypes(supportedMediaTypes);
+
+//        List<MediaType> mediaTypes = Collections.singletonList(MediaType.TEXT_HTML);
+//        mediaTypes.add(MediaType.APPLICATION_JSON);
+//        setSupportedMediaTypes(mediaTypes);
+
+//        setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
     }
 }

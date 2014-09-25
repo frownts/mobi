@@ -71,6 +71,8 @@
         <activity android:name="com.join.mobi.activity.DownloadingActivity_"/>
         <activity android:name="com.join.mobi.activity.LocalActivity_"/>
         <activity android:name="com.join.mobi.activity.LocalCourseActivity_"/>
+        <activity android:name="com.join.mobi.activity.NoticeActivity_"/>
+        <activity android:name="com.join.mobi.activity.LiveActivity_"/>
         <activity android:name="com.join.mobi.activity.LocalCourseDetailActivity_" android:screenOrientation="portrait"/>
         <activity android:name="com.join.mobi.activity.VideoWebViewActivity_"></activity>
         <activity android:name="com.join.mobi.activity.MyVideoViewBufferFullScreen_" android:screenOrientation="landscape" />

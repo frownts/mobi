@@ -88,8 +88,12 @@ public class PortalMenuAdapter extends BaseAdapter {
                 public void onClick(View view) {
                     if(position==1){
                         LiveCourseActivity_.intent(mContext).start();
+                    }else if(position==0){
+                        LiveActivity_.intent(mContext).start();
                     }else if(position==2){
                         ShareActivity_.intent(mContext).start();
+                    }else if(position==3){
+                        NoticeActivity_.intent(mContext).start();
                     }else if(position==4){
                         LocalCourseActivity_.intent(mContext).start();
                     }else if(position==5){

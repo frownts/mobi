@@ -12,57 +12,34 @@
 
 
         <LinearLayout
-                android:id="@+id/titleContainer"
                 android:layout_width="fill_parent"
                 android:layout_height="50dp"
                 android:background="@drawable/head_bg_red"
                 android:gravity="center_vertical">
 
+            <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"></LinearLayout>
 
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right">
-
-                <ImageView
-                        android:id="@+id/trash"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/trash"/>
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:gravity="right">
-
-                <ImageView
-                        android:id="@+id/filterCup"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:src="@drawable/cup"/>
-            </LinearLayout>
-
-            <LinearLayout
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="6"
+                    android:layout_weight="8"
                     android:gravity="center_horizontal">
 
                 <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:text="@string/local_resource"
+                        android:text="@string/menu_live"
                         android:textSize="20sp"/>
             </LinearLayout>
 
             <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2">
+                    android:layout_weight="1">
             </LinearLayout>
         </LinearLayout>
 
@@ -71,41 +48,36 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <!--<LinearLayout-->
-                    <!--android:layout_width="fill_parent"-->
-                    <!--android:layout_height="fill_parent"-->
-                    <!--android:orientation="vertical">-->
+            <LinearLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    >
 
-                <GridView
+                <ListView
                         android:id="@+id/listView"
                         android:layout_width="fill_parent"
                         android:layout_height="fill_parent"
-                        android:focusable="true"
-                        android:numColumns="2"
-                        android:gravity="center"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="20dp"
 
-                        android:listSelector="@android:color/transparent"/>
+                        android:descendantFocusability="blocksDescendants"
+                        android:focusable="true"/>
 
-            <!--</LinearLayout>-->
+            </LinearLayout>
         </android.support.v4.widget.SwipeRefreshLayout>
 
-        <!--<LinearLayout-->
-                <!--android:layout_width="fill_parent"-->
-                <!--android:layout_height="wrap_content">-->
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content">
 
-            <!--<TextView-->
-                    <!--android:layout_width="wrap_content"-->
-                    <!--android:layout_height="wrap_content"-->
-                    <!--android:text="asdfadsf"/>-->
-        <!--</LinearLayout>-->
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="asdfadsf"/>
+        </LinearLayout>
 
     </LinearLayout>
 
-    <!--搜索框start-->
     <RelativeLayout
-            android:layout_width="wrap_content"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_marginTop="10dp"
@@ -130,9 +102,8 @@
                 android:src="@drawable/search_icon"/>
 
     </RelativeLayout>
-    <!--搜索框end-->
 
-    <!--返回按钮-->
+
     <ImageView
             android:id="@+id/back"
             android:layout_width="wrap_content"
@@ -142,4 +113,32 @@
             android:layout_alignParentRight="true"
             android:layout_margin="20dp"
             android:paddingBottom="20dp"/>
+
+
+    <RelativeLayout
+            android:id="@+id/userNameContainer"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:visibility="gone">
+
+        <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/login_blank"
+                android:layout_centerInParent="true"/>
+
+        <TextView
+                android:id="@+id/userName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:paddingTop="20dp"
+                android:text="abc"
+                android:textSize="18sp"/>
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

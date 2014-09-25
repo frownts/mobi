@@ -51,7 +51,13 @@ public class LiveCourseChapterFragment extends Fragment {
         if(course!=null)
         totalDuration = course.getTotalDuration();
 
-        liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(),courseDetailDto.getChapter(),new LiveCourseChapterAdapter.Download(){
+
+        List<ChapterDto> chapterDtos = courseDetailDto.getChapter();
+        if(chapterDtos!=null&&chapterDtos.size()>0){
+            chapterDtos.get(0).setPlaying(true);
+        }
+
+        liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(),chapterDtos,new LiveCourseChapterAdapter.Download(){
             @Override
             public void download(ChapterDto chapterDto) {
                 doDownload(chapterDto);
@@ -83,13 +89,13 @@ public class LiveCourseChapterFragment extends Fragment {
             course = courseList.get(0);
             //更新总学习时间
             course.setLearningTimes(Integer.parseInt(totalDuration));
-            course = LocalCourseManager.getInstance().saveOrUpdate(course);
+            LocalCourseManager.getInstance().saveOrUpdate(course);
         }
 
         //判断该章节是否已经存在
         Map<String,Object> chapterParams = new HashMap<String, Object>(0);
         chapterParams.put("chapterId",chapter.getChapterId());
-        chapterParams.put("localcourse_id",course.getCourseId());
+        chapterParams.put("localcourse_id",course.getId());
 
         List<Chapter> chapters = ChapterManager.getInstance().findForParams(chapterParams);
         if(chapters==null||chapters.size()==0){
@@ -100,8 +106,10 @@ public class LiveCourseChapterFragment extends Fragment {
             entity.setFilesize(chapter.getFileSize());
             entity.setLearnedTime(chapter.getLearnedTime());
             entity.setChapterDuration(chapter.getChapterDuration());
+
             entity.setDownloadUrl(chapter.getDownloadUrl());
-            entity.setValidUntil(chapter.getValidUntil());
+//            entity.setDownloadUrl("http://192.168.1.104/apple.mp4");
+            entity.setValidUntil(course.getValidUntil()+"");
 
             ChapterManager.getInstance().save(entity);
             DialogManager.getInstance().makeText(getActivity(),"开始下载",DialogManager.DIALOG_TYPE_OK);
@@ -111,6 +119,7 @@ public class LiveCourseChapterFragment extends Fragment {
 
         //下载
         DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), chapter.getDownloadUrl(), chapter.getTitle(), Dtype.Chapter,  "0");
+        DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), "http://192.168.1.104/apple.mp4", chapter.getTitle(), Dtype.Chapter,  "0");
 
     }
 
@@ -123,7 +132,6 @@ public class LiveCourseChapterFragment extends Fragment {
         if(chapterDto==null)return;
         chapterDto.setLearnedTime(chapterDto.getLearnedTime()+1);
         liveCourseChapterAdapter.notifyDataSetChanged();
-
     }
 
     public CourseDetailDto getCourseDetailDto() {

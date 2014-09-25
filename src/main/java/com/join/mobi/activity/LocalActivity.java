@@ -73,11 +73,6 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
         if (type == 1 || type == 2) {//todo 调用视频播放器
             MyVideoViewBufferFullScreen_.intent(this).path(downloadFile.getAbsolutePath()).start();
         } else if (type == 3) {
-//            Uri path = Uri.fromFile(new File(downloadFile.getAbsolutePath()));
-//            Intent intent = new Intent(Intent.ACTION_VIEW);
-//            intent.setDataAndType(path, "application/pdf");
-//            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-
             try {
                 startActivity(FileOpenUtils.getPdfFileIntent(downloadFile.getAbsolutePath()));
             } catch (ActivityNotFoundException e) {

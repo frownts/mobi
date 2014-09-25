@@ -45,10 +45,16 @@ public class DateUtils {
         long now = System.currentTimeMillis();
         long gap = (now - begin) / 1000;
         if (gap < 60) return "刚刚";
-        else if (gap > 60 && gap < 60 * 60) {
-            return gap / 60 + "分钟前";
-        } else if (gap > 60 && gap < 60 * 60 * 60) {
+        else if((gap / 60 / 60 / 24/30/12)>1){
+            return gap / 60 / 60 / 24/30/12 + "年前";
+        }else if((gap / 60 / 60 / 24/30)>1){
+            return gap / 60 / 60 / 24/30 + "月前";
+        }else if((gap / 60 / 60 / 24)>1){
+            return gap / 60 / 60 / 24 + "天前";
+        }else if (gap > 60 && gap < 60 * 60 * 60&& gap/(60 * 60 * 60)>0) {
             return gap / 60 / 60 + "小时前";
+        }else if (gap > 60 && gap < 60 * 60) {
+            return gap / 60 + "分钟前";
         }
 
         return gap / 60 / 60 / 24 + "天前";
@@ -86,5 +92,15 @@ public class DateUtils {
     public static String ConvertDateToNormalString(Date date){
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         return sdf.format(date);
+    }
+
+    public static Date Parse(String date,String fmt){
+        SimpleDateFormat sdf = new SimpleDateFormat(fmt);
+        try {
+            return sdf.parse(date);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

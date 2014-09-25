@@ -1,6 +1,7 @@
 package com.join.mobi.adapter;
 
 import android.content.Context;
+import android.provider.MediaStore;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -9,8 +10,11 @@ import com.join.android.app.common.R;
 import com.join.android.app.common.db.tables.Chapter;
 import com.join.android.app.common.utils.DateUtils;
 import com.join.android.app.common.utils.FileUtils;
+import com.join.android.app.common.utils.MThumbnailUtils;
 import com.join.mobi.activity.LocalCourseDetailActivity;
 import com.join.mobi.customview.SpringProgressView;
+import com.php25.PDownload.DownloadApplication;
+import com.php25.PDownload.DownloadTool;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,6 +32,8 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
     private Context mContext;
     private LayoutInflater inflater;
     private int mRightWidth = 0;
+    /** 当前播放的是哪一个**/
+    private int currentPosition;
 
     private class ViewHolder {
         TextView title;
@@ -40,6 +46,7 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
         RelativeLayout item_right;
         TextView item_right_txt;
         ImageView roundDel;
+        ImageView thumbnail;
         SpringProgressView springProgressView;
     }
 
@@ -95,6 +102,7 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
             holder.filesize = (TextView) convertView.findViewById(R.id.filesize);
             holder.validUtil = (TextView) convertView.findViewById(R.id.validUtil);
             holder.roundDel = (ImageView) convertView.findViewById(R.id.roundDel);
+            holder.thumbnail = (ImageView) convertView.findViewById(R.id.thumbnail);
 
             holder.springProgressView = (SpringProgressView) convertView.findViewById(R.id.springProgressView);
             convertView.setTag(holder);
@@ -111,7 +119,14 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
         holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFilesize()));
         holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
         holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
-        holder.validUtil.setText(chapter.getValidUntil() + "天后过期");
+
+        holder.thumbnail.setImageBitmap(MThumbnailUtils.getVideoThumbnail(DownloadTool.getFileByUrl((DownloadApplication)mContext.getApplicationContext(),chapter.getDownloadUrl()),80,80, MediaStore.Images.Thumbnails.MICRO_KIND));
+
+        if(chapter.getValidUntil()==null)holder.validUtil.setVisibility(View.GONE);
+        else{
+            holder.validUtil.setVisibility(View.VISIBLE);
+            holder.validUtil.setText(chapter.getLeftDays() + "天后过期");
+        }
 
         if (((LocalCourseDetailActivity) mContext).isTrashShowing()) {
             holder.roundDel.setVisibility(View.VISIBLE);

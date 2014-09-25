@@ -138,7 +138,7 @@ public class DownloadTool {
     public static boolean isFinished(DownloadApplication context, String url) {
         DownloadFile temp = context.getDownloadFileDao().queryByTag(DigestTool.md5(url));
         if (temp == null) return false;
-        return temp.getDownloading();
+        return temp.getFinished();
     }
 
     /**
@@ -162,5 +162,19 @@ public class DownloadTool {
      */
     public static void deleteDownloadTask(DownloadApplication context, String url) {
         delDownloadTask(context, context.getDownloadFileDao().queryByTag(DigestTool.md5(url)));
+    }
+
+    /***
+     * 根据url来得到该url对应的文件
+     */
+    public static String getFileByUrl(DownloadApplication context,String url){
+         DownloadFile file = context.getDownloadFileDao().queryByTag(DigestTool.md5(url));
+        if(file==null)return "";
+        return file.getAbsolutePath();
+    }
+
+    public static DownloadFile getDownLoadFile(DownloadApplication context,String url) {
+        DownloadFile file = context.getDownloadFileDao().queryByTag(DigestTool.md5(url));
+        return file;
     }
 }
