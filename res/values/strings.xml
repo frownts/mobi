@@ -61,6 +61,7 @@
     <string name="local_resource">本地资源</string>
     <string name="study">学习</string>
     <string name="notice">通告</string>
+    <string name="file_invalid">资源无效</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

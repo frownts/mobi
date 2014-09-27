@@ -26,6 +26,10 @@ public class FileUtils {
         } else {
             fileSizeString = df.format((double) fileS / 1073741824) + "G";
         }
+
+        if(fileSizeString.equals(".0B")){
+            return "0B";
+        }
         return fileSizeString;
     }
 

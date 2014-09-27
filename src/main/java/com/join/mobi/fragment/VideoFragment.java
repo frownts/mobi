@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.manager.DialogManager;
 import com.join.mobi.activity.LiveCourseDetailActivity;
 import com.join.mobi.activity.LocalCourseDetailActivity;
 import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
@@ -53,40 +54,50 @@ public class VideoFragment extends Fragment implements MediaPlayer.OnInfoListene
             initVideo();
             seekTo = ((LocalCourseDetailActivity)getActivity()).getSeekTo();
         }
+        if(path==null||path.equals("")){
 
-        startUpdateLearningTime();
+        }else
+            startUpdateLearningTime();
     }
 
 
     void initVideo() {
-
-        mVideoView.setVideoPath(path);
-        MediaController mediaController = new MediaController(getActivity()) {
-
-        };
-
-        mediaController.setMediaPlayerControlFullScreen(new MediaController.MediaPlayerControlFullScreen() {
-            @Override
-            public void onFullScreen() {
-                MyVideoViewBufferFullScreen_.intent(getActivity()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).path(path).seekTo(mVideoView.getCurrentPosition()).start();
-                mVideoView.stopPlayback();
+        try{
+            if(path==null||path.equals("")){
+                return;
             }
+            mVideoView.setVideoPath(path);
+            MediaController mediaController = new MediaController(getActivity()) {
+
+            };
+
+            mediaController.setMediaPlayerControlFullScreen(new MediaController.MediaPlayerControlFullScreen() {
+                @Override
+                public void onFullScreen() {
+                    MyVideoViewBufferFullScreen_.intent(getActivity()).flags(Intent.FLAG_ACTIVITY_NEW_TASK).path(path).seekTo(mVideoView.getCurrentPosition()).start();
+                    mVideoView.stopPlayback();
+                }
 
 
-        });
+            });
 
-        mVideoView.setMediaController(mediaController);
-        mVideoView.requestFocus();
-        mVideoView.setOnInfoListener(this);
-        mVideoView.setOnBufferingUpdateListener(this);
-        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-                // optional need Vitamio 4.0
-                mediaPlayer.setPlaybackSpeed(1.0f);
-                mediaPlayer.seekTo(seekTo);
-            }
-        });
+            mVideoView.setMediaController(mediaController);
+            mVideoView.requestFocus();
+            mVideoView.setOnInfoListener(this);
+            mVideoView.setOnBufferingUpdateListener(this);
+            mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+                @Override
+                public void onPrepared(MediaPlayer mediaPlayer) {
+                    // optional need Vitamio 4.0
+                    mediaPlayer.setPlaybackSpeed(1.0f);
+                    mediaPlayer.seekTo(seekTo);
+                }
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            DialogManager.getInstance().makeText(getActivity(),getString(R.string.file_invalid),DialogManager.DIALOG_TYPE_ERROR);
+        }
+
     }
 
 

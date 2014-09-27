@@ -10,6 +10,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * User: mawanjin@join-cn.com
@@ -42,6 +43,7 @@ public class LiveCourseDetailFragment extends Fragment {
         branch.setText(courseDetailDto.getBranch());
         courseHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getCourseHour()));
         totalHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getTotalHour()));
+        if(StringUtils.isNotEmpty(courseDetailDto.getDescription()))
         description.setText(courseDetailDto.getDescription());
 
         originTime = courseDetailDto.getTotalHour();

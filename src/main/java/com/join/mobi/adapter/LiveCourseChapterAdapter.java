@@ -9,10 +9,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import com.join.android.app.common.R;
+import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.utils.DateUtils;
 import com.join.android.app.common.utils.FileUtils;
 import com.join.mobi.customview.SpringProgressView;
 import com.join.mobi.dto.ChapterDto;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +32,10 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
     private Download download;
     private Context mContext;
     private LayoutInflater inflater;
-    /** 当前播放的是哪一个**/
+    /**
+     * 当前播放的是哪一个*
+     */
     private int currentPosition;
-
 
 
     private class ViewHolder {
@@ -54,7 +57,7 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         chapterDtos.addAll(_chapters);
     }
 
-    public LiveCourseChapterAdapter(Context c, List<ChapterDto> _chapters,Download _download) {
+    public LiveCourseChapterAdapter(Context c, List<ChapterDto> _chapters, Download _download) {
         mContext = c;
         chapterDtos.clear();
         chapterDtos.addAll(_chapters);
@@ -69,7 +72,7 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
 
     @Override
     public ChapterDto getItem(int position) {
-        if(chapterDtos==null||chapterDtos.size()==0)return null;
+        if (chapterDtos == null || chapterDtos.size() == 0) return null;
         return chapterDtos.get(position);
     }
 
@@ -102,10 +105,15 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
         holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
 
-        holder.springProgressView.setMaxCount(chapter.getChapterDuration());
+
+        if (chapter.getChapterDuration() == 0)
+            holder.springProgressView.setMaxCount(100);
+        else
+            holder.springProgressView.setMaxCount(chapter.getChapterDuration());
         holder.springProgressView.setCurrentCount(chapter.getLearnedTime());
 
-        if(chapter.isPlaying())
+
+        if (chapter.isPlaying())
             holder.main.setBackgroundResource(R.drawable.red_border_frame);
         else
             holder.main.setBackgroundResource(R.drawable.border_bg);
@@ -114,7 +122,11 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         holder.download.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if(download!=null)download.download(chapter);
+                if (chapter.getFileSize() == 0) {
+                    DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
+                    return;
+                }
+                if (download != null) download.download(chapter);
             }
         });
 
@@ -122,13 +134,18 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
+                if (StringUtils.isEmpty(chapter.getPlayUrl())) {
+                    DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
+                    return;
+                }
+
                 currentPosition = position;
                 for (ChapterDto c : chapterDtos) c.setPlaying(false);
                 LiveCourseChapterAdapter.this.notifyDataSetChanged();
                 chapter.setPlaying(true);
 
                 Intent intent = new Intent("org.androidannotations.play");
-                intent.putExtra("playUrl",chapter.getPlayUrl());
+                intent.putExtra("playUrl", chapter.getPlayUrl());
                 mContext.sendBroadcast(intent);
             }
         });
@@ -140,7 +157,7 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         return currentPosition;
     }
 
-    public interface Download{
+    public interface Download {
         public void download(ChapterDto chapterDto);
     }
 }

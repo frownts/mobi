@@ -119,7 +119,7 @@ public class LiveCourseChapterFragment extends Fragment {
 
         //下载
         DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), chapter.getDownloadUrl(), chapter.getTitle(), Dtype.Chapter,  "0");
-        DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), "http://192.168.1.104/apple.mp4", chapter.getTitle(), Dtype.Chapter,  "0");
+//        DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), "http://192.168.1.104/apple.mp4", chapter.getTitle(), Dtype.Chapter,  "0");
 
     }
 

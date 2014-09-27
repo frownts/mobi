@@ -104,6 +104,9 @@ public class DownloadApplication extends Application {
                 if (chapter.getValidUntil() != null) {
                     DownloadFile file = DownloadTool.getDownLoadFile((DownloadApplication) getApplicationContext(), chapter.getDownloadUrl());
                     if (file != null) {
+                        if(file.getFinishTime()==null){
+                            continue;
+                        }
                         long finishTime = Long.parseLong(file.getFinishTime());
                         int day = (int) ((System.currentTimeMillis() - finishTime) / 1000 / 60 / 60 / 24);
                         long left = Long.parseLong(chapter.getValidUntil()) - day;

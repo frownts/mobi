@@ -85,7 +85,7 @@ public class DateUtils {
             if (N < 10) _N = "0" + N;
         }
 
-        return _N + ":" + K + ":" + _M;
+        return _N + ":" + _K + ":" + _M;
 
     }
 

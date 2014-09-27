@@ -94,6 +94,7 @@ public class MyVideoViewBufferFullScreen extends Activity implements OnInfoListe
                 public void onFullScreen() {
 //                    LiveCourseDetailActivity_.intent(MyVideoViewBufferFullScreen.this).seekTo(mVideoView.getCurrentPosition()).start();
                     Intent intent = new Intent("org.androidannotations.seekTo");
+                    intent.putExtra("seekTo",mVideoView.getCurrentPosition());
                     sendBroadcast(intent);
                     mVideoView.stopPlayback();
                     System.gc();

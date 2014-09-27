@@ -160,7 +160,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_login, null);
         final EditText loginName = (EditText) view.findViewById(R.id.loginName);
         final EditText passWord = (EditText) view.findViewById(R.id.passWord);
-        final EditText branch = (EditText) view.findViewById(R.id.branch);
+//        final EditText branch = (EditText) view.findViewById(R.id.branch);
+        branch = (EditText) view.findViewById(R.id.branch);
 
         //登录
         view.findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener() {

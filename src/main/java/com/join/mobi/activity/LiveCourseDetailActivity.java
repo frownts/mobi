@@ -20,6 +20,7 @@ import com.join.mobi.rpc.RPCService;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Date;
 
@@ -115,7 +116,10 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     }
 
     public void play(String url){
+
         playUrl = url;
+
+        if(StringUtils.isEmpty(playUrl))return;
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         videoFragment = new VideoFragment_();
@@ -255,7 +259,7 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         transaction.replace(R.id.fragmentVideo,new BlankFragment_());
         transaction.commit();
 
-        if(playUrl!=null)
+        if(StringUtils.isNotEmpty(playUrl))
             new Thread(){
                 @Override
                 public void run() {
@@ -287,7 +291,9 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
      */
     @Receiver(actions = "org.androidannotations.play", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
     public void play(Intent intent){
+        if(intent==null)return;
         playUrl = intent.getExtras().getString("playUrl");
+        if(StringUtils.isEmpty(playUrl))return;
         replay();
     }
 
@@ -296,7 +302,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
      */
     @Receiver(actions = "org.androidannotations.seekTo", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
     public void seekTo(Intent intent){
-        seekTo = intent.getExtras().getLong("seekTo");
+
+        seekTo = intent.getExtras().getLong("seekTo",0);
     }
 
     public long getSeekTo() {
