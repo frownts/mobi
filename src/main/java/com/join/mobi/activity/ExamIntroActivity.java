@@ -74,12 +74,12 @@ public class ExamIntroActivity extends BaseActivity {
         itemCount.setText("共 "+examDto.getItemCount()+" 道试题");
         timeLimit.setText("限时 "+ DateUtils.SecondToNormalTime(examDto.getDurationLimit()));
 
+
         examTime.setText(examTime.getText().toString().replace("$1", DateUtils.FormatForCourseLastLearningTime(examDto.getExamTime())).replace("$2", DateUtils.SecondToNormalTime(examDto.getDuration())));
+        examTime.setVisibility(View.VISIBLE);
 //        finishPercent.setText(finishPercent.getText().toString().replace("$1",examDto.getFinishPercent()+"%"));
         finishPercent.setText(finishPercent.getText().toString().replace("$1", ExamUtils.SpeculatePercent(examDto.getFinishPercent(), examDto.getItemCount() + "")+"%"));
-
-
-
+        finishPercent.setVisibility(View.VISIBLE);
 
         String correctP = examDto.getCorrectPercent();
 
@@ -91,6 +91,7 @@ public class ExamIntroActivity extends BaseActivity {
         }
 
         correctPercent.setText(correctPercent.getText().toString().replace("$1",correctP+"%"));
+        correctPercent.setVisibility(View.VISIBLE);
 
         if(examDto.getExamTime()==null||examDto.getExamTime().equals("")){
             examResult.setVisibility(View.INVISIBLE);

@@ -83,7 +83,7 @@ public class LiveCourseReferenceFragment extends Fragment {
         //判断该资料是否已经存在
         Map<String,Object> referenceParams = new HashMap<String, Object>(0);
         referenceParams.put("referenceId",reference.getReferenceId());
-        referenceParams.put("localcourse_id",course.getCourseId());
+        referenceParams.put("localcourse_id",course.getId());
 
         List<Reference> references = ReferenceManager.getInstance().findForParams(referenceParams);
         if(references==null||references.size()==0){

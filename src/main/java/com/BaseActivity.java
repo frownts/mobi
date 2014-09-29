@@ -1,10 +1,19 @@
 package com;
 
 import android.app.Activity;
+import android.os.Handler;
+import android.os.Message;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.widget.PopupWindow;
+import android.widget.TextView;
+import com.join.android.app.common.R;
 import com.join.android.app.common.db.DatabaseHelper;
 import com.join.android.app.common.db.manager.*;
 import com.join.android.app.common.db.tables.*;
 import com.join.android.app.common.dialog.CommonDialogLoading;
+import com.join.android.app.common.dialog.CommonDialogWithLetterLoading;
 import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.dto.*;
 import com.join.mobi.pref.PrefDef_;
@@ -25,6 +34,9 @@ public class BaseActivity extends Activity {
     private RPCService webService;
     private DatabaseHelper databaseHelper = null;
     private CommonDialogLoading loading;
+    private CommonDialogWithLetterLoading letterLoading;
+    private PopupWindow downLoadCompleteHint;
+
 
     @Override
     protected void onDestroy() {
@@ -85,7 +97,7 @@ public class BaseActivity extends Activity {
                     Map<String, Object> params = new HashMap<String, Object>(0);
                     params.put("courseId", course.getCourseId());
                     List<LocalCourse> localCourses = LocalCourseManager.getInstance().findForParams(params);
-                    if(localCourses!=null&&localCourses.size()>0){
+                    if (localCourses != null && localCourses.size() > 0) {
                         //更新学习总时长
                         localCourses.get(0).setLearningTimes(Integer.parseInt(course.getTotalDuration()));
                         LocalCourseManager.getInstance().saveOrUpdate(localCourses.get(0));
@@ -128,6 +140,19 @@ public class BaseActivity extends Activity {
 
     }
 
+    public void showLetterLoading() {
+        letterLoading = new CommonDialogWithLetterLoading(this, getString(R.string.saving_exam_result));
+        letterLoading.show();
+    }
+
+    public void dismissLetterLoading() {
+        if (letterLoading == null) return;
+        try {
+            letterLoading.dismiss();
+        } catch (Exception e) {
+        }
+
+    }
 
     public void showLoading() {
         loading = new CommonDialogLoading(this);
@@ -136,9 +161,10 @@ public class BaseActivity extends Activity {
 
     public void dismissLoading() {
         if (loading == null) return;
-        try{
+        try {
             loading.dismiss();
-        }catch (Exception e){}
+        } catch (Exception e) {
+        }
 
     }
 
@@ -147,11 +173,12 @@ public class BaseActivity extends Activity {
         MainContentDto mainContent;
         try {
 //            mainContent = RPCTestData.getMainContentDto();
-          mainContent = webService.getMainContent(pref.rpcUserId().get());
+            mainContent = webService.getMainContent(pref.rpcUserId().get());
 
         } catch (Throwable e) {
             try {
                 rpcException(e);
+                e.printStackTrace();
             } catch (Throwable throwable) {
                 throwable.printStackTrace();
             }
@@ -183,5 +210,24 @@ public class BaseActivity extends Activity {
         this.pref = pref;
     }
 
+    public void showDownLoadHint(View anchor,String title) {
+        View view = LayoutInflater.from(this).inflate(R.layout.pop_download_complete, null);
+        ((TextView) view.findViewById(R.id.title)).setText(title);
 
+        downLoadCompleteHint = new PopupWindow(view, getWindow().getWindowManager().getDefaultDisplay().getWidth(), 150, false);
+        downLoadCompleteHint.setOutsideTouchable(true);
+        mHandler.sendMessageDelayed(new Message(),2000);
+
+        downLoadCompleteHint.showAtLocation(anchor, Gravity.NO_GRAVITY, 0, 0);
+    }
+
+    private Handler mHandler = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            if (downLoadCompleteHint != null && downLoadCompleteHint.isShowing()) {
+                downLoadCompleteHint.dismiss();
+            }
+        }
+    };
 }

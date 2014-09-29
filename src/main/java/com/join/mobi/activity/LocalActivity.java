@@ -77,7 +77,7 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
                 startActivity(FileOpenUtils.getPdfFileIntent(downloadFile.getAbsolutePath()));
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(this,
-                        "No Application Available to View PDF",
+                        "没有可以打开pdf文档的应用程序",
                         Toast.LENGTH_SHORT).show();
             }
         } else if (type == 4) {

@@ -1,6 +1,7 @@
 package com.php25.PDownload;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import com.join.mobi.enums.Dtype;
 import com.php25.tools.DigestTool;
@@ -159,7 +160,6 @@ public class DownloadManager {
                         throw new RuntimeException("This is not a binary file.");
                     }
 
-
                     app.getDownloadFileDao().update(temp);
 
                     //开始下载
@@ -184,6 +184,9 @@ public class DownloadManager {
                         app.getDownloadFileDao().update(temp);
                         app.removeDownloadManager(DigestTool.md5(url));
                         app.checkLocalFileExpired();
+                        Intent intent = new Intent("org.androidannotations.downloadCompelte");
+                        intent.putExtra("name",showName);
+                        app.sendBroadcast(intent);
                     }
                     in.close();
                     out.close();

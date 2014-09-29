@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.content.Intent;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -49,6 +50,9 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
     EditText search;
     @ViewById
     ImageView searchIcon;
+
+    @ViewById
+    View main;
 
     LiveCourseAdapter mAdapter;
 
@@ -154,6 +158,11 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
     public void rpcException(Throwable e) {
         DialogManager.getInstance().makeText(this, getString(R.string.net_excption), DialogManager.DIALOG_TYPE_WARRING);
         dismissLoading();
+    }
+
+    @Receiver(actions = "org.androidannotations.downloadCompelte", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+    public void downLoadComplete(Intent i) {
+        showDownLoadHint(main,i.getExtras().getString("name"));
     }
 
 }

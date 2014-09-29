@@ -15,11 +15,13 @@ import com.join.android.app.common.utils.BeanUtils;
 import com.join.mobi.adapter.ShareAdapter;
 import com.join.mobi.dto.MainContentDto;
 import com.join.mobi.enums.Dtype;
+import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
+import org.androidannotations.annotations.sharedpreferences.Pref;
 
 import java.util.*;
 
@@ -48,6 +50,8 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
     @ViewById
     ImageView trash;
 
+    @Pref
+    PrefDef_ myPref;
     @RestService
     RPCService rpcService;
 
@@ -61,6 +65,7 @@ public class ShareActivity extends BaseActivity implements SwipeRefreshLayout.On
 
     @AfterViews
     void afterViews() {
+        setPref(myPref);
         setWebService(rpcService);
         wrapEvent();
         swipeRefreshLayout.setOnRefreshListener(this);

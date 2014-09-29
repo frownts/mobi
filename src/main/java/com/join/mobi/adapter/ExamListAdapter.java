@@ -2,6 +2,7 @@ package com.join.mobi.adapter;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -91,7 +92,7 @@ public class ExamListAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
 
-                ExamActivity_.intent(mContext).examIndex(position).start();
+                ExamActivity_.intent(mContext).flags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT).examIndex(position).start();
                 ((Activity)mContext).finish();
             }
         });

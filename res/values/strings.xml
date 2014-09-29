@@ -62,6 +62,10 @@
     <string name="study">学习</string>
     <string name="notice">通告</string>
     <string name="file_invalid">资源无效</string>
+    <string name="saving_exam_result">正在提交试卷</string>
+    <string name="warn">警告</string>
+    <string name="noWifi">您正在使用运营商网络连接,是否继续？</string>
+    <string name="download_complete">下载完成</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

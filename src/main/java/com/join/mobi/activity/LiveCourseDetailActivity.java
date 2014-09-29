@@ -1,13 +1,15 @@
 package com.join.mobi.activity;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.dialog.CommonDialogLoading;
@@ -35,12 +37,10 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
 
     public static final String EXTRA_COURSE_ID = "myStringExtra";
 
-
     @Pref
     PrefDef_ myPref;
     @RestService
     RPCService rpcService;
-
     @ViewById
     ImageView back;
     @ViewById
@@ -53,7 +53,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     TextView examTab;
     @ViewById
     TextView referenceTab;
-
+    @ViewById
+    View main;
     @ViewById
     ImageView curveMarkerDetail;
     @ViewById
@@ -63,62 +64,41 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     @ViewById
     ImageView curveMarkerReference;
 
-
     @Extra(EXTRA_COURSE_ID)
     String courseId;
-
     /**
      * 课程海报
      */
     @Extra
     String url;
-
     @Extra
     String name;
+    @Extra
+    long seekTo;
 
+    private String playUrl;
     LiveCourseDetailFragment_ liveCourseDetailFragment;
     LiveCourseChapterFragment_ liveCourseChapterFragment;
     LiveCourseExamFragment_ liveCourseExamFragment;
     LiveCourseReferenceFragment_ liveCourseReferenceFragment;
     VideoFragment_ videoFragment;
-
     FragmentManager fragmentManager;
     Fragment currentFragment;
-
     CourseDetailDto courseDetail;
     CommonDialogLoading loading;
-    //从服务器端取到的原总学习时间
-    long origLearningTime;
 
-//    private String path = "http://192.168.1.104/apple.mp4";
-//    @ViewById(resName = "buffer")
-//     VideoView mVideoView;
-//    @ViewById(resName = "probar")
-//     ProgressBar pb;
-//    @ViewById(resName = "download_rate")
-//     TextView downloadRateView;
-//    @ViewById(resName = "load_rate")
-//     TextView loadRateView;
-    @Extra
-    long seekTo;
-    private Uri uri;
 
-    private String playUrl;
     @AfterViews
     void afterViews() {
         title.setText(name);
-
         //加载数据
         retrieveDataFromServer();
         loading = new CommonDialogLoading(this);
         loading.show();
-
     }
 
     public void play(String url){
-
         playUrl = url;
-
         if(StringUtils.isEmpty(playUrl))return;
         fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
@@ -131,7 +111,6 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     void retrieveDataFromServer() {
         courseDetail = rpcService.getCourseDetail(myPref.rpcUserId().get(),courseId);
         afterRetrieveDataFromServer();
-
         if(courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0)
         play(courseDetail.getChapter().get(0).getDownloadUrl());
     }
@@ -143,7 +122,6 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         liveCourseChapterFragment = new LiveCourseChapterFragment_();
         liveCourseExamFragment = new LiveCourseExamFragment_();
         liveCourseReferenceFragment = new LiveCourseReferenceFragment_();
-
 
         FragmentTransaction transaction = fragmentManager.beginTransaction();
         transaction.add(R.id.liveCourseFragment, liveCourseDetailFragment);
@@ -215,9 +193,7 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
 
     @Override
     protected void onStop() {
-
         updateLearningTime();
-
         super.onStop();
     }
 
@@ -285,7 +261,6 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         this.playUrl = playUrl;
     }
 
-
     /**
      * 当播放进行时，更新进度和学习时间
      */
@@ -306,6 +281,31 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         seekTo = intent.getExtras().getLong("seekTo",0);
     }
 
+    @Receiver(actions = "org.androidannotations.downloadCompelte", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+    public void downLoadComplete(Intent i) {
+        showDownLoadHint(main,i.getExtras().getString("name"));
+    }
+
+    private PopupWindow downLoadCompleteHint;
+
+    public void showDownLoadHint(View anchor,String title) {
+        View view = LayoutInflater.from(this).inflate(R.layout.pop_download_complete, null);
+        ((TextView) view.findViewById(R.id.title)).setText(title);
+
+        downLoadCompleteHint = new PopupWindow(view, getWindow().getWindowManager().getDefaultDisplay().getWidth(), 150, false);
+        downLoadCompleteHint.setOutsideTouchable(true);
+        downLoadCompleteHint.showAtLocation(anchor, Gravity.NO_GRAVITY,0,0);
+        dismissPopUp();
+    }
+
+    @UiThread(delay = 2000)
+    void dismissPopUp(){
+        if (downLoadCompleteHint != null && downLoadCompleteHint.isShowing()) {
+            downLoadCompleteHint.dismiss();
+
+        }
+    }
+
     public long getSeekTo() {
         return seekTo;
     }
@@ -313,96 +313,4 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     public void setSeekTo(long seekTo) {
         this.seekTo = seekTo;
     }
-
-    //    void initVideo() {
-////        uri = Uri.parse(path);
-//
-////      mVideoView.setVideoURI(uri);
-//
-//        mVideoView.setVideoPath(path);
-//        MediaController mediaController = new MediaController(this){
-//
-//        };
-//
-//        mediaController.setMediaPlayerControlFullScreen(new MediaController.MediaPlayerControlFullScreen() {
-//            @Override
-//            public void onFullScreen() {
-//                MyVideoViewBufferFullScreen_.intent(LiveCourseDetailActivity.this).seekTo(mVideoView.getCurrentPosition()).start();
-//                mVideoView.stopPlayback();
-//                finish();
-//            }
-//
-//
-//        });
-//
-//        mVideoView.setMediaController(mediaController);
-//        mVideoView.requestFocus();
-//        mVideoView.setOnInfoListener(this);
-//        mVideoView.setOnBufferingUpdateListener(this);
-//        mVideoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-//            @Override
-//            public void onPrepared(MediaPlayer mediaPlayer) {
-//                // optional need Vitamio 4.0
-//                mediaPlayer.setPlaybackSpeed(1.0f);
-//                mediaPlayer.seekTo(seekTo);
-//            }
-//        });
-//    }
-
-//    @Override
-//    public boolean onInfo(MediaPlayer mp, int what, int extra) {
-//        switch (what) {
-//            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-//                if (mVideoView.isPlaying()) {
-//                    mVideoView.pause();
-//                    pb.setVisibility(View.VISIBLE);
-//                    downloadRateView.setText("");
-//                    loadRateView.setText("");
-//                    downloadRateView.setVisibility(View.VISIBLE);
-//                    loadRateView.setVisibility(View.VISIBLE);
-//
-//                }
-//                break;
-//            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-//                mVideoView.start();
-//                pb.setVisibility(View.GONE);
-//                downloadRateView.setVisibility(View.GONE);
-//                loadRateView.setVisibility(View.GONE);
-//                startUpdateLearningTime();
-//                break;
-//            case MediaPlayer.MEDIA_INFO_DOWNLOAD_RATE_CHANGED:
-//                downloadRateView.setText("" + extra + "kb/s" + "  ");
-//                break;
-//        }
-//        return true;
-//    }
-//
-//    @Override
-//    public void onBufferingUpdate(MediaPlayer mp, int percent) {
-//        loadRateView.setText(percent + "%");
-//    }
-
-//    private void startUpdateLearningTime(){
-//        //开始播放了,更新学习时间
-//        new Thread(){
-//            @Override
-//            public void run() {
-//                super.run();
-//                try {
-//                    while (mVideoView!=null){
-//                        while(mVideoView.isPlaying()){
-//                            //更新学习时间
-//                            Intent intent = new Intent("org.androidannotations.updateLearningTime");
-//                            LiveCourseDetailActivity.this.sendBroadcast(intent);
-//                            Thread.sleep(1000);
-//                        }
-//                    }
-//
-//                } catch (InterruptedException e) {
-//                    e.printStackTrace();
-//                }
-//            }
-//        }.start();
-//    }
-
 }

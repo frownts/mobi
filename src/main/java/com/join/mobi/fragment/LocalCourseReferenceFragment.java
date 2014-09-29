@@ -82,7 +82,7 @@ public class LocalCourseReferenceFragment extends Fragment {
                 startActivity(FileOpenUtils.getWordFileIntent(filePath));
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(getActivity(),
-                        "No Application Available to View PDF",
+                        "没有可以打开word文档的应用程序",
                         Toast.LENGTH_SHORT).show();
             }
         } else if (type == 3) {
@@ -93,7 +93,7 @@ public class LocalCourseReferenceFragment extends Fragment {
                 startActivity(FileOpenUtils.getHtmlFileIntent(filePath));
             } catch (ActivityNotFoundException e) {
                 Toast.makeText(getActivity(),
-                        "No Application Available to View PDF",
+                        "没有可以打开flash文档的应用程序",
                         Toast.LENGTH_SHORT).show();
             }
         } else {

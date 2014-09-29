@@ -11,7 +11,7 @@ import org.androidannotations.annotations.EApplication;
 
 
 /**
- * User: mawanjin@join-cn.com
+ * User: mawanjin@join-cn.com     x
  * Date: 14-2-11
  * Time: 下午4:58
  */
@@ -44,5 +44,6 @@ public class MApplication extends DownloadApplication {
     public void onTerminate() {
         super.onTerminate();
         DBManager.getInstance(this).onDestroy();
+        System.exit(0);
     }
 }

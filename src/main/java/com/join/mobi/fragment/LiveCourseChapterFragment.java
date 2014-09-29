@@ -106,9 +106,7 @@ public class LiveCourseChapterFragment extends Fragment {
             entity.setFilesize(chapter.getFileSize());
             entity.setLearnedTime(chapter.getLearnedTime());
             entity.setChapterDuration(chapter.getChapterDuration());
-
             entity.setDownloadUrl(chapter.getDownloadUrl());
-//            entity.setDownloadUrl("http://192.168.1.104/apple.mp4");
             entity.setValidUntil(course.getValidUntil()+"");
 
             ChapterManager.getInstance().save(entity);

@@ -84,22 +84,27 @@ public class LocalCourseChapterFragment extends Fragment {
      */
     @Receiver(actions = "org.androidannotations.ACTION_2", registerAt = Receiver.RegisterAt.OnStartOnStop)
     protected void onAction2RegisteredOnAttachOnDetach(Intent intent) {
-        //将原来的播放的章节进度进行保存
-        Chapter _chapter = localCourseChapterAdapter.getItem(currentPosition);
-        if(_chapter!=null)
-        ChapterManager.getInstance().saveOrUpdate(_chapter);
+        try{
+            //将原来的播放的章节进度进行保存
+            Chapter _chapter = localCourseChapterAdapter.getItem(currentPosition);
+            if(_chapter!=null)
+                ChapterManager.getInstance().saveOrUpdate(_chapter);
 
-        for (Chapter c : localCourseChapterAdapter.getItems()) c.setPlaying(false);
-        currentPosition = intent.getExtras().getInt("position");
-        Chapter chapter = localCourseChapterAdapter.getItem(intent.getExtras().getInt("position"));
-        chapter.setPlaying(true);
+            for (Chapter c : localCourseChapterAdapter.getItems()) c.setPlaying(false);
+            currentPosition = intent.getExtras().getInt("position");
+            Chapter chapter = localCourseChapterAdapter.getItem(intent.getExtras().getInt("position"));
+            chapter.setPlaying(true);
 
-        localCourseChapterAdapter.notifyDataSetChanged();
+            localCourseChapterAdapter.notifyDataSetChanged();
 
-        Intent _intent = new Intent("org.androidannotations.play");
-        String playUrl = DownloadTool.getFileByUrl((DownloadApplication)getActivity().getApplicationContext(),chapter.getDownloadUrl());
-        _intent.putExtra("playUrl",playUrl);
-        getActivity().sendBroadcast(_intent);
+            Intent _intent = new Intent("org.androidannotations.play");
+            String playUrl = DownloadTool.getFileByUrl((DownloadApplication)getActivity().getApplicationContext(),chapter.getDownloadUrl());
+            _intent.putExtra("playUrl",playUrl);
+            getActivity().sendBroadcast(_intent);
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 
     /**

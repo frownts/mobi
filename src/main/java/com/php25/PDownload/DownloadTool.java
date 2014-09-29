@@ -23,7 +23,7 @@ public class DownloadTool {
      * @param context
      * @param url
      */
-    public static void startDownload(DownloadApplication context, String url, String showName, Dtype dtype, String fileType) {
+    public synchronized static void startDownload(DownloadApplication context, String url, String showName, Dtype dtype, String fileType) {
         if (context.containsDownloadManager(DigestTool.md5(url))) {
             DownloadManager downloadManager = context.getDownloadManager(DigestTool.md5(url));
             downloadManager.download(url, showName, dtype, fileType);
@@ -145,6 +145,7 @@ public class DownloadTool {
      * 删除下载任务,包括数据库和文件(若有)
      */
     public static void delDownloadTask(DownloadApplication context, DownloadFile downloadFile) {
+        if(downloadFile==null)return;
         //停止下载任务
         stopDownload(context, downloadFile.getUrl());
 

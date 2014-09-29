@@ -1,5 +1,6 @@
 package com.join.mobi.activity;
 
+import android.content.Intent;
 import android.widget.ListView;
 import com.BaseActivity;
 import com.join.android.app.common.R;
@@ -18,6 +19,9 @@ import java.util.List;
 public class ExamListActivity extends BaseActivity {
 
     @Extra
+    int currentPageIndex;
+
+    @Extra
     List<ExamItem> examItems;
 
     @ViewById
@@ -34,6 +38,7 @@ public class ExamListActivity extends BaseActivity {
 
     @Click
     void backClicked() {
+        ExamActivity_.intent(this).flags(Intent.FLAG_ACTIVITY_BROUGHT_TO_FRONT).examIndex(currentPageIndex).start();
         finish();
     }
 

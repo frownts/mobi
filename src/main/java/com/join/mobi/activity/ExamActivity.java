@@ -259,8 +259,11 @@ public class ExamActivity extends BaseActivity {
 
     @Click
     void examListClicked() {
-        ExamListActivity_.intent(this).examItems(examDto.getExamItems()).start();
-        finish();
+
+
+
+        ExamListActivity_.intent(this).examItems(examDto.getExamItems()).currentPageIndex(pagerView.get(CurrentPageIndex).getExamIndex()).start();
+//        finish();
     }
 
 
@@ -283,12 +286,16 @@ public class ExamActivity extends BaseActivity {
                 @Override
                 public void onClick(View view) {
                     DialogManager.getInstance().dismiss();
+                    showLetterLoading();
                     sumit(examResult);
                 }
             });
 
-        }else
+        }else{
+            showLetterLoading();
             sumit(examResult);
+        }
+
 
 
     }
@@ -298,12 +305,14 @@ public class ExamActivity extends BaseActivity {
      */
     @Background
     void sumit(ExamResult examResult) {
+
         rpcService.submitExamResult(myPref.rpcUserId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
         showExamResult(examResult);
     }
 
     @UiThread
     void showExamResult(ExamResult examResult) {
+        dismissLetterLoading();
         ExamResultActivity_.intent(this).examDto(examDto).examResult(examResult).start();
         finish();
     }

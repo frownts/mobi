@@ -2,12 +2,14 @@ package com.join.mobi.activity;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Intent;
 import android.graphics.drawable.ColorDrawable;
 import android.view.*;
 import android.widget.*;
 import com.BaseActivity;
 import com.join.android.app.common.R;
 import com.join.android.app.common.manager.DialogManager;
+import com.join.android.app.common.manager.NetworkManager;
 import com.join.mobi.adapter.PortalMenuAdapter;
 import com.join.mobi.customview.MySpinner;
 import com.join.mobi.dto.LoginDto;
@@ -38,6 +40,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     RelativeLayout userNameContainer;
     @ViewById
     TextView userName;
+    @ViewById
+    View main;
 
     @RestService
     RPCService rpcService;
@@ -54,8 +58,29 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @AfterViews
     void afterViews() {
-        if (myPref.uncompleteDownload().get())
-            ((DownloadApplication) getApplicationContext()).startAllUnCompleteDownload();
+        if (myPref.uncompleteDownload().get()) {
+            if (NetworkManager.getInstance(this).checkNet()) {
+                if (NetworkManager.getInstance(this).getAPNType(this) != NetworkManager.WIFI) {
+                    if (!myPref.continueOnWifi().getOr(true)) {
+                        DialogManager.getInstance().createNormalDialog(this, getString(R.string.warn), getString(R.string.noWifi));
+                        DialogManager.getInstance().setOk("继续", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                ((DownloadApplication) getApplicationContext()).startAllUnCompleteDownload();
+                            }
+                        });
+                        DialogManager.getInstance().setCancel("取消", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View v) {
+                                DialogManager.getInstance().dismiss();
+                            }
+                        });
+                    }
+                } else
+                    ((DownloadApplication) getApplicationContext()).startAllUnCompleteDownload();
+            }
+
+        }
 
         menuAdapter = new PortalMenuAdapter(this, myPref.isLogin().getOr(false), new PortalMenuAdapter.NeedLogin() {
             @Override
@@ -72,7 +97,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             reloadAfterLogin(myPref.showName().get());
         }
         //执行本地文件有效期检测
-        ((DownloadApplication)getApplicationContext()).checkLocalFileExpired();
+        ((DownloadApplication) getApplicationContext()).checkLocalFileExpired();
 //        if(chapter.getDownloadTime()==null){
 //            DownloadFile file = DownloadTool.getDownLoadFile((DownloadApplication) mContext.getApplicationContext(), chapter.getDownloadUrl());
 //            if(file!=null){
@@ -169,7 +194,6 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             public void onClick(View view) {
                 showLoading();
                 doLogin(loginName.getText().toString(), passWord.getText().toString(), branch.getText().toString());
-
             }
         });
 
@@ -182,7 +206,6 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         }
         spinner.setData(data);
 
-
         branch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -191,7 +214,6 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         });
 
         spinner.setOnItemSelectedListener(new SpinnerOnItemSelectedListener());
-
 
         loginDialog.setCancelable(false);
         loginDialog.show();
@@ -257,7 +279,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     }
 
     @UiThread
-    public void loginFailed(){
+    public void loginFailed() {
         dismissLoading();
         DialogManager.getInstance().makeText(this, "用户名或密码错误", DialogManager.DIALOG_TYPE_OK);
     }
@@ -333,7 +355,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         menuAdapter.notifyDataSetChanged();
         userNameContainer.setVisibility(View.VISIBLE);
         userName.setText(_userName);
-        imgLogin.setEnabled(false);
+//        imgLogin.setEnabled(false);
     }
 
     public void reloadAfterLogout() {
@@ -367,6 +389,12 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     ImageView annonunceWhenDownload;
     ImageView autoLogin;
     ImageView logout;
+
+
+    @Receiver(actions = "org.androidannotations.downloadCompelte", registerAt = Receiver.RegisterAt.OnResumeOnPause)
+    public void downLoadComplete(Intent i) {
+        showDownLoadHint(main,i.getExtras().getString("name"));
+    }
 
 }
 
