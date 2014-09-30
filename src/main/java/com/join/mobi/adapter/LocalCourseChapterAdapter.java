@@ -119,8 +119,12 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
         holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFilesize()));
         holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
         holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
+        try{
 
-        holder.thumbnail.setImageBitmap(MThumbnailUtils.getVideoThumbnail(DownloadTool.getFileByUrl((DownloadApplication)mContext.getApplicationContext(),chapter.getDownloadUrl()),80,80, MediaStore.Images.Thumbnails.MICRO_KIND));
+        }catch (Exception e){
+            holder.thumbnail.setImageBitmap(MThumbnailUtils.getVideoThumbnail(DownloadTool.getFileByUrl((DownloadApplication)mContext.getApplicationContext(),chapter.getDownloadUrl()),80,80, MediaStore.Images.Thumbnails.MICRO_KIND));
+        }
+
 
         if(chapter.getValidUntil()==null)holder.validUtil.setVisibility(View.GONE);
         else{
@@ -135,7 +139,8 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
 
         if (chapter.isPlaying()) {//红色背影框
             holder.main.setBackgroundResource(R.drawable.red_border_frame);
-        }
+        }else
+            holder.main.setBackgroundResource(R.drawable.border_bg);
 
         holder.item_right.setOnClickListener(new View.OnClickListener() {
             @Override

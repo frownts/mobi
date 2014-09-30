@@ -17,6 +17,7 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.Receiver;
 import org.androidannotations.annotations.ViewById;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
 
@@ -42,6 +43,7 @@ public class LocalCourseChapterFragment extends Fragment {
 
         while (chapterIterator.hasNext()) {
             Chapter c = chapterIterator.next();
+            if(StringUtils.isEmpty(c.getDownloadUrl()))continue;
             if (DownloadTool.isFinished((DownloadApplication) getActivity().getApplicationContext(), c.getDownloadUrl())) {
                 chapters.add(c);
             }
@@ -65,7 +67,20 @@ public class LocalCourseChapterFragment extends Fragment {
     void retrieveDataFromDB(){
         Map params = new HashMap(0);
         params.put("localcourse_id",localCourse.getId());
-        localCourseChapterAdapter.updateItems(ChapterManager.getInstance().findForParams(params));
+        List<Chapter> chapters = ChapterManager.getInstance().findForParams(params);
+        Iterator<Chapter> iterator = chapters.iterator();
+        while (iterator.hasNext()){
+            Chapter chapter = iterator.next();
+            if(StringUtils.isEmpty(chapter.getDownloadUrl())){
+                iterator.remove();
+                continue;
+            }
+            if (!DownloadTool.isFinished((DownloadApplication) getActivity().getApplicationContext(), chapter.getDownloadUrl())) {
+                iterator.remove();
+            }
+        }
+
+        localCourseChapterAdapter.updateItems(chapters);
         localCourseChapterAdapter.notifyDataSetChanged();
     }
 

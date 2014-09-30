@@ -62,7 +62,6 @@ public class LocalActivity extends BaseActivity implements SwipeRefreshLayout.On
         origDownloadFile = DownloadTool.getAllDownloaded((DownloadApplication) getApplicationContext(), Dtype.Share);
         listView.setAdapter(localAdapter);
 
-
         retrieveDataFromServer();
     }
 

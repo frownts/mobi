@@ -114,15 +114,15 @@ public class LocalCourseReferenceFragment extends Fragment {
     }
 
 
-    /**
-     * 当点击某列进行播放时
-     *
-     * @param intent
-     */
-    @Receiver(actions = "org.androidannotations.ACTION_2", registerAt = Receiver.RegisterAt.OnStartOnStop)
-    protected void onAction2RegisteredOnAttachOnDetach(Intent intent) {
-        //open file
-        localCourseReferenceAdapter.getItem(intent.getExtras().getInt("position"));
-    }
+//    /**
+//     * 当点击某列进行播放时
+//     *
+//     * @param intent
+//     */
+//    @Receiver(actions = "org.androidannotations.ACTION_2", registerAt = Receiver.RegisterAt.OnStartOnStop)
+//    protected void onAction2RegisteredOnAttachOnDetach(Intent intent) {
+//        //open file
+//        localCourseReferenceAdapter.getItem(intent.getExtras().getInt("position"));
+//    }
 
 }

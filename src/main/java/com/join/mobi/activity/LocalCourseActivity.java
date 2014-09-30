@@ -139,7 +139,7 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
                 if(DownloadTool.isFinished((DownloadApplication)getApplicationContext(),c.getDownloadUrl())){
                     existsContent=true;
                     course.setChapterNum(course.getChapterNum()+1);
-                    break;
+//                    break;
                 }
             }
             closeableIterable.closeableIterator();
@@ -152,7 +152,7 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
                 if(DownloadTool.isFinished((DownloadApplication)getApplicationContext(),_c.getUrl())){
                     existsContent=true;
                     course.setRefNum(course.getRefNum()+1);
-                    break;
+//                    break;
                 }
             }
             _closeableIterable.closeableIterator();

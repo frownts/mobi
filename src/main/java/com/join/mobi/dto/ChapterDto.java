@@ -1,56 +1,60 @@
 package com.join.mobi.dto;
 
+import java.util.List;
+
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-8
  * Time: 下午12:17
  */
 public class ChapterDto {
-    /**
-     * 章节ID
-     */
-    private long chapterId;
 
-    /**
-     * 章节标题
-     */
-    private String title;
-
-    /**
-     * 章节时长
-     */
-    private long chapterDuration;
-
-    /**
-     * 章节学习时间
-     */
-    private long learnedTime;
 
     /**
      * 书签
      */
     private String bookMark;
 
+    private List<ChapterDetailDto> chapter;
+
+    /**
+     * 章节时长
+     */
+    private long chapterDuration;
+    /**
+     * 章节ID
+     */
+    private long chapterId;
+
+    /**
+     * 章节资源下载链接
+     */
+    private String downloadUrl;
     /**
      * 章节关联资源的文件大小
      */
     private long fileSize;
+    /**
+     * 章节学习时间
+     */
+    private long learnedTime;
 
     /**
      * 章节资源播放链接
      */
     private String playUrl;
 
+    private long resId;
     /**
-     * 章节资源下载链接
+     * 章节标题
      */
-    private String downloadUrl;
-
-    /**
-     * 有效期
-     */
-    private String validUntil;
-
+    private String title;
+//
+//    /**
+//     * 有效期
+//     */
+//    private String validUntil;
+//
     /**
      * 开始播放学习的时间
      */
@@ -125,13 +129,13 @@ public class ChapterDto {
         this.downloadUrl = downloadUrl;
     }
 
-    public String getValidUntil() {
-        return validUntil;
-    }
-
-    public void setValidUntil(String validUntil) {
-        this.validUntil = validUntil;
-    }
+//    public String getValidUntil() {
+//        return validUntil;
+//    }
+//
+//    public void setValidUntil(String validUntil) {
+//        this.validUntil = validUntil;
+//    }
 
     public boolean isPlaying() {
         return playing;
@@ -139,5 +143,21 @@ public class ChapterDto {
 
     public void setPlaying(boolean playing) {
         this.playing = playing;
+    }
+
+    public long getResId() {
+        return resId;
+    }
+
+    public void setResId(long resId) {
+        this.resId = resId;
+    }
+
+    public List<ChapterDetailDto> getChapter() {
+        return chapter;
+    }
+
+    public void setChapter(List<ChapterDetailDto> chapter) {
+        this.chapter = chapter;
     }
 }

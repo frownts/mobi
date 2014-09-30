@@ -39,7 +39,7 @@
     <LinearLayout
             android:id="@+id/fragmentVideo"
             android:layout_width="fill_parent"
-            android:layout_height="260dp"
+            android:layout_height="200dp"
             android:orientation="vertical">
 
     </LinearLayout>

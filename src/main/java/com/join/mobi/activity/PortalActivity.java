@@ -109,6 +109,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     }
 
     public void showSetting() {
+        if(settingDialog!=null&&settingDialog.isShowing())settingDialog.dismiss();
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_setting, null);
         wrapEvent(view);
         settingDialog = new AlertDialog.Builder(this).create();
@@ -187,7 +188,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         final EditText passWord = (EditText) view.findViewById(R.id.passWord);
 //        final EditText branch = (EditText) view.findViewById(R.id.branch);
         branch = (EditText) view.findViewById(R.id.branch);
-
+        loginName.setText(myPref.userId().getOr(""));
         //登录
         view.findViewById(R.id.btnLogin).setOnClickListener(new View.OnClickListener() {
             @Override

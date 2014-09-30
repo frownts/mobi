@@ -98,6 +98,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     }
 
     public void play(String url){
+        videoFragment=null;
+        System.gc();
         playUrl = url;
         if(StringUtils.isEmpty(playUrl))return;
         fragmentManager = getSupportFragmentManager();
@@ -111,8 +113,13 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     void retrieveDataFromServer() {
         courseDetail = rpcService.getCourseDetail(myPref.rpcUserId().get(),courseId);
         afterRetrieveDataFromServer();
-        if(courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0)
-        play(courseDetail.getChapter().get(0).getDownloadUrl());
+        if(courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0){
+            ChapterDto chapter = courseDetail.getChapter().get(0);
+            if(chapter.getChapter()!=null&&chapter.getChapter().size()>0&&StringUtils.isEmpty(chapter.getDownloadUrl()))
+                play(chapter.getChapter().get(0).getDownloadUrl());
+            else
+            play(chapter.getDownloadUrl());
+        }
     }
 
     @UiThread
@@ -210,6 +217,8 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     @Override
     protected void onDestroy() {
         commitLearningLog();
+        Intent i = new Intent("org.androidannotations.updateLearningTimeAfterCommitLog");
+        sendBroadcast(i);
         super.onDestroy();
     }
 
@@ -218,6 +227,7 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
         try{
             //提交学习记录
             rpcService.commitLearningLog(myPref.rpcUserId().get(), DateUtils.ConvertDateToNormalString(new Date()),liveCourseDetailFragment.getDuration()+"",courseId,liveCourseChapterFragment.getLastChapterId()+"","0");
+
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -301,7 +311,12 @@ public class LiveCourseDetailActivity extends FragmentActivity  {
     @UiThread(delay = 2000)
     void dismissPopUp(){
         if (downLoadCompleteHint != null && downLoadCompleteHint.isShowing()) {
-            downLoadCompleteHint.dismiss();
+            try{
+                downLoadCompleteHint.dismiss();
+            }catch (Exception e){
+
+            }
+
 
         }
     }

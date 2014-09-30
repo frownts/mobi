@@ -118,11 +118,19 @@ public class DownloadAdapter extends BaseAdapter {
                 final File file = new File(downloadFile.getAbsolutePath());
                 float filelength = file.length();
                 float totalSize = new Float(downloadFile.getTotalSize());
-                float f = filelength/totalSize;
-                String p = ((f*100)+"");
-                if(p.length()>4)
-                    p = p.substring(0,4);
-                downloadFile.setPercent(p+"%");
+
+                float f = 0;
+                if(filelength>0){
+                    f = (filelength/totalSize)*100;
+                    if(f>100)f=100;
+                    String p = (f+"");
+
+                    if(p.length()>4)
+                        p = p.substring(0,4);
+                    downloadFile.setPercent(p+"%");
+                }else
+                    downloadFile.setPercent("0%");
+
             }
         }
 

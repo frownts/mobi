@@ -165,4 +165,8 @@ public class LiveCourseActivity extends BaseActivity implements SwipeRefreshLayo
         showDownLoadHint(main,i.getExtras().getString("name"));
     }
 
+    @Receiver(actions = "org.androidannotations.updateLearningTimeAfterCommitLog", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
+    protected void onActionULTACRegisteredOnAttachOnDetach() {
+        onRefresh();
+    }
 }

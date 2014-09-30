@@ -2,6 +2,8 @@ package com.join.android.app.common.db.tables;
 
 import com.j256.ormlite.field.DatabaseField;
 
+import java.util.List;
+
 /**
  * User: mawanjin@join-cn.com
  * Date: 14-9-8
@@ -74,6 +76,12 @@ public class Chapter {
 
     @DatabaseField(columnName = "localcourse_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
     private LocalCourse localCourse;
+
+    @DatabaseField(columnName = "parent_id", foreign = true, foreignAutoCreate = true, foreignAutoRefresh = true)
+    private Chapter parent;
+
+
+    private List<Chapter> children;
 
     private boolean playing;
 
@@ -179,5 +187,21 @@ public class Chapter {
 
     public void setLeftDays(String leftDays) {
         this.leftDays = leftDays;
+    }
+
+    public Chapter getParent() {
+        return parent;
+    }
+
+    public void setParent(Chapter parent) {
+        this.parent = parent;
+    }
+
+    public List<Chapter> getChildren() {
+        return children;
+    }
+
+    public void setChildren(List<Chapter> children) {
+        this.children = children;
     }
 }

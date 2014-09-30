@@ -139,7 +139,7 @@ public class RPCTestData {
         chapter.setFileSize(260000);
         chapter.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
-        chapter.setValidUntil("30");
+//        chapter.setValidUntil("30");
         chapterDtos.add(chapter);
 
         ChapterDto chapter1 = new ChapterDto();
@@ -151,7 +151,7 @@ public class RPCTestData {
         chapter1.setFileSize(260000);
         chapter1.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter1.setDownloadUrl("http://cdn.mysql.com/Downloads/MySQL-5.6/mysql-5.6.10-osx10.7-x86_64.tar.gz");
-        chapter.setValidUntil("30");
+//        chapter.setValidUntil("30");
         chapterDtos.add(chapter1);
 
         ChapterDto chapter2 = new ChapterDto();
@@ -163,7 +163,7 @@ public class RPCTestData {
         chapter2.setFileSize(260000);
         chapter2.setPlayUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
         chapter2.setDownloadUrl("http://s0.hao123img.com/res/img/logo/logonew.png");
-        chapter.setValidUntil("30");
+//        chapter.setValidUntil("30");
         chapterDtos.add(chapter2);
         courseDetailDto.setChapter(chapterDtos);
 

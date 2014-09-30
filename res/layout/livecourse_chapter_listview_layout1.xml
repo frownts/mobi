@@ -44,7 +44,7 @@
                     android:src="@drawable/download_red_icon"/>
         </RelativeLayout>
     </LinearLayout>
-    <!--&lt;!&ndash;底部 大小 、 时间&ndash;&gt;-->
+    <!--底部 大小 、 时间-->
     <LinearLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
@@ -65,10 +65,10 @@
                 android:layout_height="25dp"
                 android:layout_weight="1"
                 android:gravity="center_vertical">
-            <!--<com.join.mobi.customview.SpringProgressView-->
-                    <!--android:id="@+id/springProgressView"-->
-                    <!--android:layout_width="match_parent"-->
-                    <!--android:layout_height="20dp"/>-->
+            <com.join.mobi.customview.SpringProgressView
+                    android:id="@+id/springProgressView"
+                    android:layout_width="match_parent"
+                    android:layout_height="20dp"/>
             <TextView
                     android:id="@+id/learnedTime"
                     android:layout_width="wrap_content"

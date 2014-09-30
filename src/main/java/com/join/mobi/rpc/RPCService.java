@@ -59,6 +59,16 @@ public interface RPCService {
     public MainContentDto getMainContent(String userId);
 
 
+//    /**
+//     * 课程详情
+//     *
+//     * @param userId
+//     * @param courseId
+//     * @return
+//     */
+//    @Get("courseDetail.jsp?userId={userId}&courseId={courseId}")
+//    public CourseDetailDto getCourseDetail(String userId, String courseId);
+
     /**
      * 课程详情
      *
@@ -66,7 +76,7 @@ public interface RPCService {
      * @param courseId
      * @return
      */
-    @Get("courseDetail.jsp?userId={userId}&courseId={courseId}")
+    @Get("courseDetail_1.jsp?userId={userId}&courseId={courseId}")
     public CourseDetailDto getCourseDetail(String userId, String courseId);
 
     /**

@@ -75,5 +75,6 @@ public class SplashActivity extends BaseActivity {
         PortalActivity_.intent(this).start();
         finish();
     }
-
 }
+
+
