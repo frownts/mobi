@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">mobi</string>
+    <string name="app_name">移动课堂</string>
     <string name="hello">hello</string>
     <string name="cut_title">图片裁剪</string>
     <string name="cancel_confirm">您确定要退出吗?</string>

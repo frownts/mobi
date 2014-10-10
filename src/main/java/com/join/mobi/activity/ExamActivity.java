@@ -259,11 +259,8 @@ public class ExamActivity extends BaseActivity {
 
     @Click
     void examListClicked() {
-
-
-
         ExamListActivity_.intent(this).examItems(examDto.getExamItems()).currentPageIndex(pagerView.get(CurrentPageIndex).getExamIndex()).start();
-//        finish();
+        finish();
     }
 
 
