@@ -12,7 +12,11 @@ public class ExamUtils {
     public static String SpeculatePercent(String count,String total){
 
         DecimalFormat decimalFormat = new DecimalFormat(".00");
-        float finishPercent = (Float.parseFloat(count) / Float.parseFloat(total)) * 100;
+        float finishPercent=0;
+        try{
+            finishPercent = (Float.parseFloat(count) / Float.parseFloat(total)) * 100;
+        }catch (Exception e){}
+
 
         String tempFinishPercent = decimalFormat.format(finishPercent);
         if(tempFinishPercent.equals(".00")){

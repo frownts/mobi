@@ -148,10 +148,15 @@ public class DownloadAdapter extends BaseAdapter {
 
                 @Override
                 public void updateProcess(float process) {
-                    String p = (((process)*100)+"");
-                    if(p.length()>4)
-                        p = p.substring(0,4);
-                    file.setPercent(p+"%");
+                    if(Float.isNaN(process)){
+                        file.setPercent("0%");
+                    }else{
+                        String p = (((process)*100)+"");
+                        if(p.length()>4)
+                            p = p.substring(0,4);
+                        file.setPercent(p+"%");
+                    }
+
                     ((DownloadingActivity)(mContext)).refreshAdapter();
                 }
 

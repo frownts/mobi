@@ -46,7 +46,6 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
         downloadAdapter = new DownloadAdapter(this);
         listView.setAdapter(downloadAdapter);
         retrieveDataFromDB();
-
     }
 
     @UiThread
@@ -61,9 +60,7 @@ public class DownloadingActivity extends BaseActivity implements SwipeRefreshLay
         downloadAdapter.setItems(downloadFiles);
         downloadAdapter.notifyDataSetChanged();
         swipeRefreshLayout.setRefreshing(false);
-
     }
-
 
     @ItemClick
     void listViewItemClicked(final DownloadFile downloadFile) {
