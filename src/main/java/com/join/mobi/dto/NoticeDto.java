@@ -29,7 +29,7 @@ public class NoticeDto {
     /**
      * 通告有效截止日期
      */
-    private long validUntil;
+    private String validUntil;
 
     public String getContent() {
         return content;
@@ -63,11 +63,11 @@ public class NoticeDto {
         this.noticeId = noticeId;
     }
 
-    public long getValidUntil() {
+    public String getValidUntil() {
         return validUntil;
     }
 
-    public void setValidUntil(long validUntil) {
+    public void setValidUntil(String validUntil) {
         this.validUntil = validUntil;
     }
 }

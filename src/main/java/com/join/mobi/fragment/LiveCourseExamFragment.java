@@ -51,4 +51,9 @@ public class LiveCourseExamFragment extends Fragment {
 
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        liveCourseExamAdapter.notifyDataSetChanged();
+    }
 }

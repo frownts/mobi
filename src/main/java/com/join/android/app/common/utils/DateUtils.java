@@ -51,7 +51,7 @@ public class DateUtils {
             return gap / 60 / 60 / 24/30 + "月前";
         }else if((gap / 60 / 60 / 24)>1){
             return gap / 60 / 60 / 24 + "天前";
-        }else if (gap > 60 && gap < 60 * 60 * 60&& gap/(60 * 60 * 60)>0) {
+        }else if (gap > 60 && gap < 60 * 60 * 60&& gap/(60 * 60)>0) {
             return gap / 60 / 60 + "小时前";
         }else if (gap > 60 && gap < 60 * 60) {
             return gap / 60 + "分钟前";

@@ -304,6 +304,7 @@ public class ExamActivity extends BaseActivity {
     void sumit(ExamResult examResult) {
 
         rpcService.submitExamResult(myPref.rpcUserId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
+        examDto.setFinishPercent(examResult.getFinishPersenct()+"");
         showExamResult(examResult);
     }
 

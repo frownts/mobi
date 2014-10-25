@@ -56,9 +56,16 @@ public class ExamResultActivity extends BaseActivity {
     void backClicked() {
         Intent intent = new Intent("org.androidannotations.updateProgressOfExam");
         intent.putExtra("examId",examDto.getExamId());
-        examDto.setFinishPercent(((int)Float.parseFloat(examDto.getFinishPercent()))+"");
 
-        if(examDto.getFinishPercent().equals(".0"))examDto.setFinishPercent("0");
+//        examDto.setFinishPercent("0");
+
+        examDto.setFinishPercent(((int)Float.parseFloat(examDto.getFinishPercent()))+"");
+        try{
+            if(examDto.getFinishPercent().equals(".0"))examDto.setFinishPercent("0");
+        }catch (NumberFormatException e){
+            e.printStackTrace();
+        }
+
 
         intent.putExtra("finishPercent",examDto.getFinishPercent());
 
