@@ -1,0 +1,67 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".VideoActivity" >
+
+
+	<!--<include -->
+	    <!--android:id="@+id/include2_video"-->
+	    <!--android:layout_width="wrap_content"-->
+	    <!--android:layout_height="wrap_content"-->
+	    <!--android:layout_below="@+id/include_video"-->
+	    <!--layout="@layout/player"-->
+	    <!--/>-->
+
+
+    <!--<LinearLayout-->
+            <!--android:id="@+id/seekbarContainer"-->
+            <!--android:layout_width="fill_parent"-->
+            <!--android:layout_height="50dp"-->
+            <!--android:background="@color/seekbar_bg"-->
+            <!--android:layout_marginLeft="5dp"-->
+            <!--android:orientation="horizontal">-->
+
+    <!--</LinearLayout>-->
+
+
+    <!--&lt;!&ndash; 播放按钮 &ndash;&gt;-->
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_player"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:contentDescription="@string/image_contentDescription" />-->
+
+    <!--&lt;!&ndash; 进度条 &ndash;&gt;-->
+    <!--<SeekBar-->
+        <!--android:id="@+id/sb_player"-->
+        <!--android:layout_width="720dp"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:progressDrawable="@drawable/player_setting_bright_progressbar"-->
+        <!--android:thumb="@drawable/player_settings_bright_thumb" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_suki"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:contentDescription="@string/image_contentDescription" />-->
+
+    <!--<ImageView-->
+        <!--android:id="@+id/iv_download"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:contentDescription="@string/image_contentDescription" />-->
+
+    <!--<TextView-->
+        <!--android:id="@+id/tv_video"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textColor="#FFFFFF" />-->
+
+    <TextView
+        android:id="@+id/tv2_video"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#FFFFFF" />
+
+</RelativeLayout>

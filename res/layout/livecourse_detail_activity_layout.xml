@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:id="@+id/main"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/main"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+    <!--头-->
     <LinearLayout
+            android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:background="@drawable/head_bg_red"
@@ -35,126 +37,189 @@
                 android:textSize="18sp"/>
     </LinearLayout>
 
-    <!--视频区域-->
-    <LinearLayout
-            android:id="@+id/fragmentVideo"
+
+
+    <!--视频-->
+    <RelativeLayout
+            android:id="@+id/videoContainer"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
-            android:orientation="vertical">
-
-    </LinearLayout>
-
-    <!--四个选项卡-->
-    <LinearLayout
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/gray"
-            android:padding="10dp"
-            android:orientation="vertical">
-
-        <LinearLayout
+            android:layout_below="@+id/header">
+        <SurfaceView
+                android:id="@+id/surface"
                 android:layout_width="fill_parent"
-                android:layout_height="wrap_content">
-            <!--详情-->
-            <TextView
-                    android:id="@+id/detailTab"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/detail"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-            <!--章节-->
-            <TextView
-                    android:id="@+id/chapterTab"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/chapter"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-            <!--测试-->
-            <TextView
-                    android:id="@+id/examTab"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/exam"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"/>
+        <ImageView
+                android:id="@+id/centerPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/player"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
-            <!--资料-->
-            <TextView
-                    android:id="@+id/referenceTab"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:text="@string/reference"
-                    android:gravity="center_horizontal"
-                    android:layout_weight="1"
-                    android:textSize="16sp"/>
-        </LinearLayout>
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
 
         <RelativeLayout
+                android:id="@+id/btm"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="-10dp">
+                android:layout_alignParentBottom="true"
+                android:visibility="invisible">
 
-            <LinearLayout
+            <ImageView
+                    android:id="@+id/issrt"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/pause"
+                    android:layout_alignParentBottom="true"/>
+
+            <SeekBar
+                    android:id="@+id/seekbar"
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content"
-                    android:background="@drawable/curve_red_line"/>
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fullScreen"
+                    android:layout_toRightOf="@+id/issrt"
+                    android:progressDrawable="@drawable/player_setting_bright_progressbar"
+                    android:thumb="@drawable/player_settings_bright_thumb"/>
+
+            <ImageView
+                    android:id="@+id/fullScreen"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/screen"
+                    android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+
+    <LinearLayout
+            android:id="@+id/frameContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/videoContainer">
+
+
+        <!--四个选项卡-->
+        <LinearLayout
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:background="@color/gray"
+                android:padding="10dp"
+                android:orientation="vertical">
 
             <LinearLayout
                     android:layout_width="fill_parent"
                     android:layout_height="wrap_content">
-
-                <ImageView
-                        android:id="@+id/curveMarkerDetail"
+                <!--详情-->
+                <TextView
+                        android:id="@+id/detailTab"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/detail"
+                        android:gravity="center_horizontal"
                         android:layout_weight="1"
-                        android:src="@drawable/curve_selected"/>
-
-                <ImageView
-                        android:id="@+id/curveMarkerChapter"
+                        android:textSize="16sp"/>
+                <!--章节-->
+                <TextView
+                        android:id="@+id/chapterTab"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/chapter"
+                        android:gravity="center_horizontal"
                         android:layout_weight="1"
-                        android:src="@drawable/curve_selected"
-                        android:visibility="invisible"/>
-
-                <ImageView
-                        android:id="@+id/curveMarkerExam"
+                        android:textSize="16sp"/>
+                <!--测试-->
+                <TextView
+                        android:id="@+id/examTab"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/exam"
+                        android:gravity="center_horizontal"
                         android:layout_weight="1"
-                        android:src="@drawable/curve_selected"
-                        android:visibility="invisible"/>
+                        android:textSize="16sp"/>
 
-                <ImageView
-                        android:id="@+id/curveMarkerReference"
+                <!--资料-->
+                <TextView
+                        android:id="@+id/referenceTab"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
+                        android:text="@string/reference"
+                        android:gravity="center_horizontal"
                         android:layout_weight="1"
-                        android:src="@drawable/curve_selected"
-                        android:visibility="invisible"/>
-
+                        android:textSize="16sp"/>
             </LinearLayout>
 
+            <RelativeLayout
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="-10dp">
 
-        </RelativeLayout>
+                <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/curve_red_line"/>
+
+                <LinearLayout
+                        android:layout_width="fill_parent"
+                        android:layout_height="wrap_content">
+
+                    <ImageView
+                            android:id="@+id/curveMarkerDetail"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/curve_selected"/>
+
+                    <ImageView
+                            android:id="@+id/curveMarkerChapter"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/curve_selected"
+                            android:visibility="invisible"/>
+
+                    <ImageView
+                            android:id="@+id/curveMarkerExam"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/curve_selected"
+                            android:visibility="invisible"/>
+
+                    <ImageView
+                            android:id="@+id/curveMarkerReference"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_weight="1"
+                            android:src="@drawable/curve_selected"
+                            android:visibility="invisible"/>
+
+                </LinearLayout>
 
 
-        <!--内容 fragment-->
-        <LinearLayout
-                android:id="@+id/liveCourseFragment"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:orientation="horizontal"/>
+            </RelativeLayout>
+
+
+            <!--内容 fragment-->
+            <LinearLayout
+                    android:id="@+id/liveCourseFragment"
+                    android:layout_width="fill_parent"
+                    android:layout_height="fill_parent"
+                    android:orientation="horizontal"/>
+        </LinearLayout>
+
+
     </LinearLayout>
-
-
-
-
-
-</LinearLayout>
+</RelativeLayout>

@@ -126,21 +126,6 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
 
             holder.title.setText(chapter.getTitle());
             holder.fileCount.setText(chapter.getChapter().size()+"");
-//        holder.filesize.setText(FileUtils.FormatFileSize(chapter.getFileSize()));
-//        holder.chapterDuration.setText(DateUtils.SecondToNormalTime(chapter.getChapterDuration()));
-//        holder.learnedTime.setText(DateUtils.SecondToNormalTime(chapter.getLearnedTime()));
-//
-//        if (chapter.getChapterDuration() == 0)
-//            holder.springProgressView.setMaxCount(100);
-//        else
-//            holder.springProgressView.setMaxCount(chapter.getChapterDuration());
-//        holder.springProgressView.setCurrentCount(chapter.getLearnedTime());
-
-
-//        if (chapter.isPlaying())
-//            holder.main.setBackgroundResource(R.drawable.red_border_frame);
-//        else
-//            holder.main.setBackgroundResource(R.drawable.border_bg);
 
             holder.chapterContainer.removeAllViews();
             //生成章节列表
@@ -189,16 +174,16 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
                             currentChapterDetailDto.setPlaying(false);
                         }
                         currentChapterDetailDto =  chapterDetailDto;
+
+                        for(ChapterDetailDto c :chapter.getChapter()){
+                            c.setPlaying(false);
+                        }
                         chapterDetailDto.setPlaying(true);
 
-//                    currentPosition = position;
-//                    for (ChapterDto c : chapterDtos) c.setPlaying(false);
-//                    LiveCourseChapterAdapter.this.notifyDataSetChanged();
-//                    chapter.setPlaying(true);
-                        LiveCourseChapterAdapter.this.notifyDataSetChanged();
                         Intent intent = new Intent("org.androidannotations.play");
                         intent.putExtra("playUrl", chapterDetailDto.getPlayUrl());
                         mContext.sendBroadcast(intent);
+                        LiveCourseChapterAdapter.this.notifyDataSetChanged();
                     }
                 });
 
@@ -213,16 +198,6 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
 
             }
 
-//        holder.download.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                if (chapter.getFileSize() == 0) {
-//                    DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
-//                    return;
-//                }
-//                if (download != null) download.download(chapter);
-//            }
-//        });
 
             convertView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -237,25 +212,6 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
                 }
             });
 
-//        convertView.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//
-//                if (StringUtils.isEmpty(chapter.getPlayUrl())) {
-//                    DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
-//                    return;
-//                }
-//
-//                currentPosition = position;
-//                for (ChapterDto c : chapterDtos) c.setPlaying(false);
-//                LiveCourseChapterAdapter.this.notifyDataSetChanged();
-//                chapter.setPlaying(true);
-//
-//                Intent intent = new Intent("org.androidannotations.play");
-//                intent.putExtra("playUrl", chapter.getPlayUrl());
-//                mContext.sendBroadcast(intent);
-//            }
-//        });
         }else{
 
             final ChapterDto chapter = chapterDtos.get(position);
@@ -336,8 +292,19 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         return currentPosition;
     }
 
+
+    public ChapterDetailDto getCurrentChapterDetailDto() {
+        return currentChapterDetailDto;
+    }
+
+    public void setCurrentChapterDetailDto(ChapterDetailDto currentChapterDetailDto) {
+        this.currentChapterDetailDto = currentChapterDetailDto;
+    }
+
     public interface Download {
         public void download(ChapterDto chapterDto,ChapterDetailDto chapterDetailDto);
     }
+
+
 }
 

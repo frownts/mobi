@@ -55,20 +55,25 @@ public class LiveCourseChapterFragment extends Fragment {
 
 
         List<ChapterDto> chapterDtos = courseDetailDto.getChapter();
-        if (chapterDtos != null && chapterDtos.size() > 0) {
-            ChapterDto  chapter = chapterDtos.get(0);
-            if(chapter.getChapter()!=null&&chapter.getChapter().size()>0&& StringUtils.isEmpty(chapter.getDownloadUrl()))
-                chapter.getChapter().get(0).setPlaying(true);
-            else
-                chapter.setPlaying(true);
-        }
-
         liveCourseChapterAdapter = new LiveCourseChapterAdapter(getActivity(), chapterDtos, new LiveCourseChapterAdapter.Download() {
             @Override
             public void download(ChapterDto chapterDto,ChapterDetailDto chapterDetailDto) {
                 doDownload(chapterDto,chapterDetailDto);
             }
         });
+
+        if (chapterDtos != null && chapterDtos.size() > 0) {
+            ChapterDto  chapter = chapterDtos.get(0);
+            if(chapter.getChapter()!=null&&chapter.getChapter().size()>0&& StringUtils.isEmpty(chapter.getDownloadUrl())){
+                chapter.getChapter().get(0).setPlaying(true);
+                liveCourseChapterAdapter.setCurrentChapterDetailDto(chapter.getChapter().get(0));
+            }
+
+            else
+                chapter.setPlaying(true);
+        }
+
+
         listView.setAdapter(liveCourseChapterAdapter);
         liveCourseChapterAdapter.notifyDataSetChanged();
     }
@@ -172,58 +177,6 @@ public class LiveCourseChapterFragment extends Fragment {
 
     }
 
-//    void doDownload(ChapterDto chapter,ChapterDetailDto chapterDetailDto) {
-//        //首先判断本地课程主表记录是否存在
-//        Map<String, Object> params = new HashMap<String, Object>(0);
-//        params.put("courseId", courseDetailDto.getCourseId());
-//        LocalCourse course;
-//        List<LocalCourse> courseList = LocalCourseManager.getInstance().findForParams(params);
-//        if (courseList == null || courseList.size() == 0) {
-//            LocalCourse entity = new LocalCourse();
-//            entity.setCourseId(courseDetailDto.getCourseId());
-//            entity.setCourseHour(courseDetailDto.getCourseHour());
-//            entity.setBranch(courseDetailDto.getBranch());
-//            entity.setCreateTime(courseDetailDto.getCreateTime());
-//            entity.setDescription(courseDetailDto.getDescription());
-//            entity.setTitle(courseDetailDto.getName());
-//            entity.setValidUntil(courseDetailDto.getValidUntil());
-//            entity.setUrl(url);
-//            entity.setLearningTimes(Integer.parseInt(totalDuration));
-//            course = LocalCourseManager.getInstance().saveIfNotExists(entity);
-//        } else {
-//            course = courseList.get(0);
-//            //更新总学习时间
-//            course.setLearningTimes(Integer.parseInt(totalDuration));
-//            LocalCourseManager.getInstance().saveOrUpdate(course);
-//        }
-//
-//        //判断该章节是否已经存在
-//        Map<String, Object> chapterParams = new HashMap<String, Object>(0);
-//        chapterParams.put("chapterId", chapter.getChapterId());
-//        chapterParams.put("localcourse_id", course.getId());
-//
-//        List<Chapter> chapters = ChapterManager.getInstance().findForParams(chapterParams);
-//        if (chapters == null || chapters.size() == 0) {
-//            Chapter entity = new Chapter();
-//            entity.setLocalCourse(course);
-//            entity.setTitle(chapter.getTitle());
-//            entity.setChapterId(chapter.getChapterId());
-//            entity.setFilesize(chapter.getFileSize());
-//            entity.setLearnedTime(chapter.getLearnedTime());
-//            entity.setChapterDuration(chapter.getChapterDuration());
-//            entity.setDownloadUrl(chapter.getDownloadUrl());
-//            entity.setValidUntil(course.getValidUntil() + "");
-//
-//            ChapterManager.getInstance().save(entity);
-//            DialogManager.getInstance().makeText(getActivity(), "开始下载", DialogManager.DIALOG_TYPE_OK);
-//        } else {
-//            DialogManager.getInstance().makeText(getActivity(), "正在下载,或已下载.", DialogManager.DIALOG_TYPE_OK);
-//        }
-//
-//        //下载
-//        DownloadTool.startDownload((DownloadApplication) getActivity().getApplicationContext(), chapter.getDownloadUrl(), chapter.getTitle(), Dtype.Chapter, "0");
-//
-//    }
 
     /**
      * 当播放进行时，更新进度和学习时间
@@ -233,6 +186,10 @@ public class LiveCourseChapterFragment extends Fragment {
         ChapterDto chapterDto = liveCourseChapterAdapter.getItem(liveCourseChapterAdapter.getCurrentPosition());
         if (chapterDto == null) return;
         chapterDto.setLearnedTime(chapterDto.getLearnedTime() + 1);
+
+        ChapterDetailDto chapterDetailDto = liveCourseChapterAdapter.getCurrentChapterDetailDto();
+        if(chapterDetailDto!=null)
+            chapterDetailDto.setLearnedTime(chapterDetailDto.getLearnedTime()+1);
         liveCourseChapterAdapter.notifyDataSetChanged();
     }
 
@@ -245,6 +202,9 @@ public class LiveCourseChapterFragment extends Fragment {
     }
 
     public long getLastChapterId() {
+        if(liveCourseChapterAdapter.getCurrentChapterDetailDto()!=null){
+            return liveCourseChapterAdapter.getCurrentChapterDetailDto().getChapterId();
+        }
         return liveCourseChapterAdapter.getItems().get(liveCourseChapterAdapter.getCurrentPosition()).getChapterId();
     }
 }
