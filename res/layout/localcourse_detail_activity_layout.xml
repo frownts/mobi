@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent">
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:id="@+id/main"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
+    <!--头-->
     <LinearLayout
+            android:id="@+id/header"
             android:layout_width="fill_parent"
             android:layout_height="50dp"
             android:background="@drawable/head_bg_red"
@@ -22,7 +25,7 @@
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="本地课程"
+                android:text="在线课程:"
                 android:textColor="@color/white"
                 android:textSize="18sp"/>
         <!--标题-->
@@ -34,14 +37,74 @@
                 android:textSize="18sp"/>
     </LinearLayout>
 
-    <!--视频区域-->
-    <LinearLayout
-            android:id="@+id/fragmentVideo"
+    <!--视频-->
+    <RelativeLayout
+            android:id="@+id/videoContainer"
             android:layout_width="fill_parent"
-            android:layout_height="260dp"
-            android:orientation="vertical">
+            android:layout_height="200dp"
+            android:layout_below="@+id/header">
+        <SurfaceView
+                android:id="@+id/surface"
+                android:layout_width="fill_parent"
+                android:layout_height="200dp"
+                android:layout_alignParentTop="true"/>
+        <ImageView
+                android:id="@+id/centerPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/player"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
-    </LinearLayout>
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
+
+
+        <RelativeLayout
+                android:id="@+id/btm"
+                android:layout_width="fill_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:visibility="invisible">
+
+            <ImageView
+                    android:id="@+id/issrt"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/pause"
+                    android:layout_alignParentBottom="true"/>
+
+            <SeekBar
+                    android:id="@+id/seekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fullScreen"
+                    android:layout_toRightOf="@+id/issrt"
+                    android:progressDrawable="@drawable/player_setting_bright_progressbar"
+                    android:thumb="@drawable/player_settings_bright_thumb"/>
+
+            <ImageView
+                    android:id="@+id/fullScreen"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/screen"
+                    android:layout_alignParentBottom="true"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+            android:id="@+id/frameContainer"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:layout_below="@+id/videoContainer">
 
     <!--四个选项卡-->
     <LinearLayout
@@ -148,9 +211,9 @@
                 android:layout_height="fill_parent"
                 android:orientation="horizontal"/>
     </LinearLayout>
+    </LinearLayout>
 
 
 
 
-
-</LinearLayout>
+</RelativeLayout>

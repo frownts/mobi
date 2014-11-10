@@ -114,9 +114,11 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     CourseDetailDto courseDetail;
     CommonDialogLoading loading;
     Thread threadUpdateGrogress;
+    Thread checkProgress;
 
     @AfterViews
     void afterViews() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         title.setText(name);
         //加载数据
         retrieveDataFromServer();
@@ -174,18 +176,44 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         surface.getHolder().setKeepScreenOn(true);
         surface.getHolder().addCallback(new SurfaceViewLis());
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
-
+        mediaPlayer.setScreenOnWhilePlaying(true);
+        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mp) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
 
         mediaPlayer.setOnInfoListener(this);
         seekbar.setOnSeekBarChangeListener(new surfaceSeekBar());
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
             @Override
-            public void onPrepared(MediaPlayer mediaPlayer) {
-
+            public void onPrepared(final MediaPlayer mediaPlayer) {
                 mediaPlayer.start();
+
+                checkProgress = new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        while(true){
+                            try {
+                                Thread.sleep(1000);
+                                if(mediaPlayer.isPlaying()){
+                                    progressBar.setVisibility(View.GONE);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
+                checkProgress.start();
             }
+
         });
         mediaPlayer.setOnCompletionListener(new MyOnCompletionListener());
+
+
     }
 
     @UiThread
@@ -303,6 +331,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @Click
     void issrtClicked(){
+
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             issrt.setImageDrawable(getResources().getDrawable(R.drawable.player));
@@ -335,6 +364,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @Override
     protected void onStop() {
+        checkProgress=null;
         if (mediaPlayer != null) {
             mediaPlayer.stop();
             mediaPlayer.release();
@@ -379,12 +409,11 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         }
     }
 
+
+
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
-        if(mediaPlayer.isPlaying()){
-            progressBar.setVisibility(View.GONE);
-            return true;
-        }
+
         switch (what) {
             case MediaPlayer.MEDIA_INFO_BUFFERING_START:
                 issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
@@ -396,6 +425,14 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
             case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
                 progressBar.setVisibility(View.GONE);
                 break;
+            default:
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+        }
+        if(mediaPlayer.isPlaying()){
+            progressBar.setVisibility(View.GONE);
+            issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            return true;
         }
         return true;
     }

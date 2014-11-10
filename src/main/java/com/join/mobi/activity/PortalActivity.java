@@ -42,6 +42,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     TextView userName;
     @ViewById
     View main;
+    EditText loginName;
 
     @RestService
     RPCService rpcService;
@@ -184,7 +185,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     void imgLoginClicked() {
         loginDialog = new Dialog(this);
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_login, null);
-        final EditText loginName = (EditText) view.findViewById(R.id.loginName);
+        loginName = (EditText) view.findViewById(R.id.loginName);
         final EditText passWord = (EditText) view.findViewById(R.id.passWord);
 //        final EditText branch = (EditText) view.findViewById(R.id.branch);
         branch = (EditText) view.findViewById(R.id.branch);
@@ -194,7 +195,16 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onClick(View view) {
                 showLoading();
-                doLogin(loginName.getText().toString(), passWord.getText().toString(), branch.getText().toString());
+                String userId = loginName.getText().toString();
+                int len = userId.length();
+                if(len<9){
+                    for(int i=0;i<9-len;i++){
+                        userId="0"+userId;
+                    }
+                }
+                loginName.setText(userId);
+                myPref.userId().put(userId);
+                doLogin(userId, passWord.getText().toString(), branch.getText().toString());
             }
         });
 
@@ -241,7 +251,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @Background
     void doLogin(String userId, String password, String companyId) {
-        myPref.userId().put(userId);
+
         String _companyCode = "0986";
         if (companyId.equals("深圳分公司")) {
             _companyCode = "1086";

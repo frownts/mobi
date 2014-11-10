@@ -1,13 +1,22 @@
 package com.join.mobi.activity;
 
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
+import android.media.AudioManager;
+import android.media.MediaPlayer;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.util.DisplayMetrics;
+import android.view.SurfaceHolder;
+import android.view.SurfaceView;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
+import android.view.WindowManager;
+import android.widget.*;
 import com.j256.ormlite.dao.CloseableIterable;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.manager.LocalCourseManager;
@@ -23,7 +32,9 @@ import com.php25.PDownload.DownloadTool;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
 import org.androidannotations.annotations.sharedpreferences.Pref;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.IOException;
 import java.util.*;
 
 /**
@@ -33,7 +44,7 @@ import java.util.*;
  * 本地课程
  */
 @EActivity(R.layout.localcourse_detail_activity_layout)
-public class LocalCourseDetailActivity extends FragmentActivity {
+public class LocalCourseDetailActivity extends FragmentActivity implements MediaPlayer.OnInfoListener{
 
     @Pref
     PrefDef_ myPref;
@@ -61,18 +72,38 @@ public class LocalCourseDetailActivity extends FragmentActivity {
     ImageView curveMarkerExam;
     @ViewById
     ImageView curveMarkerReference;
+    @ViewById
+    View frameContainer;
 
     @ViewById
     ImageView trash;
-
     @Extra
     String courseId;
-
     @Extra
     String name;
-
     @Extra
     long seekTo;
+
+    //视频部分
+    @ViewById
+    RelativeLayout videoContainer;
+    @ViewById
+    ProgressBar progressBar;
+    @ViewById
+    SeekBar seekbar;
+    @ViewById
+    ImageView issrt;
+    @ViewById
+    ImageView centerPlay;
+    @ViewById
+    RelativeLayout btm;
+    @ViewById
+    SurfaceView surface;
+    @ViewById
+    ImageView fullScreen;
+    @ViewById
+    View header;
+    private int postion = 0;
 
     private String playUrl;
 
@@ -84,13 +115,14 @@ public class LocalCourseDetailActivity extends FragmentActivity {
 
     FragmentManager fragmentManager;
     Fragment currentFragment;
-
     CommonDialogLoading loading;
+    Thread threadUpdateGrogress;
 
     boolean trashShowing;
 
     @AfterViews
     void afterViews() {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         title.setText(name);
         List<LocalCourse> courseList =  LocalCourseManager.getInstance().findByCourseId(courseId);
         if(courseList!=null&&courseList.size()>0) localCourse = courseList.get(0);
@@ -104,23 +136,115 @@ public class LocalCourseDetailActivity extends FragmentActivity {
             Chapter c = chapterIterator.next();
             if (DownloadTool.isFinished((DownloadApplication) getApplicationContext(), c.getDownloadUrl())) {
                 chapters.add(c);
-                play(DownloadTool.getFileByUrl((DownloadApplication)this.getApplicationContext(),c.getDownloadUrl()));
-//                play(c.getDownloadUrl());
+                play(DownloadTool.getFileByUrl((DownloadApplication) this.getApplicationContext(), c.getDownloadUrl()));
                 break;
             }
         }
         closeableIterable.closeableIterator();
-
+        initPlayer();
+        startUpdateLearningTime();
     }
 
+    private void initPlayer() {
+        if(update==null)
+            update = new upDateSeekBar(); // 创建更新进度条对象
+        mediaPlayer = new MediaPlayer();
+
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int mSurfaceViewWidth = dm.widthPixels;
+        int mSurfaceViewHeight = dm.heightPixels;
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        lp.width = mSurfaceViewWidth;
+        lp.height = mSurfaceViewHeight * 1 / 3;
+        surface.setLayoutParams(lp);
+        surface.getHolder().setFixedSize(lp.width, lp.height);
+        surface.getHolder().setKeepScreenOn(true);
+        surface.getHolder().addCallback(new SurfaceViewLis());
+        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
+        mediaPlayer.setScreenOnWhilePlaying(true);
+        mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
+            @Override
+            public void onSeekComplete(MediaPlayer mp) {
+                progressBar.setVisibility(View.GONE);
+            }
+        });
+
+        mediaPlayer.setOnInfoListener(this);
+        seekbar.setOnSeekBarChangeListener(new surfaceSeekBar());
+        mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
+            @Override
+            public void onPrepared(MediaPlayer mediaPlayer) {
+
+                mediaPlayer.start();
+            }
+
+        });
+        mediaPlayer.setOnCompletionListener(new MyOnCompletionListener());
+    }
+
+    @Click
+    void videoContainerClicked(){
+        if (centerPlay.getVisibility() == View.VISIBLE) {
+            try {
+                centerPlay.setVisibility(View.GONE);
+                play();
+                issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        } else {
+            if (btm.getVisibility() == View.VISIBLE)
+                btm.setVisibility(View.GONE);
+            else
+                btm.setVisibility(View.VISIBLE);
+        }
+    }
+
+    @Click
+    void fullScreenClicked(){
+        if (getRequestedOrientation() != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+    }
+
+    @Click
+    void issrtClicked(){
+
+        if (mediaPlayer.isPlaying()) {
+            mediaPlayer.pause();
+            issrt.setImageDrawable(getResources().getDrawable(R.drawable.player));
+        } else {
+            mediaPlayer.start();
+            issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+        }
+    }
+
+    @UiThread
     public void play(String url){
+
         playUrl = url;
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        videoFragment = new VideoFragment_();
-        transaction.replace(R.id.fragmentVideo,videoFragment);
-        transaction.commit();
+        if(StringUtils.isEmpty(playUrl))return;
+        try {
+            mediaPlayer.setDataSource(playUrl);
+            play();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+//    public void play(String url){
+//        playUrl = url;
+//        fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        videoFragment = new VideoFragment_();
+//        transaction.replace(R.id.fragmentVideo,videoFragment);
+//        transaction.commit();
+//    }
 
 
     void afterRetrieveDataFromServer() {
@@ -215,6 +339,35 @@ public class LocalCourseDetailActivity extends FragmentActivity {
         }
     }
 
+
+    private void startUpdateLearningTime() {
+        //开始播放了,更新学习时间
+        new Thread() {
+            @Override
+            public void run() {
+                super.run();
+                try {
+                    while (mediaPlayer != null) {
+                        try{
+                            while (mediaPlayer.isPlaying()) {
+                                //更新学习时间
+                                Intent intent = new Intent("org.androidannotations.updateLearningTime");
+                                sendBroadcast(intent);
+                                Thread.sleep(1000);
+                            }
+                        }catch (java.lang.IllegalStateException e){
+
+                        }
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }.start();
+    }
+
     @Override
     protected void onDestroy() {
         try{
@@ -239,33 +392,36 @@ public class LocalCourseDetailActivity extends FragmentActivity {
 
     @Override
     protected void onResume() {
-        replay();
         super.onResume();
+        mediaPlayer.reset();
+        play(playUrl);
+
     }
 
-    public void replay(){
-        fragmentManager = getSupportFragmentManager();
-        FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.replace(R.id.fragmentVideo,new BlankFragment_());
-        transaction.commit();
 
-        if(playUrl!=null)
-            new Thread(){
-                @Override
-                public void run() {
-                    super.run();
-                    try {
-                        Thread.sleep(1000);
-                        FragmentTransaction transaction = fragmentManager.beginTransaction();
-                        transaction.replace(R.id.fragmentVideo,new VideoFragment_());
-                        transaction.commit();
-                    } catch (InterruptedException e) {
-                        e.printStackTrace();
-                    }
-
-                }
-            }.start();
-    }
+//    public void replay(){
+//        fragmentManager = getSupportFragmentManager();
+//        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//        transaction.replace(R.id.fragmentVideo,new BlankFragment_());
+//        transaction.commit();
+//
+//        if(playUrl!=null)
+//            new Thread(){
+//                @Override
+//                public void run() {
+//                    super.run();
+//                    try {
+//                        Thread.sleep(1000);
+//                        FragmentTransaction transaction = fragmentManager.beginTransaction();
+//                        transaction.replace(R.id.fragmentVideo,new VideoFragment_());
+//                        transaction.commit();
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }
+//
+//                }
+//            }.start();
+//    }
 
     public String getPlayUrl() {
         return playUrl;
@@ -281,7 +437,6 @@ public class LocalCourseDetailActivity extends FragmentActivity {
     @Receiver(actions = "org.androidannotations.play", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
     public void play(Intent intent){
         playUrl = intent.getExtras().getString("playUrl");
-        replay();
     }
 
     /**
@@ -298,6 +453,197 @@ public class LocalCourseDetailActivity extends FragmentActivity {
 
     public void setSeekTo(long seekTo) {
         this.seekTo = seekTo;
+    }
+
+    //视频总部代码
+    private MediaPlayer mediaPlayer;
+    private upDateSeekBar update; // 更新进度条用
+    private boolean isplayingFlag = true; // 用于判断视频是否在播放中
+
+
+    class upDateSeekBar implements Runnable {
+
+        @Override
+        public void run() {
+            mHandler.sendMessage(Message.obtain());
+            if (isplayingFlag) {
+                mHandler.postDelayed(update, 1000);
+            }
+        }
+    }
+
+    /**
+     * 更新进度条
+     */
+    Handler mHandler = new Handler() {
+        public void handleMessage(Message msg) {
+            if (mediaPlayer == null) {
+                isplayingFlag = false;
+            } else if (mediaPlayer.isPlaying()) {
+                isplayingFlag = true;
+
+                int position = mediaPlayer.getCurrentPosition();
+                int mMax = mediaPlayer.getDuration();
+                int sMax = seekbar.getMax();
+                seekbar.setProgress(position * sMax / mMax);
+            } else {
+                return;
+            }
+        }
+    };
+
+    public void play() throws IllegalArgumentException, SecurityException,
+            IllegalStateException, IOException {
+        if(threadUpdateGrogress==null)
+            threadUpdateGrogress = new Thread(update);
+        try{
+            threadUpdateGrogress.start();
+        }catch (java.lang.IllegalThreadStateException e){}
+
+        progressBar.setVisibility(View.VISIBLE);
+        mediaPlayer.prepareAsync();
+    }
+
+    private final class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
+
+        @Override
+        public void onCompletion(MediaPlayer mediaPlayer) {
+            progressBar.setVisibility(View.GONE);
+            mediaPlayer.seekTo(0);
+            seekbar.setProgress(0);
+            issrt.setImageDrawable(getResources().getDrawable(R.drawable.player));
+        }
+    }
+
+    private class SurfaceViewLis implements SurfaceHolder.Callback {
+
+        @Override
+        public void surfaceChanged(SurfaceHolder holder, int format, int width,
+                                   int height) {
+
+        }
+
+        @Override
+        public void surfaceCreated(SurfaceHolder holder) {
+            if (postion == 0) {
+                try {
+                    // 把视频输出到SurfaceView上
+                    mediaPlayer.setDisplay(surface.getHolder());
+                } catch (IllegalArgumentException e) {
+                    e.printStackTrace();
+                } catch (SecurityException e) {
+                    e.printStackTrace();
+                } catch (IllegalStateException e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+        }
+
+        @Override
+        public void surfaceDestroyed(SurfaceHolder holder) {
+
+        }
+
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);// 设置全屏
+        // 检测屏幕的方向：纵向或横向
+        if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            // 当前为横屏， 在此处添加额外的处理代码
+            btm.setVisibility(View.GONE);
+            frameContainer.setVisibility(View.GONE);
+
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            int mSurfaceViewWidth = dm.widthPixels;
+            int mSurfaceViewHeight = dm.heightPixels;
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT);
+            lp.width = mSurfaceViewWidth;
+            lp.height = mSurfaceViewHeight;
+
+            surface.setLayoutParams(lp);
+            surface.getHolder().setFixedSize(mSurfaceViewWidth,
+                    mSurfaceViewHeight);
+
+            videoContainer.setLayoutParams(lp);
+
+        } else if (this.getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            // 当前为竖屏， 在此处添加额外的处理代码
+            header.setVisibility(View.VISIBLE);
+
+            DisplayMetrics dm = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(dm);
+            int mSurfaceViewWidth = dm.widthPixels;
+            int mSurfaceViewHeight = dm.heightPixels;
+            RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.FILL_PARENT);
+
+            lp.width = mSurfaceViewWidth;
+            lp.height = mSurfaceViewHeight * 1 / 3;
+            lp.addRule(RelativeLayout.BELOW,R.id.header);
+            videoContainer.setLayoutParams(lp);
+            frameContainer.setVisibility(View.VISIBLE);
+
+        }
+        super.onConfigurationChanged(newConfig);
+    }
+    @Override
+    public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
+
+        switch (what) {
+            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+                issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+                progressBar.setVisibility(View.GONE);
+                break;
+            case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
+                progressBar.setVisibility(View.GONE);
+                break;
+            default:
+                progressBar.setVisibility(View.VISIBLE);
+                break;
+        }
+        if(mediaPlayer.isPlaying()){
+            progressBar.setVisibility(View.GONE);
+            issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
+            return true;
+        }
+        return true;
+    }
+
+    private final class surfaceSeekBar implements SeekBar.OnSeekBarChangeListener {
+
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress,
+                                      boolean fromUser) {
+            seekBar.setProgress(progress);
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+            // TODO Auto-generated method stub
+
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            // TODO Auto-generated method stub
+            int value = seekbar.getProgress() * mediaPlayer.getDuration() // 计算进度条需要前进的位置数据大小
+                    / seekbar.getMax();
+            mediaPlayer.seekTo(value);
+            progressBar.setVisibility(View.VISIBLE);
+        }
+
     }
 }
 
