@@ -70,6 +70,7 @@ public class ExamIntroActivity extends BaseActivity {
     }
     @UiThread
     public void updateData(){
+        if(examDto==null)return;
         title.setText(examDto.getTitle());
         itemCount.setText("共 "+examDto.getItemCount()+" 道试题");
         timeLimit.setText("限时 "+ DateUtils.SecondToNormalTime(examDto.getDurationLimit()));

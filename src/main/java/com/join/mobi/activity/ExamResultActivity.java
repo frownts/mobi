@@ -50,15 +50,9 @@ public class ExamResultActivity extends BaseActivity {
         examResultAdapter = new ExamResultAdapter(this, examDto.getExamItems(), examDto.getExamItems());
         expandListView.setAdapter(examResultAdapter);
 
-    }
-
-    @Click
-    void backClicked() {
         Intent intent = new Intent("org.androidannotations.updateProgressOfExam");
         intent.putExtra("examId",examDto.getExamId());
-
 //        examDto.setFinishPercent("0");
-
         examDto.setFinishPercent(((int)Float.parseFloat(examDto.getFinishPercent()))+"");
         try{
             if(examDto.getFinishPercent().equals(".0"))examDto.setFinishPercent("0");
@@ -66,10 +60,13 @@ public class ExamResultActivity extends BaseActivity {
             e.printStackTrace();
         }
 
-
         intent.putExtra("finishPercent",examDto.getFinishPercent());
-
         sendBroadcast(intent);
+    }
+
+    @Click
+    void backClicked() {
+
         finish();
     }
 }

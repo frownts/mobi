@@ -101,6 +101,7 @@ public class ExamActivity extends BaseActivity {
         if (examDto != null) currentExamDto = examDto;
         else
             examDto = currentExamDto;
+        if(examDto==null)return;
         total.setText(total.getText().toString().replace("$1", examDto.getExamItems().size() + ""));
         examNum.setText(examNum.getText().toString().replace("$1", "1"));
         next = examIndex + 1;
