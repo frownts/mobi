@@ -29,7 +29,10 @@ public class LiveCourseExamFragment extends Fragment {
     @AfterViews
     void afterViews() {
         CourseDetailDto courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
-        liveCourseExamAdapter = new LiveCourseExamAdapter(getActivity(),courseDetailDto.getExam());
+
+        List<ExamDto> examDto = courseDetailDto.getExam();
+
+        liveCourseExamAdapter = new LiveCourseExamAdapter(getActivity(),examDto);
         listView.setAdapter(liveCourseExamAdapter);
         liveCourseExamAdapter.notifyDataSetChanged();
     }
@@ -54,6 +57,7 @@ public class LiveCourseExamFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
+        if(liveCourseExamAdapter!=null)
         liveCourseExamAdapter.notifyDataSetChanged();
     }
 }

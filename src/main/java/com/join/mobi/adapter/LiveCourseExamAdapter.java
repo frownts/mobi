@@ -6,6 +6,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 import com.join.android.app.common.R;
 import com.join.android.app.common.utils.DateUtils;
 import com.join.android.app.common.utils.ExamUtils;
@@ -28,7 +29,6 @@ public class LiveCourseExamAdapter extends BaseAdapter {
 
 
     private Context mContext;
-    private LayoutInflater inflater;
 
     private class ViewHolder {
         TextView name;
@@ -51,12 +51,14 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         mContext = c;
         examDtos.clear();
         examDtos.addAll(_examDtos);
-        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
     @Override
     public int getCount() {
+        if(examDtos!=null)
         return examDtos.size();
+        return 0;
     }
 
     @Override
@@ -74,7 +76,7 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         final ExamDto exam = examDtos.get(position);
         ViewHolder holder;
         if (convertView == null) {
-            convertView = inflater.inflate(R.layout.livecourse_exam_listview_layout, null);
+            convertView = LayoutInflater.from(mContext).inflate(R.layout.livecourse_exam_listview_layout, null);
             holder = new ViewHolder();
             holder.name = (TextView) convertView.findViewById(R.id.name);
             holder.itemCount = (TextView) convertView.findViewById(R.id.itemCount);
@@ -85,31 +87,26 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         } else {
             holder = (ViewHolder) convertView.getTag();
         }
-
-        holder.springProgressView.setMaxCount(exam.getItemCount());
+        int itemCount = exam.getItemCount();
+        if(itemCount==0)itemCount=10;
+        holder.springProgressView.setMaxCount(itemCount);
         holder.springProgressView.setCurrentCount(Long.parseLong(exam.getFinishPercent()));
         holder.name.setText(exam.getName());
         holder.itemCount.setText("共"+exam.getItemCount()+"题");
 
+        holder.finishPercent.setText(ExamUtils.SpeculatePercent(exam.getFinishPercent(), exam.getItemCount() + "")+"%");
+        if(exam.getItemCount()==0)holder.finishPercent.setText("0%");
 
-//        DecimalFormat decimalFormat = new DecimalFormat(".00");
-//        float finishPercent = (Float.parseFloat(exam.getFinishPercent()) / (float) exam.getItemCount()) * 100;
-//
-//        String tempFinishPercent = decimalFormat.format(finishPercent);
-//        if(tempFinishPercent.equals(".00")){
-//            tempFinishPercent = "0";
-//        }else if(tempFinishPercent.endsWith(".0")||tempFinishPercent.equals(".00")){
-//            tempFinishPercent = tempFinishPercent.substring(0,tempFinishPercent.indexOf("."));
-//        }
-
-        holder.finishPercent.setText(ExamUtils.SpeculatePercent(exam.getFinishPercent(),exam.getItemCount()+"")+"%");
         holder.durationLimit.setText("限时:"+ DateUtils.SecondToNormalTime(exam.getDurationLimit()));
 
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                ExamIntroActivity_.intent(mContext).examId(exam.getExamId()+"").start();
+                if(exam.getItemCount()==0){
+                    Toast.makeText(mContext,"无试题",1000).show();
+                }else
+                    ExamIntroActivity_.intent(mContext).examId(exam.getExamId()+"").start();
             }
         });
 
