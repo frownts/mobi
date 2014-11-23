@@ -581,6 +581,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
             if (mediaPlayer == null) {
                 isplayingFlag = false;
             } else if (mediaPlayer.isPlaying()) {
+                progressBar.setVisibility(View.GONE);
                 isplayingFlag = true;
 
                 int position = mediaPlayer.getCurrentPosition();

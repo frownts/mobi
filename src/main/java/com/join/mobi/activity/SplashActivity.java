@@ -36,8 +36,12 @@ public class SplashActivity extends BaseActivity {
 
 //        loadAd();
         start();
-        if (!LibsChecker.checkVitamioLibs(this))
-            return;
+        try{
+            LibsChecker.checkVitamioLibs(this);
+        }   catch (UnsatisfiedLinkError e){
+
+        }
+
 
     }
 
