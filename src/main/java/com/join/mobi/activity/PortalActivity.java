@@ -348,7 +348,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
                 break;
             case R.id.logout:
-                myPref.autoLogin().put(false);
+//                myPref.autoLogin().put(false);
                 myPref.userId().remove();
                 reloadAfterLogout();
                 settingDialog.dismiss();
@@ -358,6 +358,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @UiThread
     public void reloadAfterLogin(String _userName) {
+        myPref.autoLogin().put(true);
         dismissLoading();
         if (loginDialog != null && loginDialog.isShowing())
             loginDialog.dismiss();

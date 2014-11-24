@@ -76,7 +76,9 @@
         <activity android:name="com.join.mobi.activity.LiveActivity_"/>
         <activity android:name="com.join.mobi.activity.LocalCourseDetailActivity_" android:screenOrientation="portrait" android:configChanges="orientation|keyboard|keyboardHidden|screenSize"/>
         <activity android:name="com.join.mobi.activity.VideoWebViewActivity_"></activity>
-        <activity android:name="com.join.mobi.activity.MyVideoViewBufferFullScreen_" android:screenOrientation="landscape" />
+        <activity android:name="com.join.mobi.activity.VideoFullScreen_" android:screenOrientation="landscape" >
+
+                </activity>
 
 
     </application>

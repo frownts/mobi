@@ -44,11 +44,12 @@
             android:id="@+id/videoContainer"
             android:layout_width="fill_parent"
             android:layout_height="200dp"
-            android:layout_below="@+id/header">
+            android:layout_below="@+id/header"
+            android:background="@color/red">
         <SurfaceView
                 android:id="@+id/surface"
                 android:layout_width="fill_parent"
-                android:layout_height="200dp"
+                android:layout_height="fill_parent"
                 android:layout_alignParentTop="true"/>
         <ImageView
                 android:id="@+id/centerPlay"
@@ -65,7 +66,7 @@
                 android:layout_centerInParent="true"
                 android:visibility="gone" />
 
-
+        <!--控制条-->
         <RelativeLayout
                 android:id="@+id/btm"
                 android:layout_width="fill_parent"

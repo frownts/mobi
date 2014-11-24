@@ -111,7 +111,7 @@ public class LocalCourseDetailActivity extends FragmentActivity implements Media
     LocalCourseDetailFragment_ localCourseDetailFragment;
     LocalCourseChapterFragment_ localCourseChapterFragment;
     LocalCourseReferenceFragment_ localCourseReferenceFragment;
-    VideoFragment_ videoFragment;
+//    VideoFragment_ videoFragment;
 
     FragmentManager fragmentManager;
     Fragment currentFragment;

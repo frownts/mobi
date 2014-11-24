@@ -13,7 +13,7 @@ import com.join.android.app.common.db.tables.Reference;
 import com.join.android.app.common.utils.FileOpenUtils;
 import com.join.android.app.common.view.SwipeListView;
 import com.join.mobi.activity.LocalCourseDetailActivity;
-import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
+//import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
 import com.join.mobi.adapter.LocalCourseReferenceAdapter;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
@@ -76,7 +76,7 @@ public class LocalCourseReferenceFragment extends Fragment {
         String filePath = DownloadTool.getFileByUrl((DownloadApplication) getActivity().getApplicationContext(), reference.getUrl());
 
         if (type == 1 || type == 5) {// 调用视频播放器
-            MyVideoViewBufferFullScreen_.intent(this).path(filePath).start();
+//            MyVideoViewBufferFullScreen_.intent(this).path(filePath).start();
         } else if (type == 2) {
             try {
                 startActivity(FileOpenUtils.getWordFileIntent(filePath));

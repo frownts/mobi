@@ -8,7 +8,7 @@ import com.join.android.app.common.utils.CacheManager;
 import com.loopj.android.http.AsyncHttpClient;
 import com.loopj.android.http.FileAsyncHttpResponseHandler;
 import com.nostra13.universalimageloader.core.ImageLoader;
-import io.vov.vitamio.LibsChecker;
+//import io.vov.vitamio.LibsChecker;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.UiThread;
@@ -36,11 +36,11 @@ public class SplashActivity extends BaseActivity {
 
 //        loadAd();
         start();
-        try{
-            LibsChecker.checkVitamioLibs(this);
-        }   catch (UnsatisfiedLinkError e){
-
-        }
+//        try{
+//            LibsChecker.checkVitamioLibs(this);
+//        }   catch (UnsatisfiedLinkError e){
+//
+//        }
 
 
     }

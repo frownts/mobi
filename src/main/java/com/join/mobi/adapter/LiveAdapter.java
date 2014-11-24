@@ -9,7 +9,7 @@ import android.widget.TextView;
 import com.join.android.app.common.R;
 import com.join.android.app.common.db.tables.Live;
 import com.join.android.app.common.utils.DateUtils;
-import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
+//import com.join.mobi.activity.MyVideoViewBufferFullScreen_;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -90,7 +90,7 @@ public class LiveAdapter extends BaseAdapter {
             @Override
             public void onClick(View view) {
                 //播放直播
-                MyVideoViewBufferFullScreen_.intent(mContext).path(live.getUrl()).start();
+//                MyVideoViewBufferFullScreen_.intent(mContext).path(live.getUrl()).start();
             }
         });
 

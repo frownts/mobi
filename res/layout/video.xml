@@ -2,66 +2,69 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".VideoActivity" >
+    tools:context="com.join.mobi.activity.VideoFullScreen" >
 
 
-	<!--<include -->
-	    <!--android:id="@+id/include2_video"-->
-	    <!--android:layout_width="wrap_content"-->
-	    <!--android:layout_height="wrap_content"-->
-	    <!--android:layout_below="@+id/include_video"-->
-	    <!--layout="@layout/player"-->
-	    <!--/>-->
+    <RelativeLayout
+            android:id="@+id/videoContainer"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:layout_below="@+id/header"
+            android:background="@color/red">
+        <SurfaceView
+                android:id="@+id/surface"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentTop="true"/>
+        <ImageView
+                android:id="@+id/centerPlay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/player"
+                android:layout_centerInParent="true"
+                android:visibility="gone"/>
 
+        <ProgressBar
+                android:id="@+id/progressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:visibility="gone" />
 
-    <!--<LinearLayout-->
-            <!--android:id="@+id/seekbarContainer"-->
-            <!--android:layout_width="fill_parent"-->
-            <!--android:layout_height="50dp"-->
-            <!--android:background="@color/seekbar_bg"-->
-            <!--android:layout_marginLeft="5dp"-->
-            <!--android:orientation="horizontal">-->
+        <!--控制条-->
+        <RelativeLayout
+                android:id="@+id/btm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                >
 
-    <!--</LinearLayout>-->
+            <ImageView
+                    android:id="@+id/issrt"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:src="@drawable/pause"
+                    android:layout_alignParentBottom="true"/>
 
+            <SeekBar
+                    android:id="@+id/seekbar"
+                    android:layout_width="fill_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:layout_toLeftOf="@+id/fullScreen"
+                    android:layout_toRightOf="@+id/issrt"
+                    android:progressDrawable="@drawable/player_setting_bright_progressbar"
+                    android:thumb="@drawable/player_settings_bright_thumb"/>
 
-    <!--&lt;!&ndash; 播放按钮 &ndash;&gt;-->
-    <!--<ImageView-->
-        <!--android:id="@+id/iv_player"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:contentDescription="@string/image_contentDescription" />-->
+            <ImageView
+                    android:id="@+id/fullScreen"
+                    android:layout_width="25dp"
+                    android:layout_height="25dp"
+                    android:layout_alignParentRight="true"
+                    android:src="@drawable/screen"
+                    android:layout_alignParentBottom="true"/>
 
-    <!--&lt;!&ndash; 进度条 &ndash;&gt;-->
-    <!--<SeekBar-->
-        <!--android:id="@+id/sb_player"-->
-        <!--android:layout_width="720dp"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:progressDrawable="@drawable/player_setting_bright_progressbar"-->
-        <!--android:thumb="@drawable/player_settings_bright_thumb" />-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/iv_suki"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:contentDescription="@string/image_contentDescription" />-->
-
-    <!--<ImageView-->
-        <!--android:id="@+id/iv_download"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:contentDescription="@string/image_contentDescription" />-->
-
-    <!--<TextView-->
-        <!--android:id="@+id/tv_video"-->
-        <!--android:layout_width="wrap_content"-->
-        <!--android:layout_height="wrap_content"-->
-        <!--android:textColor="#FFFFFF" />-->
-
-    <TextView
-        android:id="@+id/tv2_video"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#FFFFFF" />
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>
