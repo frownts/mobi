@@ -140,7 +140,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         boolean buncompleteDownload = myPref.uncompleteDownload().get();
         boolean bcontinueOnWifi = myPref.continueOnWifi().get();
         boolean bannonunceWhenDownload = myPref.annonunceWhenDownload().get();
-        boolean bautoLogin = myPref.autoLogin().getOr(false);
+        boolean bautoLogin = myPref.autoLogin().getOr(true);
 
         if (buncompleteDownload) {
             uncompleteDownload.setImageDrawable(getResources().getDrawable(R.drawable.switch_on));

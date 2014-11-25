@@ -441,7 +441,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
                 progressBar.setVisibility(View.GONE);
                 break;
             default:
-                progressBar.setVisibility(View.VISIBLE);
+//                progressBar.setVisibility(View.VISIBLE);
                 break;
         }
         if(mediaPlayer.isPlaying()){
