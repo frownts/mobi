@@ -393,8 +393,8 @@ public class LocalCourseDetailActivity extends FragmentActivity implements Media
     @Override
     protected void onResume() {
         super.onResume();
-        mediaPlayer.reset();
-        play(playUrl);
+//        mediaPlayer.reset();
+//        play(playUrl);
 
     }
 

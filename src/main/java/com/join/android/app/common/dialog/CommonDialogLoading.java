@@ -64,8 +64,10 @@ public class CommonDialogLoading extends Dialog {
 
     @Override
     public void show() {
-        super.show();
-        vLoading.startAnimation(anim);
+        try{
+            super.show();
+            vLoading.startAnimation(anim);
+        }catch (Exception e){}
     }
 }
 

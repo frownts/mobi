@@ -189,26 +189,27 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
             public void onPrepared(final MediaPlayer mediaPlayer) {
                 mediaPlayer.start();
 
-//                if(checkProgress!=null&&!checkProgress.isAlive()){
-//                    checkProgress.start();
-//                }
-//                checkProgress = new Thread(){
-//                    @Override
-//                    public void run() {
-//                        super.run();
-//                        while(true){
-//                            try {
-//                                Thread.sleep(1000);
-//                                if(mediaPlayer.isPlaying()){
-//                                   //todo xxx  progressBar.setVisibility(View.GONE);
-////                                    mHandler.sendEmptyMessage(0);
-//                                }
-//                            } catch (Exception e) {
-//                                e.printStackTrace();
-//                            }
-//                        }
-//                    }
-//                };
+                if(checkProgress!=null&&!checkProgress.isAlive()){
+                    checkProgress.start();
+                }
+                checkProgress = new Thread(){
+                    @Override
+                    public void run() {
+                        super.run();
+                        while(true){
+                            try {
+                                Thread.sleep(1000);
+                                mHandler.sendEmptyMessage(0);
+                                if(mediaPlayer.isPlaying()){
+                                   //todo xxx  progressBar.setVisibility(View.GONE);
+//                                    mHandler.sendEmptyMessage(0);
+                                }
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                };
 
             }
 
@@ -220,6 +221,8 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @UiThread
     public void play(String url){
+        //test
+//        url = "http://192.168.85.82:8080/b.mpp";
         mediaPlayer.setDisplay(surface.getHolder());
         progressBar.setVisibility(View.VISIBLE);
         mediaPlayer.reset();
@@ -429,21 +432,21 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     @Override
     public boolean onInfo(MediaPlayer mediaPlayer, int what, int extra) {
 
-        switch (what) {
-            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
-                issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
-                progressBar.setVisibility(View.VISIBLE);
-                break;
-            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
-                progressBar.setVisibility(View.GONE);
-                break;
-            case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
-                progressBar.setVisibility(View.GONE);
-                break;
-            default:
+//        switch (what) {
+//            case MediaPlayer.MEDIA_INFO_BUFFERING_START:
+//                issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
 //                progressBar.setVisibility(View.VISIBLE);
-                break;
-        }
+//                break;
+//            case MediaPlayer.MEDIA_INFO_BUFFERING_END:
+//                progressBar.setVisibility(View.GONE);
+//                break;
+//            case MediaPlayer.MEDIA_INFO_VIDEO_TRACK_LAGGING:
+//                progressBar.setVisibility(View.GONE);
+//                break;
+//            default:
+////                progressBar.setVisibility(View.VISIBLE);
+//                break;
+//        }
         if(mediaPlayer.isPlaying()){
 
             progressBar.setVisibility(View.GONE);
@@ -496,6 +499,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         if(StringUtils.isEmpty(playUrl))return;
         try {
             mediaPlayer.pause();
+
 
             play(playUrl);
         } catch (Exception e) {
@@ -647,6 +651,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
                 try {
 
                     // 把视频输出到SurfaceView上
+
                     mediaPlayer.setDisplay(surface.getHolder());
                     play(playUrl);
 
@@ -656,7 +661,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
                     e.printStackTrace();
                 } catch (IllegalStateException e) {
                     e.printStackTrace();
-                }
+                }catch (Exception e){}
 
             }
 
