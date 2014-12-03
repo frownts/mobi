@@ -2,10 +2,7 @@ package com.join.mobi.rpc;
 
 import android.util.Log;
 import com.join.mobi.MyMappingJacksonHttpMessageConverter;
-import com.join.mobi.dto.CourseDetailDto;
-import com.join.mobi.dto.ExamDto;
-import com.join.mobi.dto.LoginDto;
-import com.join.mobi.dto.MainContentDto;
+import com.join.mobi.dto.*;
 import org.androidannotations.annotations.rest.Get;
 import org.androidannotations.annotations.rest.Rest;
 import org.springframework.http.HttpRequest;
@@ -145,6 +142,13 @@ public interface RPCService {
      */
     @Get("submitExamResult.jsp?userId={userId}&examId={examId}&correctPercent={correctPercent}&finishPercent={finishPercent}&examTime={startTime}&duration={duration}")
     public void submitExamResult(String userId,String examId,String correctPercent,String finishPercent,String startTime,String duration);
+
+
+    /**
+     * 版本检测
+     */
+    @Get("getCurrentVersion.jsp")
+    public VersionDto checkVersion();
 
 }
 

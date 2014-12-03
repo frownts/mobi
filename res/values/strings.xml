@@ -66,6 +66,8 @@
     <string name="warn">警告</string>
     <string name="noWifi">您正在使用运营商网络连接,是否继续？</string>
     <string name="download_complete">下载完成</string>
+    <string name="new_version">更新</string>
+    <string name="new_version_download_Hint">发现新版本是否下载</string>
     <array name="hello">
         <item>str1</item>
         <item>str2</item>

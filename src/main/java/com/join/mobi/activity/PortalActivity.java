@@ -3,6 +3,8 @@ package com.join.mobi.activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Intent;
+import android.content.pm.PackageInfo;
+import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
 import android.view.*;
 import android.widget.*;
@@ -13,8 +15,10 @@ import com.join.android.app.common.manager.NetworkManager;
 import com.join.mobi.adapter.PortalMenuAdapter;
 import com.join.mobi.customview.MySpinner;
 import com.join.mobi.dto.LoginDto;
+import com.join.mobi.dto.VersionDto;
 import com.join.mobi.pref.PrefDef_;
 import com.join.mobi.rpc.RPCService;
+import com.join.mobi.service.UpdateService;
 import com.php25.PDownload.DownloadApplication;
 import org.androidannotations.annotations.*;
 import org.androidannotations.annotations.rest.RestService;
@@ -99,6 +103,11 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         }
         //执行本地文件有效期检测
         ((DownloadApplication) getApplicationContext()).checkLocalFileExpired();
+
+        //版本检测
+        checkVersion();
+
+
 //        if(chapter.getDownloadTime()==null){
 //            DownloadFile file = DownloadTool.getDownLoadFile((DownloadApplication) mContext.getApplicationContext(), chapter.getDownloadUrl());
 //            if(file!=null){
@@ -109,8 +118,45 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     }
 
+    @Background
+    private void checkVersion() {
+        VersionDto versionDto = rpcService.checkVersion();
+        PackageManager pm = getPackageManager();//context为当前Activity上下文
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(getPackageName(), 0);
+            int version = pi.versionCode;
+            if (Float.parseFloat(versionDto.getVersionNoAndroid()) > version) {
+                showVersionDownLoadHint(versionDto);
+            }
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @UiThread
+    public void showVersionDownLoadHint(final VersionDto versionDto) {
+        final DialogManager dialogManager = DialogManager.getInstance();
+        dialogManager.createNormalDialog(this, getString(R.string.new_version), getString(R.string.new_version_download_Hint));
+        dialogManager.setCancel("稍候更新", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                dialogManager.dismiss();
+            }
+        });
+        dialogManager.setOk("下载", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent service = new Intent(PortalActivity.this, UpdateService.class);
+                service.putExtra("url",versionDto.getVersionNoAndroid());
+                startService(service);
+            }
+        });
+
+    }
+
     public void showSetting() {
-        if(settingDialog!=null&&settingDialog.isShowing())settingDialog.dismiss();
+        if (settingDialog != null && settingDialog.isShowing()) settingDialog.dismiss();
         View view = LayoutInflater.from(this).inflate(R.layout.dialog_setting, null);
         wrapEvent(view);
         settingDialog = new AlertDialog.Builder(this).create();
@@ -197,9 +243,9 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
                 showLoading();
                 String userId = loginName.getText().toString();
                 int len = userId.length();
-                if(len<9){
-                    for(int i=0;i<9-len;i++){
-                        userId="0"+userId;
+                if (len < 9) {
+                    for (int i = 0; i < 9 - len; i++) {
+                        userId = "0" + userId;
                     }
                 }
                 loginName.setText(userId);
@@ -405,7 +451,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @Receiver(actions = "org.androidannotations.downloadCompelte", registerAt = Receiver.RegisterAt.OnResumeOnPause)
     public void downLoadComplete(Intent i) {
-        showDownLoadHint(main,i.getExtras().getString("name"));
+        showDownLoadHint(main, i.getExtras().getString("name"));
     }
 
 }
