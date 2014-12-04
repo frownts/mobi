@@ -119,17 +119,25 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     }
 
     @Background
-    private void checkVersion() {
-        VersionDto versionDto = rpcService.checkVersion();
-        PackageManager pm = getPackageManager();//context为当前Activity上下文
-        PackageInfo pi = null;
+    public void checkVersion() {
+
         try {
+            VersionDto versionDto = rpcService.checkVersion();
+//            VersionDto versionDto = null;
+            //test begin
+//            versionDto = new VersionDto();
+//            versionDto.setVersionNoAndroid("2.0");
+//            versionDto.setAndroidUrl("http://122.72.120.71:9090/data6/1/2/73/2/77675cdca54a8d26cc0d76644af27321/gdown.baidu.com/91zhushou_39830.apk");
+            //test end
+
+            PackageManager pm = getPackageManager();//context为当前Activity上下文
+            PackageInfo pi = null;
             pi = pm.getPackageInfo(getPackageName(), 0);
-            int version = pi.versionCode;
+            float version = Float.parseFloat(pi.versionName);
             if (Float.parseFloat(versionDto.getVersionNoAndroid()) > version) {
                 showVersionDownLoadHint(versionDto);
             }
-        } catch (PackageManager.NameNotFoundException e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
@@ -148,7 +156,8 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             @Override
             public void onClick(View v) {
                 Intent service = new Intent(PortalActivity.this, UpdateService.class);
-                service.putExtra("url",versionDto.getVersionNoAndroid());
+                service.putExtra("url",versionDto.getAndroidUrl());
+                dialogManager.dismiss();
                 startService(service);
             }
         });

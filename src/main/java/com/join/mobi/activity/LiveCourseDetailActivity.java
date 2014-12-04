@@ -240,7 +240,13 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @Background
     void retrieveDataFromServer() {
-        courseDetail = rpcService.getCourseDetail(myPref.rpcUserId().get(),courseId);
+        try{
+            courseDetail = rpcService.getCourseDetail(myPref.rpcUserId().get(),courseId);
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
         afterRetrieveDataFromServer();
 
     }
@@ -268,7 +274,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
 
         //播放器
-        if(courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0){
+        if(courseDetail!=null&&courseDetail.getChapter()!=null&&courseDetail.getChapter().size()>0){
             ChapterDto chapter = courseDetail.getChapter().get(0);
             if(chapter.getChapter()!=null&&chapter.getChapter().size()>0&&StringUtils.isEmpty(chapter.getDownloadUrl())){
 //                play(chapter.getChapter().get(0).getDownloadUrl());
