@@ -159,7 +159,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     public void showVersionDownLoadHint(final VersionDto versionDto) {
         final DialogManager dialogManager = DialogManager.getInstance();
         dialogManager.createNormalDialog(this, getString(R.string.new_version), getString(R.string.new_version_download_Hint));
-        dialogManager.setCancel("稍候更新", new View.OnClickListener() {
+        dialogManager.setCancel("稍后更新", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogManager.dismiss();
