@@ -33,7 +33,6 @@ public class DBManager {
         }
     }
 
-
     public DatabaseHelper getHelper() {
         if (databaseHelper == null) {
             databaseHelper =
@@ -42,11 +41,21 @@ public class DBManager {
         return databaseHelper;
     }
 
+
     public void createDB(String dbName) {
         Log.i(getClass().getName(),dbName);
-        if (databaseHelper != null && databaseHelper.getDatabaseName().equals(dbName)) return;
+
+        if(databaseHelper != null ){
+            if(databaseHelper.geDBtName().equals(dbName))return;
+            OpenHelperManager.releaseHelper();
+        }
+        if (databaseHelper != null && databaseHelper.geDBtName().equals(dbName)) return;
+
+
         DatabaseHelper.setDatabaseName(dbName);
         databaseHelper = OpenHelperManager.getHelper(context, DatabaseHelper.class);
+
+
     }
 
 }
