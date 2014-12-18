@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.drawable.ColorDrawable;
+import android.net.Uri;
 import android.view.*;
 import android.widget.*;
 import com.BaseActivity;
@@ -48,6 +49,9 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     View main;
     EditText loginName;
 
+    @ViewById
+    TextView txtVersion;
+
     @RestService
     RPCService rpcService;
     Dialog loginDialog;
@@ -63,6 +67,15 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
 
     @AfterViews
     void afterViews() {
+        PackageManager pm = getPackageManager();//context为当前Activity上下文
+        PackageInfo pi = null;
+        try {
+            pi = pm.getPackageInfo(getPackageName(), 0);
+            txtVersion.setText(""+pi.versionName);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+
         if (myPref.uncompleteDownload().get()) {
             if (NetworkManager.getInstance(this).checkNet()) {
                 if (NetworkManager.getInstance(this).getAPNType(this) != NetworkManager.WIFI) {
@@ -124,11 +137,11 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
         try {
             VersionDto versionDto = rpcService.checkVersion();
 //            VersionDto versionDto = null;
-            //test begin
+////            test begin
 //            versionDto = new VersionDto();
 //            versionDto.setVersionNoAndroid("2.0");
 //            versionDto.setAndroidUrl("http://122.72.120.71:9090/data6/1/2/73/2/77675cdca54a8d26cc0d76644af27321/gdown.baidu.com/91zhushou_39830.apk");
-            //test end
+////            test end
 
             PackageManager pm = getPackageManager();//context为当前Activity上下文
             PackageInfo pi = null;
@@ -146,7 +159,7 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
     public void showVersionDownLoadHint(final VersionDto versionDto) {
         final DialogManager dialogManager = DialogManager.getInstance();
         dialogManager.createNormalDialog(this, getString(R.string.new_version), getString(R.string.new_version_download_Hint));
-        dialogManager.setCancel("稍候更新", new View.OnClickListener() {
+        dialogManager.setCancel("稍后更新", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 dialogManager.dismiss();
@@ -157,8 +170,15 @@ public class PortalActivity extends BaseActivity implements View.OnClickListener
             public void onClick(View v) {
                 Intent service = new Intent(PortalActivity.this, UpdateService.class);
                 service.putExtra("url",versionDto.getAndroidUrl());
+
+                Intent intent = new Intent();
+                intent.setAction("android.intent.action.VIEW");
+                Uri content_url = Uri.parse(versionDto.getAndroidUrl());
+                intent.setData(content_url);
+                startActivity(intent);
+
                 dialogManager.dismiss();
-                startService(service);
+//                startService(service);
             }
         });
 
