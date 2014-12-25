@@ -45,6 +45,8 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
         DATABASE_NAME = name;
     }
 
+
+
     /**
      * This is called when the database is first created. Usually you should call createTable statements here to create
      * the tables that will store your data.
@@ -191,6 +193,10 @@ public class DatabaseHelper extends OrmLiteSqliteOpenHelper {
             referenceRuntimeDao = getRuntimeExceptionDao(Reference.class);
         }
         return referenceRuntimeDao;
+    }
+
+    public static String geDBtName(){
+        return DATABASE_NAME;
     }
 
     /**
