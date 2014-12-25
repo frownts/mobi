@@ -2,6 +2,7 @@ package com.join.mobi.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.support.v4.util.LruCache;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -19,7 +20,9 @@ import com.join.mobi.dto.ChapterDto;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -105,7 +108,18 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
         }
         return 1;
     }
-
+public class ViewHolder2{
+    public View chapterView;
+    public TextView cTitle;
+    public ImageView cDownload;
+    public TextView cFileSize;
+    public SpringProgressView cSpringProgressView;
+    public TextView learnedTime;
+    public TextView chapterDuration;
+    public View main;
+}
+    private LruCache chapterCacheMap = new LruCache(20);
+    View mainbg;
     @Override
     public View getView(final int position, View convertView, ViewGroup parent) {
 
@@ -127,79 +141,9 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
             holder.title.setText(chapter.getTitle());
             holder.fileCount.setText(chapter.getChapter().size()+"");
 
-            holder.chapterContainer.removeAllViews();
-            //生成章节列表
-            for(final ChapterDetailDto chapterDetailDto :chapter.getChapter()){
-                View chapterView = inflater.inflate(R.layout.livecourse_chapter_listview_layout_bak, null);
-                TextView cTitle = (TextView) chapterView.findViewById(R.id.title);
-                cTitle.setText(chapterDetailDto.getTitle());
-                ImageView cDownload = (ImageView) chapterView.findViewById(R.id.download);
-                cDownload.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (chapterDetailDto.getFileSize() == 0) {
-                            DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
-                            return;
-                        }
-                        if (download != null) download.download(chapter,chapterDetailDto);
-                    }
-                });
-
-                TextView cFileSize = (TextView) chapterView.findViewById(R.id.filesize);
-                cFileSize.setText(FileUtils.FormatFileSize(chapterDetailDto.getFileSize()));
-
-                SpringProgressView cSpringProgressView = (SpringProgressView) chapterView.findViewById(R.id.springProgressView);
-                if (chapterDetailDto.getChapterDuration() == 0)
-                    cSpringProgressView.setMaxCount(100);
-                else
-                    cSpringProgressView.setMaxCount(chapterDetailDto.getChapterDuration());
-                cSpringProgressView.setCurrentCount(chapterDetailDto.getLearnedTime());
-
-                TextView learnedTime = (TextView) chapterView.findViewById(R.id.learnedTime);
-                learnedTime.setText(DateUtils.SecondToNormalTime(chapterDetailDto.getLearnedTime()));
-
-                TextView chapterDuration = (TextView) chapterView.findViewById(R.id.chapterDuration);
-                chapterDuration.setText(DateUtils.SecondToNormalTime(chapterDetailDto.getChapterDuration()));
-
-                View main =  chapterView.findViewById(R.id.main);
-
-                chapterView.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (StringUtils.isEmpty(chapterDetailDto.getPlayUrl())) {
-                            DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
-                            return;
-                        }
-                        if(currentChapterDetailDto!=null){
-                            currentChapterDetailDto.setPlaying(false);
-                        }
-                        currentChapterDetailDto =  chapterDetailDto;
-
-                        for(ChapterDetailDto c :chapter.getChapter()){
-                            c.setPlaying(false);
-                        }
-                        chapterDetailDto.setPlaying(true);
-
-                        Intent intent = new Intent("org.androidannotations.play");
-                        intent.putExtra("playUrl", chapterDetailDto.getPlayUrl());
-                        mContext.sendBroadcast(intent);
-                        LiveCourseChapterAdapter.this.notifyDataSetChanged();
-                    }
-                });
-
-                if (chapterDetailDto.isPlaying())
-                    main.setBackgroundResource(R.drawable.red_border_frame);
-                else
-                    main.setBackgroundResource(R.drawable.border_bg);
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
-                params.setMargins(0,0,0,20);
-                holder.chapterContainer.addView(chapterView,params);
-
-            }
-
 
             convertView.setOnClickListener(new View.OnClickListener() {
+
                 @Override
                 public void onClick(View view) {
                     //判断是否已展开
@@ -207,6 +151,89 @@ public class LiveCourseChapterAdapter extends BaseAdapter {
                         holder.chapterContainer.setVisibility(View.GONE);
                     }else{
                         holder.chapterContainer.setVisibility(View.VISIBLE);
+                        holder.chapterContainer.removeAllViews();
+                        //生成章节列表
+                        for(final ChapterDetailDto chapterDetailDto :chapter.getChapter()){
+                            ViewHolder2 viewHolder2 = (ViewHolder2) chapterCacheMap.get(position);
+                            if(viewHolder2==null){
+                                viewHolder2 = new ViewHolder2();
+                                viewHolder2.chapterView = inflater.inflate(R.layout.livecourse_chapter_listview_layout_bak, null);
+                                viewHolder2.cTitle = (TextView) viewHolder2.chapterView.findViewById(R.id.title);
+                                viewHolder2.cDownload=(ImageView) viewHolder2.chapterView.findViewById(R.id.download);
+                                viewHolder2.cFileSize = (TextView) viewHolder2.chapterView.findViewById(R.id.filesize);
+                                viewHolder2.cSpringProgressView = (SpringProgressView) viewHolder2.chapterView.findViewById(R.id.springProgressView);
+                                viewHolder2.learnedTime = (TextView) viewHolder2.chapterView.findViewById(R.id.learnedTime);
+                                viewHolder2.chapterDuration =  (TextView) viewHolder2.chapterView.findViewById(R.id.chapterDuration);
+                                viewHolder2.main = viewHolder2.chapterView.findViewById(R.id.main);
+                            }
+                            viewHolder2.cTitle.setText(chapterDetailDto.getTitle());
+                            viewHolder2.cDownload.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (chapterDetailDto.getFileSize() == 0) {
+                                        DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
+                                        return;
+                                    }
+                                    if (download != null) download.download(chapter,chapterDetailDto);
+                                }
+                            });
+
+                            viewHolder2.cFileSize.setText(FileUtils.FormatFileSize(chapterDetailDto.getFileSize()));
+
+                            if (chapterDetailDto.getChapterDuration() == 0)
+                                viewHolder2.cSpringProgressView.setMaxCount(100);
+                            else
+                                viewHolder2.cSpringProgressView.setMaxCount(chapterDetailDto.getChapterDuration());
+                            viewHolder2.cSpringProgressView.setCurrentCount(chapterDetailDto.getLearnedTime());
+
+                            viewHolder2.learnedTime.setText(DateUtils.SecondToNormalTime(chapterDetailDto.getLearnedTime()));
+
+                            viewHolder2.chapterDuration.setText(DateUtils.SecondToNormalTime(chapterDetailDto.getChapterDuration()));
+
+                            final ViewHolder2 finalViewHolder = viewHolder2;
+                            viewHolder2.chapterView.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    if (StringUtils.isEmpty(chapterDetailDto.getPlayUrl())) {
+                                        DialogManager.getInstance().makeText(mContext, mContext.getString(R.string.file_invalid), DialogManager.DIALOG_TYPE_ERROR);
+                                        return;
+                                    }
+                                    if(currentChapterDetailDto!=null){
+                                        currentChapterDetailDto.setPlaying(false);
+                                    }
+                                    currentChapterDetailDto =  chapterDetailDto;
+
+                                    for(ChapterDetailDto c :chapter.getChapter()){
+                                        c.setPlaying(false);
+                                    }
+                                    chapterDetailDto.setPlaying(true);
+
+                                    if(mainbg!=null)mainbg.setBackgroundResource(R.drawable.border_bg);
+                                    finalViewHolder.main.setBackgroundResource(R.drawable.red_border_frame);
+                                    mainbg = finalViewHolder.main;
+
+                                    Intent intent = new Intent("org.androidannotations.play");
+                                    intent.putExtra("playUrl", chapterDetailDto.getPlayUrl());
+                                    mContext.sendBroadcast(intent);
+                                    LiveCourseChapterAdapter.this.notifyDataSetChanged();
+                                }
+                            });
+
+                            if (chapterDetailDto.isPlaying()){
+                                viewHolder2.main.setBackgroundResource(R.drawable.red_border_frame);
+                                mainbg = viewHolder2.main;
+                            }
+
+                            else
+                                viewHolder2.main.setBackgroundResource(R.drawable.border_bg);
+
+                            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT);
+                            params.setMargins(0,0,0,20);
+
+                            holder.chapterContainer.addView(viewHolder2.chapterView,params);
+
+                        }
+
                     }
 
                 }

@@ -54,12 +54,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity
-                android:name="io.vov.vitamio.activity.InitActivity"
-                android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-                android:launchMode="singleTop"
-                android:theme="@android:style/Theme.NoTitleBar"
-                android:windowSoftInputMode="stateAlwaysHidden"/>
+
         <activity android:name="com.join.mobi.activity.PortalActivity_"/>
         <activity android:name="com.join.mobi.activity.LiveCourseActivity_"/>
         <activity android:name="com.join.mobi.activity.LiveCourseDetailActivity_" android:screenOrientation="portrait"  android:configChanges="orientation|keyboard|keyboardHidden|screenSize"/>
