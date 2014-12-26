@@ -49,10 +49,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <LinearLayout
-                    android:layout_width="fill_parent"
-                    android:layout_height="fill_parent"
-                    >
+            <!--<LinearLayout-->
+                    <!--android:layout_width="fill_parent"-->
+                    <!--android:layout_height="fill_parent"-->
+                    <!--android:orientation="vertical"-->
+                    <!-->-->
 
                 <ListView
                         android:id="@+id/listView"
@@ -62,7 +63,7 @@
                         android:descendantFocusability="blocksDescendants"
                         android:focusable="true"/>
 
-            </LinearLayout>
+            <!--</LinearLayout>-->
         </android.support.v4.widget.SwipeRefreshLayout>
 
         <LinearLayout

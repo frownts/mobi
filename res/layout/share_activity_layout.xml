@@ -55,7 +55,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/white"
-                        android:text="@string/local_resource"
+                        android:text="@string/share_resource"
                         android:textSize="20sp"/>
             </LinearLayout>
 
