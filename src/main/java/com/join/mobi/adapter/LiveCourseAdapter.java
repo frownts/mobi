@@ -91,7 +91,7 @@ public class LiveCourseAdapter extends BaseAdapter {
         holder.title.setText(course.getTitle());
         holder.lastLearn.setText("上次学习:  "+ DateUtils.FormatForCourseLastLearningTime(course.getLastLearn()));
         holder.courseHour.setText("课程总时长:  "+DateUtils.SecondToNormalTime(course.getCourseHour()));
-        holder.totalDuration.setText("累计学习:  "+DateUtils.SecondToNormalTime(Long.parseLong(course.getTotalDuration())));
+        holder.totalDuration.setText(""+DateUtils.SecondToNormalTime(Long.parseLong(course.getTotalDuration())));
         if(course.getCourseComplete()==1){
             holder.courseFinished.setVisibility(View.VISIBLE);
         }else

@@ -21,6 +21,12 @@ public class Live {
     @DatabaseField
     private String url;
 
+    /**
+     * 课程是否完成 0未完成  1完成
+     */
+    @DatabaseField
+    private int courseComplete;
+
 
     public int getId() {
         return id;
@@ -68,5 +74,13 @@ public class Live {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getCourseComplete() {
+        return courseComplete;
+    }
+
+    public void setCourseComplete(int courseComplete) {
+        this.courseComplete = courseComplete;
     }
 }
