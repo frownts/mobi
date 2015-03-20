@@ -24,6 +24,8 @@ public class Course {
     private long courseHour;
     @DatabaseField
     private String url;
+    @DatabaseField
+    private int courseComplete;
 
     public int getId() {
         return id;
@@ -87,5 +89,13 @@ public class Course {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    public int getCourseComplete() {
+        return courseComplete;
+    }
+
+    public void setCourseComplete(int courseComplete) {
+        this.courseComplete = courseComplete;
     }
 }

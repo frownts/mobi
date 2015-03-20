@@ -37,6 +37,11 @@ public class LiveCourseDto {
     private long courseHour;
 
     /**
+     * 课程是否完成 0未完成  1完成
+     */
+    private int courseComplete;
+
+    /**
      * 海报链接
      */
     private String url;
@@ -100,4 +105,11 @@ public class LiveCourseDto {
         this.url = url;
     }
 
+    public int getCourseComplete() {
+        return courseComplete;
+    }
+
+    public void setCourseComplete(int courseComplete) {
+        this.courseComplete = courseComplete;
+    }
 }

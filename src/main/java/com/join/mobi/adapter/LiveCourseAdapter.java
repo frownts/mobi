@@ -36,6 +36,7 @@ public class LiveCourseAdapter extends BaseAdapter {
         TextView lastLearn;
         TextView courseHour;
         TextView totalDuration;
+        TextView courseFinished;
     }
 
     public List<Course> getItems(){
@@ -81,6 +82,7 @@ public class LiveCourseAdapter extends BaseAdapter {
             holder.lastLearn = (TextView) convertView.findViewById(R.id.lastLearn);
             holder.courseHour = (TextView) convertView.findViewById(R.id.courseHour);
             holder.totalDuration = (TextView) convertView.findViewById(R.id.totalDuration);
+            holder.courseFinished = (TextView) convertView.findViewById(R.id.courseFinished);
             convertView.setTag(holder);
         } else {
             holder = (GirdHolder) convertView.getTag();
@@ -90,6 +92,10 @@ public class LiveCourseAdapter extends BaseAdapter {
         holder.lastLearn.setText("上次学习:  "+ DateUtils.FormatForCourseLastLearningTime(course.getLastLearn()));
         holder.courseHour.setText("课程总时长:  "+DateUtils.SecondToNormalTime(course.getCourseHour()));
         holder.totalDuration.setText("累计学习:  "+DateUtils.SecondToNormalTime(Long.parseLong(course.getTotalDuration())));
+        if(course.getCourseComplete()==1){
+            holder.courseFinished.setVisibility(View.VISIBLE);
+        }else
+            holder.courseFinished.setVisibility(View.INVISIBLE);
 
         convertView.setOnClickListener(new View.OnClickListener() {
             @Override

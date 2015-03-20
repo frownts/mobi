@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.join.android.app.common"
-          android:versionCode="1"
-          android:versionName="1.1">
+          android:versionCode="2"
+          android:versionName="2.0">
 
     <uses-sdk
             android:maxSdkVersion="17"
@@ -73,7 +73,7 @@
         <activity android:name="com.join.mobi.activity.VideoWebViewActivity_"></activity>
         <activity android:name="com.join.mobi.activity.VideoFullScreen_" android:screenOrientation="landscape" >
 
-                </activity>
+        </activity>
 
         <service android:name="com.join.mobi.service.UpdateService"/>
 

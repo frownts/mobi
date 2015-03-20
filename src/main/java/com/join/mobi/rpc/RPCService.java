@@ -19,8 +19,8 @@ import java.io.IOException;
  * http://aia.fortune-net.cn/app/
  * http://test.fortune-net.cn:8080/app
  */
-//@Rest(rootUrl = "http://test.fortune-net.cn:8080/app/", converters = MyMappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
-@Rest(rootUrl = "http://aia.fortune-net.cn/app/", converters = MyMappingJacksonHttpMessageConverter.class, interceptors = {HttpBasicAuthenticatorInterceptor.class,})
+@Rest(rootUrl = "http://test.fortune-net.cn:80/app/", converters = MyMappingJacksonHttpMessageConverter.class, interceptors = HttpBasicAuthenticatorInterceptor.class)
+//@Rest(rootUrl = "http://aia.fortune-net.cn/app/", converters = MyMappingJacksonHttpMessageConverter.class, interceptors = {HttpBasicAuthenticatorInterceptor.class,})
 public interface RPCService {
 
 
