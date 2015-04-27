@@ -303,10 +303,14 @@ public class ExamActivity extends BaseActivity {
      */
     @Background
     void sumit(ExamResult examResult) {
+        try{
+            rpcService.submitExamResult(myPref.rpcUserId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
 
-        rpcService.submitExamResult(myPref.rpcUserId().get(), examDto.getExamId() + "", examResult.getCorrectPercent(), examResult.getFinishPersenct(), examResult.getStartTime(), examResult.getDuration());
-        examDto.setFinishPercent(examResult.getFinishPersenct()+"");
-        showExamResult(examResult);
+        }catch (Exception e){
+            examDto.setFinishPercent(examResult.getFinishPersenct()+"");
+            showExamResult(examResult);
+        }
+
     }
 
     @UiThread
