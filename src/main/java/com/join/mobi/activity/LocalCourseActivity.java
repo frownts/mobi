@@ -123,7 +123,6 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
     @UiThread
     public void retrieveDataFromDB() {
         origLocalCourses.clear();
-//        origLocalCourses = LocalCourseManager.getInstance().findAll();
         List<LocalCourse> temp = LocalCourseManager.getInstance().findAll();
         if(temp==null)return;
 
@@ -139,7 +138,6 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
                 if(DownloadTool.isFinished((DownloadApplication)getApplicationContext(),c.getDownloadUrl())){
                     existsContent=true;
                     course.setChapterNum(course.getChapterNum()+1);
-//                    break;
                 }
             }
             closeableIterable.closeableIterator();
@@ -152,7 +150,6 @@ public class LocalCourseActivity extends BaseActivity implements SwipeRefreshLay
                 if(DownloadTool.isFinished((DownloadApplication)getApplicationContext(),_c.getUrl())){
                     existsContent=true;
                     course.setRefNum(course.getRefNum()+1);
-//                    break;
                 }
             }
             _closeableIterable.closeableIterator();

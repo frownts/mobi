@@ -226,10 +226,12 @@ public class LocalCourseDetailActivity extends FragmentActivity implements Media
 
     @UiThread
     public void play(String url){
-
+        progressBar.setVisibility(View.VISIBLE);
+        mediaPlayer.reset();
         playUrl = url;
         if(StringUtils.isEmpty(playUrl))return;
         try {
+            mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(playUrl);
             play();
         } catch (IOException e) {
@@ -237,14 +239,21 @@ public class LocalCourseDetailActivity extends FragmentActivity implements Media
         }
     }
 
+//    @UiThread
 //    public void play(String url){
+//
 //        playUrl = url;
-//        fragmentManager = getSupportFragmentManager();
-//        FragmentTransaction transaction = fragmentManager.beginTransaction();
-//        videoFragment = new VideoFragment_();
-//        transaction.replace(R.id.fragmentVideo,videoFragment);
-//        transaction.commit();
+//        if(StringUtils.isEmpty(playUrl))return;
+//        try {
+//            mediaPlayer.stop();
+//            mediaPlayer.setDataSource(playUrl);
+//            play();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
 //    }
+
+
 
 
     void afterRetrieveDataFromServer() {
@@ -437,6 +446,13 @@ public class LocalCourseDetailActivity extends FragmentActivity implements Media
     @Receiver(actions = "org.androidannotations.play", registerAt = Receiver.RegisterAt.OnCreateOnDestroy)
     public void play(Intent intent){
         playUrl = intent.getExtras().getString("playUrl");
+        if(StringUtils.isEmpty(playUrl))return;
+        try {
+            mediaPlayer.pause();
+            play(playUrl);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     /**

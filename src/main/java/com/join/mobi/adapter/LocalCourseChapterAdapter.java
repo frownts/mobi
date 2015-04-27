@@ -139,8 +139,9 @@ public class LocalCourseChapterAdapter extends BaseAdapter {
 
         if (chapter.isPlaying()) {//红色背影框
             holder.main.setBackgroundResource(R.drawable.red_border_frame);
-        }else
+        }else{
             holder.main.setBackgroundResource(R.drawable.border_bg);
+        }
 
         holder.item_right.setOnClickListener(new View.OnClickListener() {
             @Override

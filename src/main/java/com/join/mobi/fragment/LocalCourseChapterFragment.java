@@ -8,15 +8,13 @@ import com.join.android.app.common.R;
 import com.join.android.app.common.db.manager.ChapterManager;
 import com.join.android.app.common.db.tables.Chapter;
 import com.join.android.app.common.db.tables.LocalCourse;
+import com.join.android.app.common.manager.DialogManager;
 import com.join.android.app.common.view.SwipeListView;
 import com.join.mobi.activity.LocalCourseDetailActivity;
 import com.join.mobi.adapter.LocalCourseChapterAdapter;
 import com.php25.PDownload.DownloadApplication;
 import com.php25.PDownload.DownloadTool;
-import org.androidannotations.annotations.AfterViews;
-import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.Receiver;
-import org.androidannotations.annotations.ViewById;
+import org.androidannotations.annotations.*;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.*;
@@ -84,6 +82,8 @@ public class LocalCourseChapterFragment extends Fragment {
         localCourseChapterAdapter.notifyDataSetChanged();
     }
 
+
+
     /**
      * 当点击删除图标时，刷新list
      * @param intent
@@ -104,12 +104,16 @@ public class LocalCourseChapterFragment extends Fragment {
             Chapter _chapter = localCourseChapterAdapter.getItem(currentPosition);
             if(_chapter!=null)
                 ChapterManager.getInstance().saveOrUpdate(_chapter);
-
-            for (Chapter c : localCourseChapterAdapter.getItems()) c.setPlaying(false);
             currentPosition = intent.getExtras().getInt("position");
-            Chapter chapter = localCourseChapterAdapter.getItem(intent.getExtras().getInt("position"));
-            chapter.setPlaying(true);
+            Chapter chapter = localCourseChapterAdapter.getItem(currentPosition);
+            for (Chapter c : localCourseChapterAdapter.getItems()) {
+                if(c.getId()==chapter.getId())
+                    c.setPlaying(true);
+                else
+                    c.setPlaying(false);
+            }
 
+            chapter.setPlaying(true);
             localCourseChapterAdapter.notifyDataSetChanged();
 
             Intent _intent = new Intent("org.androidannotations.play");
