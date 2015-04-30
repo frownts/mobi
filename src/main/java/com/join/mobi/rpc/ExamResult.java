@@ -1,5 +1,7 @@
 package com.join.mobi.rpc;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 
 /**
@@ -17,6 +19,9 @@ public class ExamResult implements Serializable {
 
 
     public String getCorrectPercent() {
+        if(StringUtils.isNotEmpty(correctPercent)&&correctPercent.contains(".")){
+            correctPercent = correctPercent.substring(0,correctPercent.indexOf("."));
+        }
         return correctPercent;
     }
 
@@ -25,6 +30,9 @@ public class ExamResult implements Serializable {
     }
 
     public String getFinishPersenct() {
+        if(StringUtils.isNotEmpty(finishPersenct)&&finishPersenct.contains(".")){
+            finishPersenct = finishPersenct.substring(0,finishPersenct.indexOf("."));
+        }
         return finishPersenct;
     }
 

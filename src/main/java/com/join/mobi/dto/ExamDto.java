@@ -1,5 +1,7 @@
 package com.join.mobi.dto;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -99,6 +101,9 @@ public class ExamDto implements Serializable{
     }
 
     public String getFinishPercent() {
+        if(StringUtils.isNotEmpty(finishPercent)&&finishPercent.contains(".")){
+            finishPercent = finishPercent.substring(0,finishPercent.indexOf("."));
+        }
         return finishPercent;
     }
 

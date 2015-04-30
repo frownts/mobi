@@ -78,8 +78,8 @@ public class ExamIntroActivity extends BaseActivity {
 
         examTime.setText(examTime.getText().toString().replace("$1", DateUtils.FormatForCourseLastLearningTime(examDto.getExamTime())).replace("$2", DateUtils.SecondToNormalTime(examDto.getDuration())));
         examTime.setVisibility(View.VISIBLE);
-//        finishPercent.setText(finishPercent.getText().toString().replace("$1",examDto.getFinishPercent()+"%"));
-        finishPercent.setText(finishPercent.getText().toString().replace("$1", ExamUtils.SpeculatePercent(examDto.getFinishPercent(), examDto.getItemCount() + "")+"%"));
+//        finishPercent.setText(finishPercent.getText().toString().replace("$1", ExamUtils.SpeculatePercent(examDto.getFinishPercent(), examDto.getItemCount() + "")+"%"));
+        finishPercent.setText(finishPercent.getText().toString().replace("$1", examDto.getFinishPercent()+"%"));
         finishPercent.setVisibility(View.VISIBLE);
 
         String correctP = examDto.getCorrectPercent();

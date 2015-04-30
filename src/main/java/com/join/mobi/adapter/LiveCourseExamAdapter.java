@@ -94,7 +94,8 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         holder.name.setText(exam.getName());
         holder.itemCount.setText("共"+exam.getItemCount()+"题");
 
-        holder.finishPercent.setText(ExamUtils.SpeculatePercent(exam.getFinishPercent(), exam.getItemCount() + "")+"%");
+//        holder.finishPercent.setText(ExamUtils.SpeculatePercent(exam.getFinishPercent(), exam.getItemCount() + "")+"%");
+        holder.finishPercent.setText(exam.getFinishPercent()+"%");
         if(exam.getItemCount()==0)holder.finishPercent.setText("0%");
 
         holder.durationLimit.setText("限时:"+ DateUtils.SecondToNormalTime(exam.getDurationLimit()));
