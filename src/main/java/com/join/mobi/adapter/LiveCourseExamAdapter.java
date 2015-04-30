@@ -90,7 +90,7 @@ public class LiveCourseExamAdapter extends BaseAdapter {
         int itemCount = exam.getItemCount();
         if(itemCount==0)itemCount=10;
         holder.springProgressView.setMaxCount(itemCount);
-        holder.springProgressView.setCurrentCount(Long.parseLong(exam.getFinishPercent()));
+        holder.springProgressView.setCurrentCount(itemCount*Long.parseLong(exam.getFinishPercent())/100);
         holder.name.setText(exam.getName());
         holder.itemCount.setText("共"+exam.getItemCount()+"题");
 

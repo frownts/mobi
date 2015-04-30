@@ -29,7 +29,7 @@ public class LiveCourseExamFragment extends Fragment {
     @AfterViews
     void afterViews() {
         CourseDetailDto courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
-
+        if(courseDetailDto==null)return;
         List<ExamDto> examDto = courseDetailDto.getExam();
 
         liveCourseExamAdapter = new LiveCourseExamAdapter(getActivity(),examDto);

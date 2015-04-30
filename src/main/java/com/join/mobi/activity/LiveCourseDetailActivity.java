@@ -374,13 +374,14 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @Override
     protected void onStop() {
-        checkProgress=null;
-        if (mediaPlayer != null) {
-            mediaPlayer.stop();
-            mediaPlayer.release();
-            mediaPlayer = null;
-        }
-        threadUpdateGrogress = null;
+        mediaPlayer.pause();
+//        checkProgress=null;
+//        if (mediaPlayer != null) {
+//            mediaPlayer.stop();
+//            mediaPlayer.release();
+//            mediaPlayer = null;
+//        }
+//        threadUpdateGrogress = null;
         super.onStop();
     }
 

@@ -1,5 +1,7 @@
 package com.join.mobi;
 
+import com.fasterxml.jackson.databind.DeserializationFeature;
+import org.codehaus.jackson.map.DeserializationConfig;
 import org.springframework.http.MediaType;
 import org.springframework.http.converter.json.MappingJacksonHttpMessageConverter;
 
@@ -19,11 +21,7 @@ public class MyMappingJacksonHttpMessageConverter extends MappingJacksonHttpMess
         supportedMediaTypes.add(MediaType.TEXT_HTML);
         supportedMediaTypes.add(MediaType.APPLICATION_JSON);
         setSupportedMediaTypes(supportedMediaTypes);
+        getObjectMapper().disable(DeserializationConfig.Feature.FAIL_ON_UNKNOWN_PROPERTIES);
 
-//        List<MediaType> mediaTypes = Collections.singletonList(MediaType.TEXT_HTML);
-//        mediaTypes.add(MediaType.APPLICATION_JSON);
-//        setSupportedMediaTypes(mediaTypes);
-
-//        setSupportedMediaTypes(Collections.singletonList(MediaType.APPLICATION_JSON));
     }
 }

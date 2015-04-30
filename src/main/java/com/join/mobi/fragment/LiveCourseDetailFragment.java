@@ -38,7 +38,10 @@ public class LiveCourseDetailFragment extends Fragment {
 
     @AfterViews
     void afterViews() {
+
         courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
+        if(courseDetailDto==null)return;
+        if(StringUtils.isNotEmpty(courseDetailDto.getCreateTime()))
         createTime.setText(DateUtils.FormatForCourseLastLearningTime(courseDetailDto.getCreateTime()));
         branch.setText(courseDetailDto.getBranch());
         courseHour.setText(DateUtils.SecondToNormalTime(courseDetailDto.getCourseHour()));

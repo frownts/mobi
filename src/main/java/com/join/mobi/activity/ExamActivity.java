@@ -366,8 +366,8 @@ public class ExamActivity extends BaseActivity {
 
 
         examResult.setCorrectPercent(tempCorrectPercent);
-//        examResult.setFinishPersenct(decimalFormat.format(finishPercent));
-        examResult.setFinishPersenct(finishNum+"");
+        examResult.setFinishPersenct(decimalFormat.format(finishPercent));
+//        examResult.setFinishPersenct(finishNum+"");
         examResult.setDuration(((System.currentTimeMillis()-startTime.getTime())/1000)+"");
         examResult.setStartTime(DateUtils.ConvertDateToNormalString(startTime));
 

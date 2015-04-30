@@ -49,6 +49,7 @@ public class LiveCourseChapterFragment extends Fragment {
 
         courseDetailDto = ((LiveCourseDetailActivity_) getActivity()).getCourseDetail();
         url = ((LiveCourseDetailActivity_) getActivity()).getUrl();
+        if(courseDetailDto==null)return;
         Course course = CourseManager.getInstance().getByCourseId(courseDetailDto.getCourseId());
         if (course != null)
             totalDuration = course.getTotalDuration();
@@ -172,8 +173,6 @@ public class LiveCourseChapterFragment extends Fragment {
             }
 
         }
-
-
 
     }
 
