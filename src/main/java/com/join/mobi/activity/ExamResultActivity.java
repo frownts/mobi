@@ -10,6 +10,7 @@ import com.join.mobi.adapter.ExamResultAdapter;
 import com.join.mobi.dto.ExamDto;
 import com.join.mobi.rpc.ExamResult;
 import org.androidannotations.annotations.*;
+import org.apache.commons.lang3.StringUtils;
 
 /**
  * User: mawanjin@join-cn.com
@@ -52,7 +53,8 @@ public class ExamResultActivity extends BaseActivity {
 
         Intent intent = new Intent("org.androidannotations.updateProgressOfExam");
         intent.putExtra("examId",examDto.getExamId());
-//        examDto.setFinishPercent("0");
+        if(StringUtils.isEmpty(examDto.getFinishPercent()))examDto.setFinishPercent("0");
+
         examDto.setFinishPercent(((int)Float.parseFloat(examDto.getFinishPercent()))+"");
         try{
             if(examDto.getFinishPercent().equals(".0"))examDto.setFinishPercent("0");
