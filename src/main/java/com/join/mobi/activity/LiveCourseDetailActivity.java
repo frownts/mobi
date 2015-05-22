@@ -100,7 +100,9 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     SurfaceView surface;
     @ViewById
     ImageView fullScreen;
-    private int postion = 0;
+
+    private int position = 0;
+    private SurfaceHolder surHolder;
 
 
     private String playUrl;
@@ -119,6 +121,8 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     @AfterViews
     void afterViews() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+
+        surHolder = surface.getHolder();
         title.setText(name);
         loading = new CommonDialogLoading(this);
         loading.show();
@@ -167,10 +171,11 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         lp.width = mSurfaceViewWidth;
         surface.setLayoutParams(lp);
-        surface.getHolder().setFixedSize(lp.width, lp.height);
-        surface.getHolder().setKeepScreenOn(true);
-        surface.getHolder().addCallback(new SurfaceViewLis());
-        surface.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        surHolder.setFixedSize(lp.width, lp.height);
+        surHolder.setKeepScreenOn(true);
+        surHolder.addCallback(new SurfaceViewLis());
+        surHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+
         mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
@@ -214,9 +219,11 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @UiThread
     public void play(String url){
-        mediaPlayer.setDisplay(surface.getHolder());
+        if(mediaPlayer!=null)
+        mediaPlayer.release();
+        initPlayer();
+
         progressBar.setVisibility(View.VISIBLE);
-        mediaPlayer.reset();
         playUrl = url;
         if(StringUtils.isEmpty(playUrl))return;
         try {
@@ -226,6 +233,20 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    @UiThread
+    public void play() {
+        seekbar.setProgress(0);
+        if(threadUpdateGrogress==null)
+            threadUpdateGrogress = new Thread(update);
+        try{
+            if(!threadUpdateGrogress.isAlive())
+                threadUpdateGrogress.start();
+        }catch (java.lang.IllegalThreadStateException e){}
+
+        progressBar.setVisibility(View.VISIBLE);
+        mediaPlayer.prepareAsync();
     }
 
     @Background
@@ -273,7 +294,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         }
 
-        initPlayer();
+
         startUpdateLearningTime();
         play(playUrl);
     }
@@ -375,13 +396,6 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     @Override
     protected void onStop() {
         mediaPlayer.pause();
-//        checkProgress=null;
-//        if (mediaPlayer != null) {
-//            mediaPlayer.stop();
-//            mediaPlayer.release();
-//            mediaPlayer = null;
-//        }
-//        threadUpdateGrogress = null;
         super.onStop();
     }
 
@@ -555,19 +569,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         }
     };
 
-    @UiThread
-    public void play() {
-        seekbar.setProgress(0);
-        if(threadUpdateGrogress==null)
-        threadUpdateGrogress = new Thread(update);
-        try{
-            if(!threadUpdateGrogress.isAlive())
-            threadUpdateGrogress.start();
-        }catch (java.lang.IllegalThreadStateException e){}
 
-        progressBar.setVisibility(View.VISIBLE);
-        mediaPlayer.prepareAsync();
-    }
 
 
     private final class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
@@ -590,10 +592,10 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            if (postion == 0) {
+            if (position == 0) {
                 try {
                     // 把视频输出到SurfaceView上
-                    mediaPlayer.setDisplay(surface.getHolder());
+                    mediaPlayer.setDisplay(surHolder);
                     play(playUrl);
 
                 } catch (IllegalArgumentException e) {
@@ -636,7 +638,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
             lp.height = mSurfaceViewHeight;
 
             surface.setLayoutParams(lp);
-            surface.getHolder().setFixedSize(mSurfaceViewWidth,
+            surHolder.setFixedSize(mSurfaceViewWidth,
                     mSurfaceViewHeight);
 
             videoContainer.setLayoutParams(lp);

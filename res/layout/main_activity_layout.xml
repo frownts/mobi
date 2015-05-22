@@ -47,4 +47,10 @@
             android:layout_height="wrap_content"
             android:text="progressBar"/>
 
+    <Button
+            android:id="@+id/mediaPlay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="视频播放"/>
+
 </LinearLayout>

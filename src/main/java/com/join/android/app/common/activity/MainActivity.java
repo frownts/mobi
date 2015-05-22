@@ -1,5 +1,6 @@
 package com.join.android.app.common.activity;
 
+import android.content.Intent;
 import android.widget.Button;
 import com.BaseActivity;
 import com.join.android.app.common.R;
@@ -70,6 +71,11 @@ public class MainActivity extends BaseActivity {
     @Click
     void btnProgressBarClicked() {
         ProgressActivity_.intent(this).start();
+    }
+
+    @Click
+    void mediaPlayClicked(){
+        VideoViewBuffer_.intent(this).start();
     }
 
 
