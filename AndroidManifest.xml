@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.join.android.app.common"
-          android:versionCode="4"
-          android:versionName="4.0">
+          android:versionCode="5"
+          android:versionName="5.0">
 
     <uses-sdk
             android:maxSdkVersion="17"
@@ -32,12 +32,7 @@
         <activity android:name=".activity.DBActivity_"/>
 
         <activity android:name=".activity.PrefActivity_"/>
-        <activity android:name=".activity.MainActivity_">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
-        </activity>
+
 
 
         <activity android:name=".activity.ImageCacheDetailActivity_"/>
@@ -51,11 +46,18 @@
 
         </activity>
 
-        <activity android:name="com.join.mobi.activity.SplashActivity_">
+        <activity android:name=".activity.MainActivity_">
 
+        </activity>
+        <activity android:name="com.join.mobi.activity.SplashActivity_">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
         <activity android:name="com.join.mobi.activity.PortalActivity_"/>
+        <activity android:name="com.join.android.app.common.activity.VideoActivity_"/>
         <activity android:name="com.join.mobi.activity.LiveCourseActivity_"/>
         <activity android:name="com.join.mobi.activity.LiveCourseDetailActivity_" android:screenOrientation="portrait"  android:configChanges="orientation|keyboard|keyboardHidden|screenSize"/>
         <activity android:name="com.join.mobi.activity.ExamIntroActivity_"/>

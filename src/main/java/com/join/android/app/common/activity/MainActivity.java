@@ -75,7 +75,8 @@ public class MainActivity extends BaseActivity {
 
     @Click
     void mediaPlayClicked(){
-        VideoViewBuffer_.intent(this).start();
+//        VideoViewBuffer_.intent(this).start();
+        VideoActivity_.intent(this).start();
     }
 
 

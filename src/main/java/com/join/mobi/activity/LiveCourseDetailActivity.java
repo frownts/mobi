@@ -100,9 +100,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     SurfaceView surface;
     @ViewById
     ImageView fullScreen;
-
-    private int position = 0;
-    private SurfaceHolder surHolder;
+    private int postion = 0;
 
 
     private String playUrl;
@@ -121,8 +119,20 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     @AfterViews
     void afterViews() {
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON, WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-
-        surHolder = surface.getHolder();
+        DisplayMetrics dm = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(dm);
+        int mSurfaceViewWidth = dm.widthPixels;
+        int mSurfaceViewHeight = dm.heightPixels;
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
+        lp.width = mSurfaceViewWidth;
+        surface.setLayoutParams(lp);
+        surface.getHolder().setFixedSize(lp.width, lp.height);
+        surface.getHolder().setKeepScreenOn(true);
+        surface.getHolder().addCallback(new SurfaceViewLis());
+        surface.getHolder().setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+        mediaPlayer = new MediaPlayer();
         title.setText(name);
         loading = new CommonDialogLoading(this);
         loading.show();
@@ -160,30 +170,14 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     private void initPlayer() {
         if(update==null)
-        update = new upDateSeekBar(); // 创建更新进度条对象
-        mediaPlayer = new MediaPlayer();
-        DisplayMetrics dm = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(dm);
-        int mSurfaceViewWidth = dm.widthPixels;
-        int mSurfaceViewHeight = dm.heightPixels;
-        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT);
-        lp.width = mSurfaceViewWidth;
-        surface.setLayoutParams(lp);
-        surHolder.setFixedSize(lp.width, lp.height);
-        surHolder.setKeepScreenOn(true);
-        surHolder.addCallback(new SurfaceViewLis());
-        surHolder.setType(SurfaceHolder.SURFACE_TYPE_PUSH_BUFFERS);
+            update = new upDateSeekBar(); // 创建更新进度条对象
 
-        mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
         mediaPlayer.setOnSeekCompleteListener(new MediaPlayer.OnSeekCompleteListener() {
             @Override
             public void onSeekComplete(MediaPlayer mp) {
                 progressBar.setVisibility(View.GONE);
             }
         });
-
         mediaPlayer.setOnInfoListener(this);
         seekbar.setOnSeekBarChangeListener(new surfaceSeekBar());
         mediaPlayer.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
@@ -219,34 +213,20 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @UiThread
     public void play(String url){
-        if(mediaPlayer!=null)
-        mediaPlayer.release();
-        initPlayer();
 
         progressBar.setVisibility(View.VISIBLE);
         playUrl = url;
+//        playUrl = "http://192.168.1.101:8080/test1.mp4";
         if(StringUtils.isEmpty(playUrl))return;
         try {
+            mediaPlayer.reset();
+            mediaPlayer.setDisplay(surface.getHolder());
             mediaPlayer.setAudioStreamType(AudioManager.STREAM_MUSIC);
             mediaPlayer.setDataSource(playUrl);
             play();
         } catch (IOException e) {
             e.printStackTrace();
         }
-    }
-
-    @UiThread
-    public void play() {
-        seekbar.setProgress(0);
-        if(threadUpdateGrogress==null)
-            threadUpdateGrogress = new Thread(update);
-        try{
-            if(!threadUpdateGrogress.isAlive())
-                threadUpdateGrogress.start();
-        }catch (java.lang.IllegalThreadStateException e){}
-
-        progressBar.setVisibility(View.VISIBLE);
-        mediaPlayer.prepareAsync();
     }
 
     @Background
@@ -294,8 +274,10 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         }
 
-
+        initPlayer();
         startUpdateLearningTime();
+
+
         play(playUrl);
     }
 
@@ -366,6 +348,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         if (mediaPlayer.isPlaying()) {
             mediaPlayer.pause();
             issrt.setImageDrawable(getResources().getDrawable(R.drawable.player));
+            progressBar.setVisibility(View.GONE);
         } else {
             mediaPlayer.start();
             issrt.setImageDrawable(getResources().getDrawable(R.drawable.pause));
@@ -396,6 +379,13 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
     @Override
     protected void onStop() {
         mediaPlayer.pause();
+//        checkProgress=null;
+//        if (mediaPlayer != null) {
+//            mediaPlayer.stop();
+//            mediaPlayer.release();
+//            mediaPlayer = null;
+//        }
+//        threadUpdateGrogress = null;
         super.onStop();
     }
 
@@ -476,8 +466,6 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         if(StringUtils.isEmpty(playUrl))return;
         try {
             mediaPlayer.pause();
-
-
             play(playUrl);
         } catch (Exception e) {
             e.printStackTrace();
@@ -569,7 +557,19 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         }
     };
 
+    @UiThread
+    public void play() {
+        seekbar.setProgress(0);
+        if(threadUpdateGrogress==null)
+            threadUpdateGrogress = new Thread(update);
+        try{
+            if(!threadUpdateGrogress.isAlive())
+                threadUpdateGrogress.start();
+        }catch (java.lang.IllegalThreadStateException e){}
 
+        progressBar.setVisibility(View.VISIBLE);
+        mediaPlayer.prepareAsync();
+    }
 
 
     private final class MyOnCompletionListener implements MediaPlayer.OnCompletionListener{
@@ -592,21 +592,22 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         @Override
         public void surfaceCreated(SurfaceHolder holder) {
-            if (position == 0) {
-                try {
-                    // 把视频输出到SurfaceView上
-                    mediaPlayer.setDisplay(surHolder);
-                    play(playUrl);
-
-                } catch (IllegalArgumentException e) {
-                    e.printStackTrace();
-                } catch (SecurityException e) {
-                    e.printStackTrace();
-                } catch (IllegalStateException e) {
-                    e.printStackTrace();
-                }catch (Exception e){}
-
-            }
+            surfaceCreated = true;
+//            if (postion == 0) {
+//                try {
+//                    // 把视频输出到SurfaceView上
+//                    mediaPlayer.setDisplay(surface.getHolder());
+//                    play(playUrl);
+//
+//                } catch (IllegalArgumentException e) {
+//                    e.printStackTrace();
+//                } catch (SecurityException e) {
+//                    e.printStackTrace();
+//                } catch (IllegalStateException e) {
+//                    e.printStackTrace();
+//                }catch (Exception e){}
+//
+//            }
 
         }
 
@@ -616,6 +617,8 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         }
 
     }
+
+    private boolean surfaceCreated;
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
@@ -638,7 +641,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
             lp.height = mSurfaceViewHeight;
 
             surface.setLayoutParams(lp);
-            surHolder.setFixedSize(mSurfaceViewWidth,
+            surface.getHolder().setFixedSize(mSurfaceViewWidth,
                     mSurfaceViewHeight);
 
             videoContainer.setLayoutParams(lp);
