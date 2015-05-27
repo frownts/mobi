@@ -122,7 +122,6 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         DisplayMetrics dm = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(dm);
         int mSurfaceViewWidth = dm.widthPixels;
-        int mSurfaceViewHeight = dm.heightPixels;
         RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -136,6 +135,9 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
         title.setText(name);
         loading = new CommonDialogLoading(this);
         loading.show();
+
+        initPlayer();
+
         //加载数据
         retrieveDataFromServer();
     }
@@ -195,8 +197,8 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
                         while(true){
                             try {
                                 Thread.sleep(1000);
-                                mHandler.sendEmptyMessage(0);
                                 if(mediaPlayer.isPlaying()){
+                                    mHandler.sendEmptyMessage(0);
                                 }
                             } catch (Exception e) {
                                 e.printStackTrace();
@@ -216,7 +218,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         progressBar.setVisibility(View.VISIBLE);
         playUrl = url;
-//        playUrl = "http://192.168.1.101:8080/test1.mp4";
+//        playUrl = "http://192.168.1.103:8080/test1.mp4";
         if(StringUtils.isEmpty(playUrl))return;
         try {
             mediaPlayer.reset();
@@ -274,7 +276,7 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
         }
 
-        initPlayer();
+
         startUpdateLearningTime();
 
 
@@ -378,20 +380,20 @@ public class LiveCourseDetailActivity extends FragmentActivity implements MediaP
 
     @Override
     protected void onStop() {
-        mediaPlayer.pause();
-//        checkProgress=null;
-//        if (mediaPlayer != null) {
-//            mediaPlayer.stop();
-//            mediaPlayer.release();
-//            mediaPlayer = null;
-//        }
-//        threadUpdateGrogress = null;
+        if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
+            mediaPlayer.release();
+            mediaPlayer = null;
+        }
         super.onStop();
     }
 
     @Override
     protected void onDestroy() {
         if (mediaPlayer != null) {
+            mediaPlayer.stop();
+            mediaPlayer.reset();
             mediaPlayer.release();
             mediaPlayer = null;
         }

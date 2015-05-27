@@ -76,13 +76,6 @@
         <activity android:name="com.join.mobi.activity.VideoFullScreen_" android:screenOrientation="landscape" >
 
         </activity>
-        <activity android:name="com.join.android.app.common.activity.VideoViewBuffer_" android:screenOrientation="portrait"  android:configChanges="orientation|keyboard|keyboardHidden|screenSize"></activity>
-        <activity
-                android:name="io.vov.vitamio.activity.InitActivity"
-                android:configChanges="orientation|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
-                android:launchMode="singleTop"
-                android:theme="@android:style/Theme.NoTitleBar"
-                android:windowSoftInputMode="stateAlwaysHidden" />
 
         <service android:name="com.join.mobi.service.UpdateService"/>
 
